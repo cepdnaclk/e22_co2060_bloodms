@@ -3,7 +3,7 @@
 ## 🧩 Project Overview
 The Blood Bank Application helps **donors, medical staff, and administrators** efficiently manage blood donations and emergencies. Features include **donor eligibility checks, donation scheduling, inventory tracking, and location-based matching for emergencies**.
 
-## 🏗️ Features
+## 🏗️ Feature in our system
 
 <details>
 <summary>Donor Portal</summary>
