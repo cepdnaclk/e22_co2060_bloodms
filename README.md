@@ -46,6 +46,14 @@ The Blood Bank Application helps **donors, medical staff, and administrators** e
 - Mobile responsiveness across all pages  
 
 </details>
+<details>
+<summary>Tech stack/summary>
+
+-frontend-React
+-backend-Djaqngo with python
+-database-postgressSql
+
+</details>
 
 ---
 
