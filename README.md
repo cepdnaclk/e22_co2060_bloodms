@@ -50,17 +50,17 @@ The Blood Bank Application helps **donors, medical staff, and administrators** e
 <summary>Tech stack/summary>
 
 -frontend-React
--backend-Djaqngo with python
--database-postgressSql
+-backend-Django with python
+-database-postgreSql
 
 </details>
 
 ---
 
 ## Tech Stack
-- **Frontend**: HTML, CSS, JavaScript, React (or your chosen framework)
-- **Backend**: Node.js / Python / Java Spring Boot (specify your tech)
-- **Database**: MySQL / PostgreSQL / MongoDB
+- **Frontend**: React
+- **Backend**: Django with Python
+- **Database**: PostgreSQL
 - **Maps Integration**: Google Maps API / Leaflet.js
 - **Notifications**: SMS & Email services (Twilio / SendGrid)
 
