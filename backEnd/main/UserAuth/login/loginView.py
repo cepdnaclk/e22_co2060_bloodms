@@ -11,7 +11,7 @@ from ..serializers.serializers import LoginSerializer, RegisterSerializer, UserS
 
 
 @api_view(['POST'])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def api_login(request):
 
     serializer = LoginSerializer(data=request.data)
@@ -66,11 +66,6 @@ def api_register(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def api_logout(request):
-    """
-    API endpoint for React logout
-    POST /login/api/logout/
-    Requires authentication
-    """
     logout(request)
     return Response({
         'success': True,
@@ -81,11 +76,6 @@ def api_logout(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def api_user(request):
-    """
-    Get current logged in user
-    GET /login/api/user/
-    Requires authentication
-    """
     return Response({
         'success': True,
         'user': UserSerializer(request.user).data
@@ -95,10 +85,6 @@ def api_user(request):
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def api_check_auth(request):
-    """
-    Check if user is authenticated
-    GET /login/api/check-auth/
-    """
     if request.user.is_authenticated:
         return Response({
             'authenticated': True,

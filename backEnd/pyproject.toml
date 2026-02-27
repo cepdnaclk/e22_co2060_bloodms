@@ -7,3 +7,7 @@ requires-python = ">=3.11"
 dependencies = [
     "django>=5.2.10",
 ]
+[tool.ruff]
+line-length = 88
+select = ["E", "F", "W", "I"]  # Errors, formatting, warnings, imports
+ignore = []               # optional rules to ignore
