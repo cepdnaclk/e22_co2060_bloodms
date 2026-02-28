@@ -1,0 +1,339 @@
+/* New SignUp Redesign Styles */
+
+.signup-container.new-design {
+    min-height: calc(100vh - 70px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fdfdfd;
+    /* Clean white backdrop for the whole page */
+    padding: 2rem;
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+.signup-split-card-new {
+    width: 100%;
+    max-width: 900px;
+    /* Matched to approximate aspect ratio of screenshot */
+    min-height: 550px;
+    display: flex;
+    background: #EFEBEA;
+    /* Soft off-white/beige from screenshot */
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+    /* Softer shadow */
+}
+
+/* --- Left Visual Section (Red) --- */
+.signup-visual-section-new {
+    flex: 0 0 40%;
+    /* Approx 40% width */
+    background: #E85D56;
+    /* The soft red/coral color from screenshot */
+    position: relative;
+    overflow: hidden;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 3rem;
+}
+
+.visual-content-new {
+    position: relative;
+    z-index: 2;
+    text-align: left;
+    /* Align text to left as in image */
+}
+
+.visual-title-new {
+    font-size: 2.8rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.5px;
+}
+
+.visual-subtitle-new {
+    font-size: 1rem;
+    font-weight: 300;
+    opacity: 0.9;
+}
+
+/* Floating Orbs */
+.visual-orbs {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.orb {
+    position: absolute;
+    border-radius: 50%;
+    /* Gradient to match the 3D sphere look */
+    background: radial-gradient(circle at 30% 30%, #F67C75, #D2423B);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.orb-1 {
+    width: 60px;
+    height: 60px;
+    top: 5%;
+    left: 20%;
+}
+
+.orb-2 {
+    width: 110px;
+    height: 110px;
+    top: 25%;
+    left: 45%;
+}
+
+.orb-3 {
+    width: 45px;
+    height: 45px;
+    bottom: 40%;
+    right: -20px;
+}
+
+.orb-4 {
+    /* Added bottom left orb from image */
+    width: 70px;
+    height: 70px;
+    bottom: 10%;
+    left: 15%;
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #F67C75, #D2423B);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    z-index: 1;
+}
+
+/* Add the 4th orb dynamically in CSS via pseudo element to avoid touching JSX again if possible, or just style it */
+.visual-orbs::after {
+    content: '';
+    position: absolute;
+    width: 70px;
+    height: 70px;
+    bottom: 10%;
+    left: 15%;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #F67C75, #D2423B);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+
+/* --- Right Form Section --- */
+.signup-form-section-new {
+    flex: 0 0 60%;
+    padding: 3rem 4rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.auth-header-new {
+    margin-bottom: 2rem;
+}
+
+.auth-header-new h2 {
+    color: #333333;
+    font-size: 1.8rem;
+    font-weight: 500;
+    line-height: 1.3;
+}
+
+.auth-form-new {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.form-row-new {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.form-group-new {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    flex: 1;
+}
+
+.form-group-new label {
+    font-size: 0.85rem;
+    color: #666;
+    font-weight: 500;
+}
+
+/* Input Fields */
+.form-group-new input,
+.form-group-new select {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    /* Soft white inputs matching the image */
+    background-color: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    color: #333;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+    /* Very subtle shadow */
+    transition: all 0.2s ease;
+}
+
+.form-group-new input:focus,
+.form-group-new select:focus {
+    outline: none;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 2px rgba(232, 93, 86, 0.2);
+}
+
+.form-group-new input::placeholder {
+    color: #bcbcbc;
+}
+
+.w-50 {
+    width: 50% !important;
+}
+
+/* Custom Select styling to remove default arrow */
+.auth-select-new {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23bcbcbc' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 1rem center !important;
+    background-size: 1em !important;
+}
+
+/* Autocomplete overrides */
+.suggestions-list-new {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: none;
+    border-radius: 4px;
+    max-height: 150px;
+    overflow-y: auto;
+    z-index: 10;
+    list-style: none;
+    padding: 0;
+    margin: 0.3rem 0 0 0;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.suggestions-list-new li {
+    padding: 0.8rem 1rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.suggestions-list-new li:hover {
+    background-color: #f5f5f5;
+    color: #E85D56;
+}
+
+/* Buttons Area */
+.form-actions-new {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2rem;
+}
+
+.btn-back-new {
+    padding: 0.6rem 2rem;
+    background-color: white;
+    color: #666;
+    text-decoration: none;
+    border-radius: 20px;
+    /* Pill shape */
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+}
+
+.btn-back-new:hover {
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+    background-color: #fcfcfc;
+}
+
+.btn-next-new {
+    padding: 0.6rem 2.5rem;
+    /* Dark gradient button from image */
+    background: linear-gradient(to right, #614358, #30202F);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    /* Pill shape */
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    transition: all 0.2s ease;
+}
+
+.btn-next-new:hover:not(:disabled) {
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
+    transform: translateY(-1px);
+}
+
+.btn-next-new:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.spinner-small {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 1s ease-in-out infinite;
+    display: inline-block;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .signup-split-card-new {
+        flex-direction: column;
+        max-width: 500px;
+    }
+
+    .signup-visual-section-new {
+        flex: none;
+        padding: 3rem 2rem;
+        min-height: 250px;
+    }
+
+    .signup-form-section-new {
+        flex: none;
+        padding: 2.5rem 2rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .form-row-new {
+        flex-direction: column;
+        gap: 1.2rem;
+    }
+
+    .w-50 {
+        width: 100% !important;
+    }
+
+    .auth-header-new h2 {
+        font-size: 1.5rem;
+    }
+}

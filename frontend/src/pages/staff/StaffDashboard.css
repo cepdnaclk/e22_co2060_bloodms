@@ -1,0 +1,56 @@
+/* Staff Dashboard Styles */
+.staff-dashboard .fifo-alert-card {
+    border: 1px solid var(--color-warning);
+    background-color: var(--color-warning-bg);
+}
+
+.staff-dashboard .alert-header h2 {
+    color: var(--color-warning);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.fifo-item {
+    min-width: 200px;
+    border-left: 4px solid var(--color-warning);
+}
+
+.fifo-item:hover {
+    transform: translateY(-2px);
+    transition: transform var(--transition-fast);
+}
+
+.flex-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.gap-4 {
+    gap: var(--spacing-4);
+}
+
+.w-full {
+    width: 100%;
+}
+
+.bg-white {
+    background-color: white;
+}
+
+.mb-2 {
+    margin-bottom: var(--spacing-2);
+}
+
+.mt-1 {
+    margin-top: var(--spacing-1);
+}
+
+.mt-2 {
+    margin-top: var(--spacing-2);
+}
+
+.block {
+    display: block;
+}

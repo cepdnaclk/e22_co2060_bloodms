@@ -1,0 +1,166 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  /* Colors */
+  --color-primary: #C62828;
+  /* Deep Medical Red */
+  --color-primary-dark: #9B1A1A;
+  --color-primary-light: #FFEBEE;
+
+  --color-secondary: #2B3A42;
+  /* Soft Navy for contrast */
+  --color-secondary-light: #F8F9FA;
+  /* Updated to Light Gray for general backgrounding */
+
+  --color-success: #2E7D32;
+  /* Green -> Safe */
+  --color-success-bg: #E8F5E9;
+
+  --color-warning: #F57F17;
+  /* Yellow -> Low */
+  --color-warning-bg: #FFFDE7;
+
+  --color-critical: #B71C1C;
+  /* Darker Red -> Critical */
+  --color-critical-bg: #FFEBEE;
+
+  --color-expiring: #6A1B9A;
+  /* Purple -> Expiring Soon */
+  --color-expiring-bg: #F3E5F5;
+
+  --color-background: #F4F6F8;
+  /* Soft Gray */
+  --color-surface: #FFFFFF;
+  --color-border: #E0E0E0;
+
+  --color-text-main: #1C2025;
+  --color-text-muted: #637381;
+  --color-text-inverse: #FFFFFF;
+
+  /* Typography */
+  --font-family: 'Inter', sans-serif;
+  --font-size-base: 16px;
+  --font-size-sm: 14px;
+  --font-size-xs: 12px;
+  --font-size-lg: 18px;
+  --font-size-xl: 24px;
+  --font-size-2xl: 32px;
+
+  /* Spacing */
+  --spacing-1: 4px;
+  --spacing-2: 8px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-5: 20px;
+  --spacing-6: 24px;
+  --spacing-8: 32px;
+  --spacing-12: 48px;
+
+  /* Soft Shadows Accessible Contrast */
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 6px 16px rgba(0, 0, 0, 0.08);
+  /* Updated soft shadows */
+  --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.12);
+
+  /* Radii */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  /* Force standard matching 10px requested */
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-full: 9999px;
+
+  /* Animation */
+  --transition-fast: 150ms ease-in-out;
+  --transition-normal: 250ms ease-in-out;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--color-background);
+  color: var(--color-text-main);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  font-family: inherit;
+  border: none;
+  cursor: pointer;
+}
+
+/* Base utility classes for typography */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 600;
+  color: var(--color-secondary);
+  margin-bottom: var(--spacing-4);
+}
+
+h1 {
+  font-size: var(--font-size-2xl);
+}
+
+h2 {
+  font-size: var(--font-size-xl);
+}
+
+h3 {
+  font-size: var(--font-size-lg);
+}
+
+.text-muted {
+  color: var(--color-text-muted);
+}
+
+.text-xs {
+  font-size: var(--font-size-xs);
+}
+
+.text-sm {
+  font-size: var(--font-size-sm);
+}
+
+.text-base {
+  font-size: var(--font-size-base);
+}
+
+.text-lg {
+  font-size: var(--font-size-lg);
+}
+
+/* Global Emergency Mode Class attached to body */
+body.disaster-mode {
+  --color-background: #FFEBEE;
+  --color-surface: #FFFFFF;
+  --color-border: #FFCDD2;
+  --color-primary: #D32F2F;
+  /* more urgent red */
+  /* Intense animation pulse for emergency */
+  animation: pulse-bg 2s infinite alternate;
+}
+
+@keyframes pulse-bg {
+  0% {
+    background-color: #FFEBEE;
+  }
+
+  100% {
+    background-color: #FFCDD2;
+  }
+}

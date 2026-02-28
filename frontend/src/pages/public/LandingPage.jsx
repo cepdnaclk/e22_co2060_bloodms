@@ -1,0 +1,272 @@
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { Heart, Activity, MapPin, Search, PhoneCall, ArrowRight, Shield, Clock } from 'lucide-react';
+import './LandingPage.css';
+
+const LandingPage = () => {
+    const [bloodStock, setBloodStock] = useState({
+        "O+": "Normal", "A+": "Low", "B+": "Critical", "AB+": "Normal",
+        "O-": "Normal", "A-": "Normal", "B-": "Low", "AB-": "Normal"
+    });
+
+    // Intersection Observer for scroll animations
+    useEffect(() => {
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: "0px 0px -50px 0px"
+        };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-in');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        const elements = document.querySelectorAll('.animate-on-scroll');
+        elements.forEach(el => observer.observe(el));
+
+        return () => observer.disconnect();
+    }, []);
+
+    return (
+        <div className="landing-page-new">
+            {/* Emergency Banner */}
+            <div className="emergency-banner-new">
+                <div className="banner-content">
+                    <span className="pulse-dot"></span>
+                    <strong>URGENT:</strong> B+ Blood urgently required at General Hospital Colombo.
+                    <a href="tel:0110000000" className="banner-phone"><PhoneCall size={14} /> 011 000 0000</a>
+                </div>
+            </div>
+
+            {/* Hero Section */}
+            <section className="hero-section-new">
+                <div className="hero-container">
+                    <div className="hero-content animate-on-scroll">
+                        <div className="hero-badge-new">
+                            <Shield size={16} /> Sri Lanka National Blood Transfusion Service
+                        </div>
+                        <h4 className="hero-top-title">Donate Blood, Save Life!</h4>
+                        <h1 className="hero-title">
+                            Donate Your Blood & <br /> Inspires to Others
+                        </h1>
+                        <div className="hero-actions-new">
+                            <Link to="/donor" className="btn-donate-now">
+                                DONATE NOW
+                            </Link>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Service Cards Section (Moved below Hero) */}
+            <section className="services-section">
+                <div className="container">
+                    <div className="services-cards-wrapper">
+                        <div className="services-container">
+                            <div className="services-styles-box-inner animate-on-scroll" style={{ transitionDelay: '0.1s' }}>
+                                <div className="service-card-wrapper">
+                                    <div className="service-img-box">
+                                        <img src="https://images.unsplash.com/photo-1615461066841-6116e61058f4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Blood Donation" />
+                                    </div>
+                                    <div className="service-content-main-box">
+                                        <div className="service-icon-box bg-dark">
+                                            <Heart size={36} color="white" />
+                                        </div>
+                                        <h3 className="service-box-title">Blood Donation</h3>
+                                        <p>Aliquam vitae phare sapien betex convalli hen drerit enim ac bibend umvelit aliquam ipsum.</p>
+                                    </div>
+                                    <div className="service-read-more">
+                                        <Link to="/donor">READ MORE</Link>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="services-styles-box-inner animate-on-scroll" style={{ transitionDelay: '0.3s' }}>
+                                <div className="service-card-wrapper">
+                                    <div className="service-img-box">
+                                        <img src="https://images.unsplash.com/photo-1579154204601-01588f351e67?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Blood Bank" />
+                                    </div>
+                                    <div className="service-content-main-box">
+                                        <div className="service-icon-box bg-dark">
+                                            <Shield size={36} color="white" />
+                                        </div>
+                                        <h3 className="service-box-title">Blood Bank</h3>
+                                        <p>Aliquam vitae phare sapien betex convalli hen drerit enim ac bibend umvelit aliquam ipsum.</p>
+                                    </div>
+                                    <div className="service-read-more">
+                                        <Link to="/donor">READ MORE</Link>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="services-styles-box-inner animate-on-scroll" style={{ transitionDelay: '0.5s' }}>
+                                <div className="service-card-wrapper">
+                                    <div className="service-img-box">
+                                        <img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Health Check" />
+                                    </div>
+                                    <div className="service-content-main-box">
+                                        <div className="service-icon-box bg-dark">
+                                            <Activity size={36} color="white" />
+                                        </div>
+                                        <h3 className="service-box-title">Health Check</h3>
+                                        <p>Aliquam vitae phare sapien betex convalli hen drerit enim ac bibend umvelit aliquam ipsum.</p>
+                                    </div>
+                                    <div className="service-read-more">
+                                        <Link to="/donor">READ MORE</Link>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Live Blood Stock Section (moved down) */}
+            <section className="live-stock-section">
+                <div className="container">
+                    <div className="stock-panel animate-on-scroll">
+                        <h3><Activity size={20} color="var(--color-primary)" /> Live National Stock</h3>
+                        <div className="stock-grid">
+                            {Object.entries(bloodStock).map(([type, status]) => (
+                                <div key={type} className={`stock-card status-${status.toLowerCase()}`}>
+                                    <span className="blood-type">{type}</span>
+                                    <span className="status-badge">{status}</span>
+                                </div>
+                            ))}
+                        </div>
+                        <div className="stock-footer">
+                            <span><Clock size={12} /> Updated just now</span>
+                            <Link to="/donor">View Details</Link>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Features/Stats Section */}
+            <section className="highlights-section-new">
+                <div className="container">
+                    <div className="stats-grid-new animate-on-scroll">
+                        <div className="stat-item-new">
+                            <h2 className="stat-number-new">48<span className="unit">h</span></h2>
+                            <p>Predictive Shortage Alerts</p>
+                        </div>
+                        <div className="stat-item-new divider">
+                            <h2 className="stat-number-new">10k+</h2>
+                            <p>Registered Active Donors</p>
+                        </div>
+                        <div className="stat-item-new divider">
+                            <h2 className="stat-number-new">85<span>%</span></h2>
+                            <p>Wastage Reduction</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Map Mock Section */}
+            <section className="map-section-new animate-on-scroll">
+                <div className="container">
+                    <div className="map-header">
+                        <h2><MapPin size={28} /> Find Nearby Blood Camps</h2>
+                        <p>Locate active donation centers and urgent hospital requests in your district.</p>
+                    </div>
+                    <div className="map-mockup-wrapper" style={{ padding: '0', overflow: 'hidden', height: '400px', borderRadius: 'var(--radius-md)', boxShadow: 'var(--shadow-md)' }}>
+                        <iframe
+                            title="National Blood Center Location"
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.671046714073!2d79.85871807469796!3d6.929871593069695!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae2591146399bd5%3A0xc02cf3c9f53eec0!2sNational%20Blood%20Center!5e0!3m2!1sen!2slk!4v1711200000000!5m2!1sen!2slk"
+                            width="100%"
+                            height="100%"
+                            style={{ border: 0 }}
+                            allowFullScreen=""
+                            loading="lazy"
+                            referrerPolicy="no-referrer-when-downgrade"
+                        ></iframe>
+                    </div>
+                </div>
+            </section>
+
+            {/* Why Donate Section */}
+            <section className="why-donate-section">
+                <div className="container why-donate-container">
+                    <div className="why-donate-image animate-on-scroll">
+                        <img src="https://plus.unsplash.com/premium_photo-1682309715509-f38baca7ec41?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Hold Blood Drop" />
+                    </div>
+                    <div className="why-donate-content animate-on-scroll" style={{ transitionDelay: '0.2s' }}>
+                        <h5 className="section-subtitle">Why Donate?</h5>
+                        <h2 className="section-title">The Life You Save<br />Could Be Someone<br />You Love</h2>
+                        <p className="section-description">
+                            Aliquam vitae pharetra sapien. Sed et ex convallis, hen dreri enim ac, bibendum veliti. Aliquam ipsum nisi eleif end utine mauris idin aliquam efficitur nulla phas ellorci diam.
+                        </p>
+
+                        <div className="benefits-grid">
+                            <div className="benefit-item">
+                                <div className="benefit-icon">
+                                    <Heart fill="var(--color-primary)" color="var(--color-primary)" size={24} />
+                                </div>
+                                <h4>Your Blood, Their Second Chance</h4>
+                                <p>Namu ante maucb usenaxi nulla dignii a gravding.</p>
+                            </div>
+                            <div className="benefit-item">
+                                <div className="benefit-icon">
+                                    <Activity fill="var(--color-primary)" color="var(--color-primary)" size={24} />
+                                </div>
+                                <h4>Urgent Need Every Day</h4>
+                                <p>Namu ante maucb usenaxi nulla dignii a gravding.</p>
+                            </div>
+                            <div className="benefit-item">
+                                <div className="benefit-icon">
+                                    <Shield fill="var(--color-primary)" color="var(--color-primary)" size={24} />
+                                </div>
+                                <h4>Save Lives in Minutes</h4>
+                                <p>Namu ante maucb usenaxi nulla dignii a gravding.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Testimonials Mock */}
+            <section className="testimonials-section animate-on-scroll">
+                <div className="container">
+                    <h2 className="section-title">Why We Donate</h2>
+                    <div className="testimonial-grid">
+                        <div className="testimonial-card">
+                            <div className="quote">"HOPEDROP alerted me that my rare AB- blood was needed locally. The process was seamless and I knew exactly who I was helping."</div>
+                            <div className="author">- Kamal S., Donor</div>
+                        </div>
+                        <div className="testimonial-card">
+                            <div className="quote">"As a Medical Officer, the 48-hour predictive alerts have completely changed how we manage inventory. We no longer hit critical zero."</div>
+                            <div className="author">- Dr. Perera, General Hospital</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Footer */}
+            <footer className="footer-new">
+                <div className="container footer-grid">
+                    <div className="footer-brand">
+                        <h2><Heart color="var(--color-primary)" fill="var(--color-primary)" /> HOPEDROP</h2>
+                        <p>National Blood Bank Management System of Sri Lanka.</p>
+                    </div>
+                    <div className="footer-links">
+                        <h4>Quick Links</h4>
+                        <Link to="/donor">Donor Portal</Link>
+                        <Link to="/patient">Request Blood</Link>
+                        <Link to="/login">Hospital Login</Link>
+                    </div>
+                    <div className="footer-contact">
+                        <h4>Emergency Contact</h4>
+                        <p>Hotline: 011 236 9931</p>
+                        <p>Email: info@hopedrop.lk</p>
+                    </div>
+                </div>
+                <div className="footer-bottom">
+                    <p>&copy; {new Date().getFullYear()} HOPEDROP National Blood Transfusion Service. All rights reserved.</p>
+                </div>
+            </footer>
+        </div>
+    );
+};
+
+export default LandingPage;

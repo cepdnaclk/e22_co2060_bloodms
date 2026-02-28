@@ -1,0 +1,118 @@
+/* Lab Dashboard Styles */
+.alert-card.wrapper-alert {
+    display: flex;
+    align-items: center;
+    background-color: var(--color-expiring-bg);
+    padding: var(--spacing-4) var(--spacing-6);
+    border-radius: var(--radius-lg);
+    border-left: 4px solid var(--color-expiring);
+    gap: var(--spacing-4);
+    box-shadow: var(--shadow-sm);
+    margin-bottom: var(--spacing-6);
+}
+
+.alert-icon-wrapper {
+    background-color: white;
+    padding: var(--spacing-3);
+    border-radius: 50%;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+}
+
+.alert-text {
+    flex: 1;
+}
+
+.alert-text h4 {
+    margin: 0 0 var(--spacing-1) 0;
+    color: var(--color-expiring);
+    font-size: var(--font-size-lg);
+}
+
+.alert-text p {
+    margin: 0;
+    color: var(--color-secondary);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+}
+
+.bg-white {
+    background-color: white !important;
+}
+
+/* Form Styles */
+.add-packet-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-4);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-6);
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2);
+}
+
+.form-group label {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--color-secondary);
+}
+
+.form-control {
+    padding: var(--spacing-3);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-sm);
+    font-family: var(--font-family);
+    transition: border-color var(--transition-fast);
+    background-color: var(--color-background);
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    background-color: white;
+    box-shadow: 0 0 0 3px var(--color-primary-light);
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: var(--spacing-4);
+    padding-top: var(--spacing-4);
+    border-top: 1px dashed var(--color-border);
+}
+
+/* Table overrides */
+.table-responsive {
+    overflow-x: auto;
+}
+
+.inline-icon {
+    vertical-align: text-bottom;
+    margin-right: 4px;
+}
+
+.text-critical {
+    color: var(--color-critical);
+}
+
+@media (max-width: 1024px) {
+    .form-row {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-4);
+    }
+}
