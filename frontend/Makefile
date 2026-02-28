@@ -19,3 +19,12 @@ fix:
 	ruff check --fix .
 	@echo "Running ESLint auto-fix..."
 	npm run lint -- --fix
+
+i:
+	@echo "install react for laptop"
+	npm install
+
+numpy:
+	@echo "install numpy"
+	pip install numpy
+
