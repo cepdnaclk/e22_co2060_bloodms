@@ -75,11 +75,11 @@ const LandingPage = () => {
                                         <div className="service-icon-box bg-dark">
                                             <Heart size={36} color="white" />
                                         </div>
-                                        <h3 className="service-box-title">Blood Donation</h3>
-                                        <p>Aliquam vitae phare sapien betex convalli hen drerit enim ac bibend umvelit aliquam ipsum.</p>
+                                        <h3 className="service-box-title">Donor Registration</h3>
+                                        <p>Join our community of lifesavers. Register today to seamlessly book your donation appointments.</p>
                                     </div>
                                     <div className="service-read-more">
-                                        <Link to="/donor">READ MORE</Link>
+                                        <Link to="/donor">Register Now</Link>
                                     </div>
                                 </div>
                             </div>
@@ -92,11 +92,11 @@ const LandingPage = () => {
                                         <div className="service-icon-box bg-dark">
                                             <Shield size={36} color="white" />
                                         </div>
-                                        <h3 className="service-box-title">Blood Bank</h3>
-                                        <p>Aliquam vitae phare sapien betex convalli hen drerit enim ac bibend umvelit aliquam ipsum.</p>
+                                        <h3 className="service-box-title">Check Your Eligibility</h3>
+                                        <p>Not sure if you can donate blood today? Take our quick, automated health questionnaire to instantly verify your eligibility.</p>
                                     </div>
                                     <div className="service-read-more">
-                                        <Link to="/donor">READ MORE</Link>
+                                        <Link to="/donor">Take the Quiz</Link>
                                     </div>
                                 </div>
                             </div>
@@ -109,11 +109,11 @@ const LandingPage = () => {
                                         <div className="service-icon-box bg-dark">
                                             <Activity size={36} color="white" />
                                         </div>
-                                        <h3 className="service-box-title">Health Check</h3>
-                                        <p>Aliquam vitae phare sapien betex convalli hen drerit enim ac bibend umvelit aliquam ipsum.</p>
+                                        <h3 className="service-box-title">Blood Camp Details</h3>
+                                        <p>Donating has never been easier. Use our interactive map to discover upcoming blood donation drives hosted in your city.</p>
                                     </div>
                                     <div className="service-read-more">
-                                        <Link to="/donor">READ MORE</Link>
+                                        <Link to="/donor">View Camps</Link>
                                     </div>
                                 </div>
                             </div>
