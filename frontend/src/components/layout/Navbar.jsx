@@ -2,7 +2,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Heart, Activity, User, ShieldAlert, LogIn, LogOut, Menu } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import './Navbar.css';
-
+//fggf
 const Navbar = () => {
     const location = useLocation();
     const navigate = useNavigate();
