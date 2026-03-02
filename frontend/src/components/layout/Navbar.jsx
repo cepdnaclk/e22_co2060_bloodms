@@ -1,12 +1,14 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Heart, Activity, User, ShieldAlert, LogIn, LogOut, Menu } from 'lucide-react';
+import { Heart, Activity, User, ShieldAlert, LogIn, LogOut, Menu, Moon, Sun } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
 import './Navbar.css';
 
 const Navbar = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const { isAuthenticated, logout } = useAuth();
+    const { theme, toggleTheme } = useTheme();
 
     const handleLogout = () => {
         logout();
@@ -22,7 +24,7 @@ const Navbar = () => {
             <div className="navbar-container">
                 <Link to="/" className="navbar-brand">
                     <Heart className="brand-icon" size={28} color="var(--color-primary)" fill="var(--color-primary)" />
-                    <span className="brand-text">Dulaj</span>
+                    <span className="brand-text">HopeDrop</span>
                 </Link>
 
                 <div className="navbar-links">
@@ -40,6 +42,26 @@ const Navbar = () => {
                     </Link>
 
                     <div className="navbar-actions">
+                        {/* Dark Mode Toggle */}
+                        <button
+                            className="theme-toggle-btn"
+                            onClick={toggleTheme}
+                            title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+                            aria-label="Toggle dark mode"
+                        >
+                            <span className={`theme-toggle-track ${theme === 'dark' ? 'dark' : ''}`}>
+                                <span className="theme-toggle-thumb">
+                                    {theme === 'dark'
+                                        ? <Moon size={12} />
+                                        : <Sun size={12} />
+                                    }
+                                </span>
+                            </span>
+                            <span className="theme-toggle-label">
+                                {theme === 'dark' ? <Moon size={16} /> : <Sun size={16} />}
+                            </span>
+                        </button>
+
                         {isAuthenticated ? (
                             <button
                                 className="btn btn-outline"

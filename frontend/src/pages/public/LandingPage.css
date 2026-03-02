@@ -838,3 +838,131 @@
         height: 300px;
     }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   Dark Mode Overrides — LandingPage
+   All hardcoded colours that don't rely on CSS vars are
+   overridden here under [data-theme="dark"]
+   ═══════════════════════════════════════════════════════════ */
+
+/* Service Cards */
+[data-theme="dark"] .service-card-wrapper {
+    background: #1c2128;
+    box-shadow: 0px 0px 40px 0px rgba(0, 0, 0, 0.35);
+}
+
+[data-theme="dark"] .service-box-title {
+    color: #cdd3de;
+}
+
+[data-theme="dark"] .service-read-more {
+    background-color: #2d3142;
+}
+
+[data-theme="dark"] .service-card-wrapper:hover .service-read-more {
+    background-color: var(--color-primary);
+}
+
+[data-theme="dark"] .bg-dark {
+    background-color: #2d3142;
+}
+
+/* Stats Highlights strip */
+[data-theme="dark"] .highlights-section-new {
+    background: #161b22;
+}
+
+/* Why Donate Section */
+[data-theme="dark"] .why-donate-section {
+    background: #161b22;
+}
+
+[data-theme="dark"] .why-donate-content .section-title {
+    color: #cdd3de;
+}
+
+[data-theme="dark"] .benefits-grid {
+    background: #1c2128;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="dark"] .benefit-item h4 {
+    color: #cdd3de;
+}
+
+/* Testimonials */
+[data-theme="dark"] .testimonials-section {
+    background: #161b22;
+}
+
+[data-theme="dark"] .testimonial-card {
+    background: #1c2128;
+}
+
+/* Blood Stock Panel */
+[data-theme="dark"] .stock-panel {
+    background: #1c2128;
+    color: #e6edf3;
+}
+
+[data-theme="dark"] .stock-panel h3 {
+    color: #cdd3de;
+}
+
+/* Map Section */
+[data-theme="dark"] .map-mockup-wrapper {
+    background-color: #1c2128;
+    background-image:
+        linear-gradient(#30363d 1px, transparent 1px),
+        linear-gradient(90deg, #30363d 1px, transparent 1px);
+}
+
+[data-theme="dark"] .map-pin {
+    background: #2d3142;
+    color: #e6edf3;
+}
+
+[data-theme="dark"] .map-overlay-card {
+    background: #1c2128;
+    color: #e6edf3;
+}
+
+[data-theme="dark"] .map-overlay-card h4 {
+    color: #cdd3de;
+}
+
+/* Footer — keep it deep dark in dark mode */
+[data-theme="dark"] .footer-new {
+    background: #0d1117;
+    color: #e6edf3;
+}
+
+[data-theme="dark"] .footer-brand h2 {
+    color: #e6edf3;
+}
+
+[data-theme="dark"] .footer-brand p {
+    color: #8b949e;
+}
+
+[data-theme="dark"] .footer-links h4,
+[data-theme="dark"] .footer-contact h4 {
+    color: #e6edf3;
+}
+
+[data-theme="dark"] .footer-links a {
+    color: #8b949e;
+}
+
+[data-theme="dark"] .footer-links a:hover {
+    color: var(--color-primary-light);
+}
+
+[data-theme="dark"] .footer-contact p {
+    color: #8b949e;
+}
+
+[data-theme="dark"] .footer-bottom {
+    background: rgba(0, 0, 0, 0.4);
+    color: #8b949e;
+}
