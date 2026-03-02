@@ -22,7 +22,7 @@ const Navbar = () => {
             <div className="navbar-container">
                 <Link to="/" className="navbar-brand">
                     <Heart className="brand-icon" size={28} color="var(--color-primary)" fill="var(--color-primary)" />
-                    <span className="brand-text">Dulaj</span>
+                    <span className="brand-text">HopeDrop</span>
                 </Link>
 
                 <div className="navbar-links">
