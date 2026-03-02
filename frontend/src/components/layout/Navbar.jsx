@@ -3,6 +3,7 @@ import { Heart, Activity, User, ShieldAlert, LogIn, LogOut, Menu, Moon, Sun } fr
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import './Navbar.css';
+import logoIcon from '../../assets/logo-icon.png';
 
 const Navbar = () => {
     const location = useLocation();
@@ -23,8 +24,14 @@ const Navbar = () => {
         <nav className="navbar">
             <div className="navbar-container">
                 <Link to="/" className="navbar-brand">
-                    <Heart className="brand-icon" size={28} color="var(--color-primary)" fill="var(--color-primary)" />
-                    <span className="brand-text">HopeDrop</span>
+                    <img 
+                        src={logoIcon} 
+                        alt="Logo" 
+                        className="navbar-logo-img" 
+                    />
+                    <span className="navbar-brand-text">
+                        HOPEDROP
+                    </span>
                 </Link>
 
                 <div className="navbar-links">
