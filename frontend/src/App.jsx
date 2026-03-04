@@ -11,6 +11,7 @@ import DoctorDashboard from './pages/doctor/DoctorDashboard';
 import LabDashboard from './pages/staff/LabDashboard';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import PatientDashboard from './pages/patient/PatientDashboard';
+import ContactPage from './pages/public/ContactPage';
 import './App.css';
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
               <Route path="/" element={<LandingPage />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<SignUp />} />
+              <Route path="/contact" element={<ContactPage />} />
 
               {/* Protected Routes */}
               <Route path="/donor" element={<PrivateRoute><DonorDashboard /></PrivateRoute>} />

@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Heart, Activity, User, ShieldAlert, LogIn, LogOut, Menu, Moon, Sun } from 'lucide-react';
+import { Heart, Activity, User, ShieldAlert, LogIn, LogOut, Menu, Moon, Sun, Mail } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import './Navbar.css';
@@ -46,6 +46,9 @@ const Navbar = () => {
                     </Link>
                     <Link to="/admin" className={navLinkClass('/admin')}>
                         <ShieldAlert size={18} /> Admin
+                    </Link>
+                    <Link to="/contact" className={navLinkClass('/contact')}>
+                        <Mail size={18} /> Contact
                     </Link>
 
                     <div className="navbar-actions">
