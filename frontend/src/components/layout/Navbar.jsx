@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Heart, Activity, User, ShieldAlert, LogIn, LogOut, Menu, Moon, Sun, Mail } from 'lucide-react';
+import { Heart, Activity, User, ShieldAlert, LogIn, LogOut, Menu, Moon, Sun, Mail, Calendar } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import './Navbar.css';
@@ -37,6 +37,9 @@ const Navbar = () => {
                 <div className="navbar-links">
                     <Link to="/donor" className={navLinkClass('/donor')}>
                         <User size={18} /> Donor
+                    </Link>
+                    <Link to="/events" className={navLinkClass('/events')}>
+                        <Calendar size={18} /> Events
                     </Link>
                     <Link to="/doctor" className={navLinkClass('/doctor')}>
                         <Activity size={18} /> Medical

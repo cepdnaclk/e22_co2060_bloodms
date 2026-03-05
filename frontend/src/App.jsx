@@ -12,7 +12,9 @@ import LabDashboard from './pages/staff/LabDashboard';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import PatientDashboard from './pages/patient/PatientDashboard';
 import ContactPage from './pages/public/ContactPage';
+import Events from "./pages/events/Events"; 
 import './App.css';
+
 
 function App() {
   return (
@@ -28,6 +30,7 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<SignUp />} />
               <Route path="/contact" element={<ContactPage />} />
+              <Route path="/events" element={<Events />} />
 
               {/* Protected Routes */}
               <Route path="/donor" element={<PrivateRoute><DonorDashboard /></PrivateRoute>} />
