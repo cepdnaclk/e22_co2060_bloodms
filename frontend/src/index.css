@@ -189,3 +189,113 @@ body.disaster-mode {
     background-color: #FFCDD2;
   }
 }
+
+/* ═══════════════════════════════════════════════════
+   SweetAlert2 — HOPEDROP Custom Theme
+   Works in light & dark modes, fully responsive
+   ═══════════════════════════════════════════════════ */
+
+/* ── Toast popup shell ── */
+.swal-hopedrop-popup {
+  font-family: var(--font-family) !important;
+  border-radius: 14px !important;
+  font-size: clamp(0.8rem, 2vw, 0.95rem) !important;
+
+  /* Light mode */
+  background: rgba(255, 255, 255, 0.97) !important;
+  border: 1px solid rgba(198, 40, 40, 0.12) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12),
+              0 2px 8px rgba(198, 40, 40, 0.08) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+}
+
+/* Dark mode toast */
+[data-theme="dark"] .swal-hopedrop-popup {
+  background: rgba(22, 27, 34, 0.95) !important;
+  border: 1px solid rgba(198, 40, 40, 0.28) !important;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6),
+              0 0 20px rgba(198, 40, 40, 0.12) !important;
+  color: #e6edf3 !important;
+}
+
+/* ── Title ── */
+.swal-hopedrop-title {
+  font-size: clamp(0.9rem, 2.5vw, 1.05rem) !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.2px !important;
+  color: #1a1a2e !important;
+  padding: 0 !important;
+  margin-bottom: 2px !important;
+}
+
+[data-theme="dark"] .swal-hopedrop-title {
+  color: #e6edf3 !important;
+}
+
+/* ── Body text ── */
+.swal-hopedrop-html {
+  font-size: clamp(0.75rem, 1.8vw, 0.88rem) !important;
+  color: #555 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+[data-theme="dark"] .swal-hopedrop-html {
+  color: #8b949e !important;
+}
+
+/* ── Confirm button ── */
+.swal-hopedrop-confirm {
+  background: linear-gradient(135deg, #C62828, #8B0000) !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  font-size: clamp(0.8rem, 2vw, 0.9rem) !important;
+  padding: 0.5em 1.4em !important;
+  box-shadow: 0 4px 12px rgba(198, 40, 40, 0.35) !important;
+  transition: all 0.2s ease !important;
+}
+
+.swal-hopedrop-confirm:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 18px rgba(198, 40, 40, 0.5) !important;
+}
+
+/* ── Icon sizing ── */
+.swal-hopedrop-icon {
+  width: clamp(2.5rem, 8vw, 3.5rem) !important;
+  height: clamp(2.5rem, 8vw, 3.5rem) !important;
+  margin: 0 auto 0.5rem !important;
+  border-width: 2px !important;
+}
+
+/* Success icon — crimson ring on dark */
+[data-theme="dark"] .swal2-success-ring {
+  border-color: rgba(198, 40, 40, 0.35) !important;
+}
+
+/* ── Timer progress bar ── */
+.swal2-timer-progress-bar {
+  background: linear-gradient(to right, #C62828, #E53935) !important;
+  height: 3px !important;
+  border-radius: 0 0 14px 14px !important;
+}
+
+/* ── Compact toast layout (no title/icon stacking) ── */
+.swal2-toast .swal-hopedrop-popup {
+  padding: 0.75rem 1rem !important;
+}
+
+/* ── Responsive positioning nudge on small screens ── */
+@media (max-width: 480px) {
+  .swal2-container.swal2-top-end,
+  .swal2-container.swal2-top-right {
+    top: 0.5rem !important;
+    right: 0.5rem !important;
+    left: 0.5rem !important;
+  }
+
+  .swal-hopedrop-popup {
+    border-radius: 10px !important;
+  }
+}

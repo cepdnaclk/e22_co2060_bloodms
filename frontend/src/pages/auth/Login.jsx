@@ -1,7 +1,21 @@
 import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import { useAuth } from '../../context/AuthContext';
 import './Login.css';
+
+/* ── Shared SweetAlert2 theme ─────────────────────────────── */
+const swalBase = {
+    customClass: {
+        popup:          'swal-hopedrop-popup',
+        title:          'swal-hopedrop-title',
+        htmlContainer:  'swal-hopedrop-html',
+        confirmButton:  'swal-hopedrop-confirm',
+        icon:           'swal-hopedrop-icon',
+    },
+    width: 'clamp(260px, 90vw, 380px)',
+    padding: 'clamp(1.2rem, 4vw, 2rem)',
+};
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -13,8 +27,6 @@ const Login = () => {
     const { login } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
-
-    // Redirect to where they were trying to go, or default to landing/donor dashboard
     const from = location.state?.from?.pathname || '/donor';
 
     const handleSubmit = (e) => {
@@ -23,38 +35,66 @@ const Login = () => {
 
         if (!email || !password) {
             setError('Please fill in all fields');
+
+            Swal.fire({
+                ...swalBase,
+                position: 'top-end',
+                icon: 'warning',
+                title: 'Missing Fields',
+                text: 'Please fill in all required fields.',
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
+                toast: true,
+            });
             return;
         }
 
         setLoading(true);
 
-        // Simulate API call
         setTimeout(() => {
             setLoading(false);
 
-            // Extract role from the email we mocked in the dropdown (or default to donor)
             let selectedRole = 'donor';
             if (email.includes('@frontend.lk')) {
                 selectedRole = email.split('@')[0];
             }
 
-            // Mock login success
             login({ email, name: email.split('@')[0], role: selectedRole });
 
-            // Redirect intentionally to the role dashboard instead of generic 'from'
-            navigate(`/${selectedRole}`, { replace: true });
+            /* ── Login success toast ── */
+            Swal.fire({
+                ...swalBase,
+                position: 'top-end',
+                icon: 'success',
+                title: 'Login Successful!',
+                text: `Welcome back, ${email.split('@')[0]}.`,
+                showConfirmButton: false,
+                timer: 1800,
+                timerProgressBar: true,
+                toast: true,
+            }).then(() => {
+                navigate(`/${selectedRole}`, { replace: true });
+            });
         }, 1500);
     };
 
     return (
         <div className="auth-container">
-            <div className="auth-card glass-panel">
+            <div className="auth-card">
+
+                {/* Logo mark */}
+                <div className="auth-logo-mark">
+                    <div className="logo-icon">🩸</div>
+                    <span className="logo-text">HOPEDROP</span>
+                </div>
+
                 <div className="auth-header">
                     <h2>Welcome Back</h2>
                     <p>Login to access your HOPEDROP dashboard</p>
                 </div>
 
-                {error && <div className="auth-error-message">{error}</div>}
+                {error && <div className="auth-error-message">⚠️ {error}</div>}
 
                 <form className="auth-form" onSubmit={handleSubmit}>
                     <div className="form-group">
@@ -74,16 +114,9 @@ const Login = () => {
                         <label htmlFor="role">Login As</label>
                         <select
                             id="role"
-                            onChange={(e) => {
-                                // Default to a specific demo state we can use in handleSubmit
-                                setEmail(e.target.value + '@frontend.lk');
-                            }}
+                            onChange={(e) => setEmail(e.target.value + '@frontend.lk')}
                             disabled={loading}
                             className="auth-select"
-                            style={{
-                                width: '100%', padding: '0.8rem 1rem', border: '1px solid #E0E0E0',
-                                borderRadius: '4px', marginBottom: '1rem', backgroundColor: 'white'
-                            }}
                         >
                             <option value="donor">Donor</option>
                             <option value="patient">Patient</option>
@@ -126,16 +159,14 @@ const Login = () => {
 
                     <button
                         type="submit"
-                        className={`btn-primary auth-submit-btn ${loading ? 'loading' : ''}`}
+                        className={`auth-submit-btn ${loading ? 'loading' : ''}`}
                         disabled={loading}
                     >
                         {loading ? <span className="spinner"></span> : 'Login'}
                     </button>
                 </form>
 
-                <div className="auth-divider">
-                    <span>OR</span>
-                </div>
+                <div className="auth-divider"><span>OR</span></div>
 
                 <div className="social-login">
                     <button className="btn-social btn-google" type="button">
