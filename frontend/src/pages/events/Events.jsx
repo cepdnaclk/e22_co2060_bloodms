@@ -34,7 +34,7 @@ const Events = () => {
             cta: 'REGISTER NOW',
             href: '#',
             image: 'https://images.unsplash.com/photo-1643660527081-d1b887c8bbd3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxibG9vZCUyMGRvbmF0aW9uJTIwdm9sdW50ZWVyJTIwbWVkaWNhbHxlbnwxfHx8fDE3NzI2OTExNDl8MA&ixlib=rb-4.1.0&q=80&w=1080',
-            icon: <Calendar size={24} />
+            icon: <Calendar size={48} />
         },
         {
             label: 'ONLINE EVENT',
@@ -44,7 +44,7 @@ const Events = () => {
             cta: 'JOIN WEBINAR',
             href: '#',
             image: 'https://images.unsplash.com/photo-1691934286085-c88039d93dae?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxvbmxpbmUlMjBtZWRpY2FsJTIwY29uZmVyZW5jZSUyMHpvb218ZW58MXx8fHwxNzcyNjkxMTQ5fDA&ixlib=rb-4.1.0&q=80&w=1080',
-            icon: <Video size={24} />
+            icon: <Video size={48} />
         },
         {
             label: 'URGENT EVENT',
@@ -54,7 +54,7 @@ const Events = () => {
             cta: 'REGISTER NOW',
             href: '#',
             image: 'https://images.unsplash.com/photo-1761479328966-a8efb3413521?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxlbWVyZ2VuY3klMjBob3NwaXRhbCUyMHVyZ2VudCUyMGNhcmV8ZW58MXx8fHwxNzcyNjkxMTUwfDA&ixlib=rb-4.1.0&q=80&w=1080',
-            icon: <MapPin size={24} />
+            icon: <MapPin size={48} />
         }
     ];
 
@@ -67,7 +67,7 @@ const Events = () => {
             cta: 'VIEW GALLERY',
             href: '#',
             image: 'https://images.unsplash.com/photo-1683791895200-201c0c40310f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxibG9vZCUyMGRvbm9yJTIwY2VsZWJyYXRpb24lMjBjb21tdW5pdHl8ZW58MXx8fHwxNzcyNjkxMTUwfDA&ixlib=rb-4.1.0&q=80&w=1080',
-            icon: <Users size={24} />
+            icon: <Users size={48} />
         },
         {
             label: 'PAST EVENT',
@@ -77,7 +77,7 @@ const Events = () => {
             cta: 'VIEW GALLERY',
             href: '#',
             image: 'https://images.unsplash.com/photo-1609342332922-ed6f903fd139?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMG9mZmljZSUyMGhlYWx0aGNhcmV8ZW58MXx8fHwxNzcyNTg5NzMyfDA&ixlib=rb-4.1.0&q=80&w=1080',
-            icon: <Calendar size={24} />
+            icon: <Calendar size={48} />
         },
         {
             label: 'PAST EVENT',
@@ -87,7 +87,7 @@ const Events = () => {
             cta: 'VIEW GALLERY',
             href: '#',
             image: 'https://images.unsplash.com/photo-1761666507437-9fb5a6ef7b0a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb21tdW5pdHklMjB2b2x1bnRlZXJzJTIwaGVscGluZyUyMHBlb3BsZXxlbnwxfHx8fDE3NzI1Nzc1NTl8MA&ixlib=rb-4.1.0&q=80&w=1080',
-            icon: <Users size={24} />
+            icon: <Users size={48} />
         }
     ];
 
@@ -100,7 +100,7 @@ const Events = () => {
             cta: 'READ MORE',
             href: '#',
             image: 'https://images.unsplash.com/photo-1769147555720-71fc71bfc216?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBob3NwaXRhbCUyMGJ1aWxkaW5nJTIwZXh0ZXJpb3J8ZW58MXx8fHwxNzcyNTgzODEzfDA&ixlib=rb-4.1.0&q=80&w=1080',
-            icon: <MapPin size={24} />
+            icon: <MapPin size={48} />
         },
         {
             label: 'PARTNERSHIP',
@@ -110,7 +110,7 @@ const Events = () => {
             cta: 'READ MORE',
             href: '#',
             image: 'https://images.unsplash.com/photo-1589104759909-e355f8999f7e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtZWRpY2FsJTIwcGFydG5lcnNoaXAlMjBoZWFsdGhjYXJlJTIwdGVhbXxlbnwxfHx8fDE3NzI2OTExNTJ8MA&ixlib=rb-4.1.0&q=80&w=1080',
-            icon: <Users size={24} />
+            icon: <Users size={48} />
         },
         {
             label: 'PRODUCT LAUNCH',
@@ -120,7 +120,7 @@ const Events = () => {
             cta: 'READ MORE',
             href: '#',
             image: 'https://images.unsplash.com/photo-1767449441925-737379bc2c4d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2JpbGUlMjBoZWFsdGglMjBhcHAlMjB0ZWNobm9sb2d5fGVufDF8fHx8MTc3MjY1Mzc5Mnww&ixlib=rb-4.1.0&q=80&w=1080',
-            icon: <Phone size={24} />
+            icon: <Phone size={48} />
         }
     ];
 
