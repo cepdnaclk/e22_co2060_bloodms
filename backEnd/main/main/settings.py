@@ -9,8 +9,10 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
-
+from datetime import timedelta
 from pathlib import Path
+
+from django.conf.global_settings import AUTH_USER_MODEL
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -38,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+
     # Third party apps
     'rest_framework',
     'corsheaders',
@@ -59,6 +62,9 @@ INSTALLED_APPS = [
     'Hospitals',
     'Certificate',
     'DonationRecord',
+    'rest_framework_simplejwt.token_blacklist',
+
+
 
 ]
 
@@ -71,6 +77,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
 ]
 
 ROOT_URLCONF = 'main.urls'
@@ -148,21 +156,19 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # CORS Settings (allow React to communicate with Django)
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # Vite default port
+    "http://localhost:5173",
     "http://127.0.0.1:5173",
 ]
 
-CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_CREDENTIALS = True #it tells to browser that is safe to send to cookies
 
 # REST Framework Settings
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.SessionAuthentication',
-    ],
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
-    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
 }
+
 
 # Session Settings (for authentication with React)
 SESSION_COOKIE_SAMESITE = None
@@ -174,3 +180,30 @@ CSRF_TRUSTED_ORIGINS = [
     "http://127.0.0.1:5173",
 ]
 
+
+SIMPLE_JWT = {
+    # How long the access token is valid (default is 5 minutes)
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
+
+    # How long the refresh token is valid (default is 1 day)
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+
+    # If True, every time a refresh token is used, a NEW refresh token is issued
+    'ROTATE_REFRESH_TOKENS': True,
+
+    # If True, the old refresh token is blacklisted after being used (requires Blacklist app)
+    'BLACKLIST_AFTER_ROTATION': True,
+
+    # The prefix required in the header, e.g., "Authorization: Bearer <token>"
+    'AUTH_HEADER_TYPES': ('Bearer',),
+
+    # Use a different key for signing if you don't want to use Django's SECRET_KEY
+    'SIGNING_KEY': 'your-secret-signing-key',
+
+    # Which user field to include in the token (usually 'id')
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
+}
+
+
+AUTH_USER_MODEL='main.UserAut.User'

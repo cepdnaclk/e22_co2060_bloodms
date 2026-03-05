@@ -18,4 +18,15 @@ run:
 app:
 	python manage.py startapp
 
+#make migrations
+
+mg:
+	python manage.py makemigrations
+
+
+#migrate to data base
+
+m:
+	python manage.py migrate
+
 
