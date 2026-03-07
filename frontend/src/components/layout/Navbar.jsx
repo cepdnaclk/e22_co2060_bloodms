@@ -87,6 +87,9 @@ const Navbar = () => {
                     <Link to="/about-us" className={navLinkClass('/about-us')}>
                         <span>About Us</span>
                     </Link>
+                    <Link to="/services" className={navLinkClass('/services')}>
+                        <span>Services</span>
+                    </Link>
                 </div>
 
                 {/* ACTIONS (right side) */}
@@ -162,6 +165,9 @@ const Navbar = () => {
                     </Link>
                     <Link to="/about-us" className={mobileLinkClass('/about-us')} onClick={closeMenu}>
                         <span>About Us</span>
+                    </Link>
+                    <Link to="/services" className={mobileLinkClass('/services')} onClick={closeMenu}>
+                        <span>Services</span>
                     </Link>
 
                     {/* Mobile auth action */}
