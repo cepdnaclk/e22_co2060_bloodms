@@ -25,16 +25,6 @@ export const AuthProvider = ({ children }) => {
         setUser(userData);
         localStorage.setItem('hopedrop_token', 'dummy-token');
         localStorage.setItem('hopedrop_user', JSON.stringify(userData));
-
-        // Show success alert
-        Swal.fire({
-            title: 'Welcome Back!',
-            text: `Logged in successfully as ${userData.role.charAt(0).toUpperCase() + userData.role.slice(1)}`,
-            icon: 'success',
-            confirmButtonColor: '#C62828',
-            timer: 2000,
-            timerProgressBar: true
-        });
     };
 
     const logout = () => {
