@@ -4,6 +4,10 @@ import Swal from 'sweetalert2';
 import './DonorDashboard.css';
 
 const DonorDashboard = () => {
+    const nearbyCamps = [
+        { name: 'Kandy National Hospital', details: '2.4 miles away • Closes at 6:00 PM' },
+        { name: 'Community Center Drive', details: '5.1 miles away • Tomorrow, 9:00 AM' }
+    ];
     return (
         <div className="dashboard donor-dashboard">
             <div className="dashboard-header">
@@ -51,44 +55,44 @@ const DonorDashboard = () => {
                             <button className="btn btn-outline text-sm">View Map</button>
                         </div>
                         <div className="card-body">
-                            <div className="camp-list">
-                                <div className="camp-item">
+                            {nearbyCamps.map((camp, index) => (
+                                <div key={index} className="camp-item">
                                     <div className="camp-icon"><MapPin size={24} /></div>
                                     <div className="camp-details">
-                                        <h4>Central City Hospital</h4>
-                                        <p className="text-sm text-muted">2.4 miles away • Closes at 6:00 PM</p>
+                                        <h4>{camp.name}</h4>
+                                        <p className="text-sm text-muted">{camp.details}</p>
                                     </div>
-                                    <button
-                                        className="btn btn-primary text-sm"
-                                        onClick={() => {
-                                            Swal.fire({
-                                                title: 'Book Donation Slot',
-                                                text: 'Confirm your booking for Central City Hospital?',
-                                                icon: 'info',
-                                                showCancelButton: true,
-                                                confirmButtonColor: '#C62828',
-                                                confirmButtonText: 'Yes, Book it!'
-                                            }).then((result) => {
-                                                if (result.isConfirmed) {
-                                                    Swal.fire(
-                                                        'Booked!',
-                                                        'Your donation slot is confirmed for today.',
-                                                        'success'
-                                                    );
-                                                }
-                                            });
-                                        }}
-                                    >Book</button>
-                                </div>
-                                <div className="camp-item">
-                                    <div className="camp-icon"><MapPin size={24} /></div>
-                                    <div className="camp-details">
-                                        <h4>Community Center Drive</h4>
-                                        <p className="text-sm text-muted">5.1 miles away • Tomorrow, 9:00 AM</p>
+                                    <div style={{ display: 'flex', gap: '8px' }}>
+                                        <button
+                                            className="btn btn-outline text-sm"
+                                            onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(camp.name)}`, '_blank')}
+                                        >
+                                            Get Location
+                                        </button>
+                                        <button
+                                            className="btn btn-primary text-sm"
+                                            onClick={() => {
+                                                Swal.fire({
+                                                    title: 'Book Donation Slot',
+                                                    text: `Confirm your booking for ${camp.name}?`,
+                                                    icon: 'info',
+                                                    showCancelButton: true,
+                                                    confirmButtonColor: '#C62828',
+                                                    confirmButtonText: 'Yes, Book it!'
+                                                }).then((result) => {
+                                                    if (result.isConfirmed) {
+                                                        Swal.fire(
+                                                            'Booked!',
+                                                            'Your donation slot is confirmed.',
+                                                            'success'
+                                                        );
+                                                    }
+                                                });
+                                            }}
+                                        >Book</button>
                                     </div>
-                                    <button className="btn btn-primary text-sm">Book</button>
                                 </div>
-                            </div>
+                            ))}
                         </div>
                     </div>
                 </div>
