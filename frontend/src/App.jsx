@@ -15,6 +15,8 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import PatientDashboard from './pages/patient/PatientDashboard';
 import ContactPage from './pages/public/ContactPage';
 import Events from "./pages/events/Events";
+import AboutUs from "./pages/public/AboutUs";
+import Services from "./pages/public/Services"; 
 import './App.css';
 
 
@@ -33,6 +35,19 @@ function App() {
                 <Route path="/signup" element={<SignUp />} />
                 <Route path="/contact" element={<ContactPage />} />
                 <Route path="/events" element={<Events />} />
+      <BrowserRouter>
+        <div className="app-container">
+          <Navbar />
+          <main className="main-content">
+            <Routes>
+              {/* Public Routes */}
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<SignUp />} />
+              <Route path="/contact" element={<ContactPage />} />
+              <Route path="/events" element={<Events />} />
+              <Route path="/about-us" element={<AboutUs />} />
+              <Route path="/services" element={<Services />} />
 
                 {/* Protected Routes */}
                 <Route path="/donor" element={<PrivateRoute><DonorDashboard /></PrivateRoute>} />

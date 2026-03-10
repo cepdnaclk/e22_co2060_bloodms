@@ -55,7 +55,6 @@ const Navbar = () => {
                 <Link to="/" className="nav-logo" onClick={closeMenu}>
                     <img src={logoIcon} alt="Logo" className="nav-logo-img" />
                     <span className="logo-text">HOPEDROP</span>
-                    <span className="logo-dot">.</span>
                 </Link>
 
                 {/* DESKTOP LINKS (center — hidden below 1024px) */}
@@ -83,6 +82,12 @@ const Navbar = () => {
                     <Link to="/contact" className={navLinkClass('/contact')}>
                         <Mail size={16} />
                         <span>Contact</span>
+                    </Link>
+                    <Link to="/about-us" className={navLinkClass('/about-us')}>
+                        <span>About Us</span>
+                    </Link>
+                    <Link to="/services" className={navLinkClass('/services')}>
+                        <span>Services</span>
                     </Link>
                 </div>
 
@@ -156,6 +161,12 @@ const Navbar = () => {
                     </Link>
                     <Link to="/contact" className={mobileLinkClass('/contact')} onClick={closeMenu}>
                         <Mail size={24} /> Contact
+                    </Link>
+                    <Link to="/about-us" className={mobileLinkClass('/about-us')} onClick={closeMenu}>
+                        <span>About Us</span>
+                    </Link>
+                    <Link to="/services" className={mobileLinkClass('/services')} onClick={closeMenu}>
+                        <span>Services</span>
                     </Link>
 
                     {/* Mobile auth action */}

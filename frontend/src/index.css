@@ -346,8 +346,6 @@ body.disaster-mode {
 
 /* ── Icon sizing ── */
 .swal-hopedrop-icon {
-  width: clamp(2.5rem, 8vw, 3.5rem) !important;
-  height: clamp(2.5rem, 8vw, 3.5rem) !important;
   margin: 0 auto 0.5rem !important;
   border-width: 2px !important;
 }

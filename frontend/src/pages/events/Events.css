@@ -187,7 +187,7 @@
 
 .event-card-inner {
     /* extra top margin so icon "floats" above card */
-    margin-top: 40px;
+
 }
 
 /* ── Image Box ── */
@@ -217,8 +217,8 @@
     bottom: 0;
     left: 50%;
     transform: translate(-50%, 50%);
-    width: 90px;
-    height: 90px;
+    width: 80px;
+    height: 80px;
     border-radius: 12px;
     display: flex;
     align-items: center;
@@ -229,7 +229,7 @@
 }
 
 .event-bg-dark {
-    background: #1a202c;
+    background: #1a2429;
     color: white;
 }
 
@@ -294,7 +294,7 @@
 
 /* ── Read More / CTA Button ── */
 .event-service-read-more {
-    background-color: #f7fafc;
+    background-color: #1a2429;;
     padding: 1rem;
     text-align: center;
     transition: all 0.3s ease;
@@ -306,7 +306,7 @@
 }
 
 .event-service-read-more a {
-    color: var(--color-secondary, #1a202c);
+    color: white;
     font-weight: 700;
     font-size: 0.875rem;
     letter-spacing: 0.5px;
