@@ -29,13 +29,14 @@ const Login = () => {
     const location = useLocation();
     const from = location.state?.from?.pathname || '/donor';
 
-    const handleSubmit = (e) => {
+    // ✅ Fixed: added "async" because we use "await" inside
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
 
+        // ✅ Fixed: validation with Swal INSIDE the if block
         if (!email || !password) {
             setError('Please fill in all fields');
-
             Swal.fire({
                 ...swalBase,
                 position: 'top-end',
@@ -47,36 +48,48 @@ const Login = () => {
                 timerProgressBar: true,
                 toast: true,
             });
-            return;
+            return;  // ← stops here if fields are empty
         }
 
         setLoading(true);
 
-        setTimeout(() => {
-            setLoading(false);
+        try {
+            // ✅ login() now calls the Django API internally (inside AuthContext)
+            const userData = await login(email, password);
 
-            let selectedRole = 'donor';
-            if (email.includes('@frontend.lk')) {
-                selectedRole = email.split('@')[0];
-            }
-
-            login({ email, name: email.split('@')[0], role: selectedRole });
-
-            /* ── Login success toast ── */
+            // Success toast
             Swal.fire({
                 ...swalBase,
                 position: 'top-end',
                 icon: 'success',
                 title: 'Login Successful!',
-                text: `Welcome back, ${email.split('@')[0]}.`,
+                text: `Welcome back, ${userData.username || email.split('@')[0]}.`,
                 showConfirmButton: false,
                 timer: 1800,
                 timerProgressBar: true,
                 toast: true,
             }).then(() => {
-                navigate(`/${selectedRole}`, { replace: true });
+                navigate(`/${userData.role || 'donor'}`, { replace: true });
             });
-        }, 1500);
+
+        } catch (error) {
+            // ❌ Django returned 401 or other error
+            const message = error.response?.data?.detail || 'Invalid credentials';
+            setError(message);
+            Swal.fire({
+                ...swalBase,
+                position: 'top-end',
+                icon: 'error',
+                title: 'Login Failed',
+                text: message,
+                showConfirmButton: false,
+                timer: 2500,
+                timerProgressBar: true,
+                toast: true,
+            });
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -108,22 +121,6 @@ const Login = () => {
                             disabled={loading}
                             className={error && !email ? 'error-input' : ''}
                         />
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="role">Login As</label>
-                        <select
-                            id="role"
-                            onChange={(e) => setEmail(e.target.value + '@frontend.lk')}
-                            disabled={loading}
-                            className="auth-select"
-                        >
-                            <option value="donor">Donor</option>
-                            <option value="patient">Patient</option>
-                            <option value="doctor">Medical Officer</option>
-                            <option value="staff">Hospital Staff</option>
-                            <option value="admin">System Admin</option>
-                        </select>
                     </div>
 
                     <div className="form-group">
