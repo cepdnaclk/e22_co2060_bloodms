@@ -38,10 +38,8 @@ export const AuthProvider = ({ children }) => {
 
         setAuthTokens(tokens);
         setUser(userData);
-        setIsAuthenticated(true);
-        localStorage.setItem("authTokens", JSON.stringify(tokens));
-
-        return userData;  // ✅ return user data so Login.jsx can use it
+        localStorage.setItem('hopedrop_token', 'dummy-token');
+        localStorage.setItem('hopedrop_user', JSON.stringify(userData));
     };
 
     const logout = () => {

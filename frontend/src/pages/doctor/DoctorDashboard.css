@@ -70,6 +70,10 @@
     background-color: #FAFAFA;
 }
 
+[data-theme="dark"] .data-table tbody tr:hover {
+    background-color: #1c2128;
+}
+
 .badge {
     padding: var(--spacing-1) var(--spacing-3);
     border-radius: var(--radius-full);

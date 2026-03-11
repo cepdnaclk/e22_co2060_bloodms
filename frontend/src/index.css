@@ -98,6 +98,71 @@
   --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
   --shadow-md: 0 6px 16px rgba(0, 0, 0, 0.4);
   --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.5);
+
+  /* Global Button Overrides for Dark Mode */
+  .btn-danger-pulse {
+    background-color: #C62828 !important;
+    color: #e6edf3 !important;
+    border: 1px solid #C62828 !important;
+  }
+}
+
+/* Hardcoded Button Styles explicitly for all Dashboards */
+.dashboard .btn {
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* LIGHT MODE COLORS */
+.dashboard .btn-outline {
+  background-color: transparent;
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+}
+
+.dashboard .btn-outline:hover {
+  background-color: rgba(198, 40, 40, 0.08);
+  /* slight red tint */
+}
+
+.dashboard .btn-primary {
+  background-color: var(--color-primary);
+  color: white;
+  border: 1px solid var(--color-primary);
+}
+
+.dashboard .btn-primary:hover {
+  background-color: var(--color-primary-dark, #a30000);
+}
+
+/* DARK MODE COLORS - Using !important to combat global index.css broad rules */
+[data-theme="dark"] .dashboard .btn-outline {
+  background-color: transparent !important;
+  color: #ff6b6b !important;
+  border: 1px solid #ff6b6b !important;
+}
+
+[data-theme="dark"] .dashboard .btn-outline:hover {
+  background-color: rgba(255, 107, 107, 0.15) !important;
+}
+
+[data-theme="dark"] .dashboard .btn-primary {
+  background-color: #C62828 !important;
+  color: #ffffff !important;
+  border: 1px solid #C62828 !important;
+}
+
+[data-theme="dark"] .dashboard .btn-primary:hover {
+  background-color: #ff6b6b !important;
+  color: #1a1a2e !important;
+  border-color: #ff6b6b !important;
 }
 
 * {
@@ -190,6 +255,24 @@ body.disaster-mode {
   }
 }
 
+[data-theme="dark"] body.disaster-mode {
+  --color-background: #2b0404;
+  --color-surface: #1a0202;
+  --color-border: #4a0b0b;
+  --color-primary: #ff4d4d;
+  animation: pulse-bg-dark 2s infinite alternate;
+}
+
+@keyframes pulse-bg-dark {
+  0% {
+    background-color: #2b0404;
+  }
+
+  100% {
+    background-color: #3d0606;
+  }
+}
+
 /* ═══════════════════════════════════════════════════
    SweetAlert2 — HOPEDROP Custom Theme
    Works in light & dark modes, fully responsive
@@ -205,7 +288,7 @@ body.disaster-mode {
   background: rgba(255, 255, 255, 0.97) !important;
   border: 1px solid rgba(198, 40, 40, 0.12) !important;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12),
-              0 2px 8px rgba(198, 40, 40, 0.08) !important;
+    0 2px 8px rgba(198, 40, 40, 0.08) !important;
   backdrop-filter: blur(12px) !important;
   -webkit-backdrop-filter: blur(12px) !important;
 }
@@ -215,7 +298,7 @@ body.disaster-mode {
   background: rgba(22, 27, 34, 0.95) !important;
   border: 1px solid rgba(198, 40, 40, 0.28) !important;
   box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6),
-              0 0 20px rgba(198, 40, 40, 0.12) !important;
+    0 0 20px rgba(198, 40, 40, 0.12) !important;
   color: #e6edf3 !important;
 }
 
@@ -263,8 +346,6 @@ body.disaster-mode {
 
 /* ── Icon sizing ── */
 .swal-hopedrop-icon {
-  width: clamp(2.5rem, 8vw, 3.5rem) !important;
-  height: clamp(2.5rem, 8vw, 3.5rem) !important;
   margin: 0 auto 0.5rem !important;
   border-width: 2px !important;
 }
@@ -288,6 +369,7 @@ body.disaster-mode {
 
 /* ── Responsive positioning nudge on small screens ── */
 @media (max-width: 480px) {
+
   .swal2-container.swal2-top-end,
   .swal2-container.swal2-top-right {
     top: 0.5rem !important;

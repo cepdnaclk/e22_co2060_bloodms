@@ -55,7 +55,6 @@ const Navbar = () => {
                 <Link to="/" className="nav-logo" onClick={closeMenu}>
                     <img src={logoIcon} alt="Logo" className="nav-logo-img" />
                     <span className="logo-text">HOPEDROP</span>
-                    <span className="logo-dot">.</span>
                 </Link>
 
                 {/* DESKTOP LINKS (center — hidden below 1024px) */}

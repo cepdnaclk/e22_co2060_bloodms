@@ -11,6 +11,7 @@ import SignUp from './pages/auth/SignUp';
 
 import DonorDashboard from './pages/donor/DonorDashboard';
 import DonorEligibility from './pages/donor/DonorEligibility';
+import DonorRegistration from './pages/donor/DonorRegistration';
 import DoctorDashboard from './pages/doctor/DoctorDashboard';
 import LabDashboard from './pages/staff/LabDashboard';
 import AdminDashboard from './pages/admin/AdminDashboard';
@@ -26,6 +27,17 @@ function App() {
   return (
     <ThemeProvider>
       <AuthProvider>
+        <BrowserRouter>
+          <div className="app-container">
+            <Navbar />
+            <main className="main-content">
+              <Routes>
+                {/* Public Routes */}
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<SignUp />} />
+                <Route path="/contact" element={<ContactPage />} />
+                <Route path="/events" element={<Events />} />
       <BrowserRouter>
         <div className="app-container">
           <Navbar />
@@ -40,21 +52,22 @@ function App() {
               <Route path="/about-us" element={<AboutUs />} />
               <Route path="/services" element={<Services />} />
 
-              {/* Protected Routes */}
-              <Route path="/donor" element={<PrivateRoute><DonorDashboard /></PrivateRoute>} />
-              <Route path="/donor/eligibility" element={<PrivateRoute><DonorEligibility /></PrivateRoute>} />
-              <Route path="/doctor" element={<PrivateRoute><DoctorDashboard /></PrivateRoute>} />
-              {/* Renamed lab to staff path logically */}
-              <Route path="/staff" element={<PrivateRoute><LabDashboard /></PrivateRoute>} />
-              <Route path="/admin" element={<PrivateRoute><AdminDashboard /></PrivateRoute>} />
-              <Route path="/patient" element={<PrivateRoute><PatientDashboard /></PrivateRoute>} />
+                {/* Protected Routes */}
+                <Route path="/donor" element={<PrivateRoute><DonorDashboard /></PrivateRoute>} />
+                <Route path="/donor/eligibility" element={<PrivateRoute><DonorEligibility /></PrivateRoute>} />
+                <Route path="/donor/register" element={<PrivateRoute><DonorRegistration /></PrivateRoute>} />
+                <Route path="/doctor" element={<PrivateRoute><DoctorDashboard /></PrivateRoute>} />
+                {/* Renamed lab to staff path logically */}
+                <Route path="/staff" element={<PrivateRoute><LabDashboard /></PrivateRoute>} />
+                <Route path="/admin" element={<PrivateRoute><AdminDashboard /></PrivateRoute>} />
+                <Route path="/patient" element={<PrivateRoute><PatientDashboard /></PrivateRoute>} />
 
-              {/* Catch all redirect to landing page */}
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-          </main>
-        </div>
-      </BrowserRouter>
+                {/* Catch all redirect to landing page */}
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+            </main>
+          </div>
+        </BrowserRouter>
       </AuthProvider>
     </ThemeProvider>
   );

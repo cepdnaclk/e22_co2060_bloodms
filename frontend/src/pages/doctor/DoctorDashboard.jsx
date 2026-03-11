@@ -118,7 +118,7 @@ const DoctorDashboard = () => {
                             <h4>Predictive Alert: Potential O- Stock-out in 42 hours</h4>
                             <p>Based on current consumption rates and scheduled surgeries, O- reserves will reach critical levels by Friday.</p>
                         </div>
-                        <button className="btn btn-outline" style={{ backgroundColor: 'white' }}>Request Units</button>
+                        <button className="btn btn-outline">Request Units</button>
                     </div>
 
                     {/* Real-Time Stock Board */}

@@ -27,7 +27,8 @@
 .questions-list {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-6); /* Plenty of space requested */
+    gap: var(--spacing-6);
+    /* Plenty of space requested */
     margin-bottom: var(--spacing-8);
 }
 
@@ -105,7 +106,30 @@
     gap: var(--spacing-2);
     padding: var(--spacing-3) var(--spacing-6);
     font-size: var(--font-size-base);
+    transition: all var(--transition-fast);
 }
+
+.btn-submit:hover {
+    background-color: var(--color-warning) !important;
+    /* App's orange color (#F57F17) */
+    border-color: var(--color-warning) !important;
+}
+
+/* Ensure the submit button text/icon are visible in dark mode */
+[data-theme="dark"] .btn-submit {
+    background-color: #1a1a2e;
+    color: #e6edf3;
+    border: 1px solid #30363d;
+}
+
+[data-theme="dark"] .btn-submit:hover {
+    background-color: #a6c209 !important;
+    /* Explicit orange color for dark mode */
+    color: #1a1a2e !important;
+    /* Make text dark to contrast with the bright orange */
+    border-color: #a6c209 !important;
+}
+
 
 @media (max-width: 768px) {
     .question-item {
@@ -117,7 +141,7 @@
         width: 100%;
         justify-content: flex-start;
     }
-    
+
     .btn-radio {
         flex: 1;
     }
