@@ -75,31 +75,6 @@
   --transition-normal: 250ms ease-in-out;
 }
 
-/* ─── Dark Mode Token Overrides ─────────────────────────────── */
-[data-theme="dark"] {
-  --color-background: #0d1117;
-  --color-surface: #161b22;
-  --color-border: #30363d;
-
-  --color-text-main: #e6edf3;
-  --color-text-muted: #8b949e;
-  --color-text-inverse: #0d1117;
-
-  --color-secondary: #cdd3de;
-  --color-secondary-light: #1c2128;
-
-  --color-primary-light: rgba(198, 40, 40, 0.18);
-
-  --color-success-bg: rgba(46, 125, 50, 0.2);
-  --color-warning-bg: rgba(245, 127, 23, 0.2);
-  --color-critical-bg: rgba(183, 28, 28, 0.2);
-  --color-expiring-bg: rgba(106, 27, 154, 0.2);
-
-  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 6px 16px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.5);
-}
-
 * {
   box-sizing: border-box;
   margin: 0;

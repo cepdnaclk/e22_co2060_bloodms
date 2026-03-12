@@ -1,6 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
-import { ThemeProvider } from './context/ThemeContext';
 import PrivateRoute from './components/layout/PrivateRoute';
 import Navbar from './components/layout/Navbar';
 import LandingPage from './pages/public/LandingPage';
@@ -11,13 +10,11 @@ import DoctorDashboard from './pages/doctor/DoctorDashboard';
 import LabDashboard from './pages/staff/LabDashboard';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import PatientDashboard from './pages/patient/PatientDashboard';
-import ContactPage from './pages/public/ContactPage';
 import './App.css';
 
 function App() {
   return (
-    <ThemeProvider>
-      <AuthProvider>
+    <AuthProvider>
       <BrowserRouter>
         <div className="app-container">
           <Navbar />
@@ -27,7 +24,6 @@ function App() {
               <Route path="/" element={<LandingPage />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<SignUp />} />
-              <Route path="/contact" element={<ContactPage />} />
 
               {/* Protected Routes */}
               <Route path="/donor" element={<PrivateRoute><DonorDashboard /></PrivateRoute>} />
@@ -43,8 +39,7 @@ function App() {
           </main>
         </div>
       </BrowserRouter>
-      </AuthProvider>
-    </ThemeProvider>
+    </AuthProvider>
   );
 }
 

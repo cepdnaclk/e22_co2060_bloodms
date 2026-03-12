@@ -52,8 +52,6 @@ const LandingPage = () => {
                         <h1 className="hero-title">
                             Donate Your Blood & <br /> Inspires to Others
                         </h1>
-                        
-                        {/* This is the part that centers the button */}
                         <div className="hero-actions-new">
                             <Link to="/donor" className="btn-donate-now">
                                 DONATE NOW
@@ -256,7 +254,6 @@ const LandingPage = () => {
                         <Link to="/donor">Donor Portal</Link>
                         <Link to="/patient">Request Blood</Link>
                         <Link to="/login">Hospital Login</Link>
-                        <Link to="/contact">Contact Us</Link>
                     </div>
                     <div className="footer-contact">
                         <h4>Emergency Contact</h4>

@@ -21,10 +21,5 @@ fix:
 	npm run lint -- --fix
 
 i:
-	@echo "install react for laptop"
+	@echo "install react"
 	npm install
-
-numpy:
-	@echo "install numpy"
-	pip install numpy
-

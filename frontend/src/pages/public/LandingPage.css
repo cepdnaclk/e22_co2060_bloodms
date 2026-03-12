@@ -52,74 +52,29 @@
     text-decoration: underline;
 }
 
-/* 1. The Main Hero Section (Slideshow Container) */
+/* Hero Section */
 .hero-section-new {
+    /* Image background with dark overlay */
+    background: linear-gradient(rgba(18, 25, 33, 0.8), rgba(18, 25, 33, 0.8)), url('https://images.unsplash.com/photo-1615461066159-fea0960485d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
     padding: 8rem 0;
     color: white;
     position: relative;
     overflow: hidden;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    /* This starts the 6-image cycle */
-    animation: heroSlideshow 60s infinite ease-in-out;
 }
-
 
 .hero-container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 2rem;
-    display: flex;
-    flex-direction: column; /* Stacks text and button vertically */
-    justify-content: center;
-    min-height: 60vh;
-    position: relative;
-    z-index: 2;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
 }
 
 .hero-content {
-    /* Keeps the text block on the left side */
-    align-self: flex-start; 
-    text-align: left;
-    max-width: 600px;
-    margin-bottom: 3rem; /* Creates space so the button sits below */
+    z-index: 2;
 }
-
-/* 3. The 6-Image Animation Logic */
-@keyframes heroSlideshow {
-    /* Image 1: Your URL */
-    0%, 12% { 
-        background-image: linear-gradient(rgba(18, 25, 33, 0.8), rgba(18, 25, 33, 0.8)), 
-        url('https://images.unsplash.com/photo-1615461066159-fea0960485d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80'); 
-    }
-    /* Image 2: Your Asset */
-    17%, 29% { 
-        background-image: linear-gradient(rgba(18, 25, 33, 0.8), rgba(18, 25, 33, 0.8)), 
-        url('../../assets/photo1.jpg'); 
-    }
-    /* Image 3: Your Asset */
-    34%, 46% { 
-        background-image: linear-gradient(rgba(18, 25, 33, 0.8), rgba(18, 25, 33, 0.8)), 
-        url('../../assets/photo2.jpg'); 
-    }
-    /* Image 4: Your Asset */
-    51%, 63% { 
-        background-image: linear-gradient(rgba(18, 25, 33, 0.8), rgba(18, 25, 33, 0.8)), 
-        url('../../assets/photo3.jpg'); 
-    }
-    /* Image 5: Your Asset */
-    68%, 80% { 
-        background-image: linear-gradient(rgba(18, 25, 33, 0.8), rgba(18, 25, 33, 0.8)), 
-        url('../../assets/photo4.jpg'); 
-    }
-    /* Image 6: Your Asset */
-    85%, 100% { 
-        background-image: linear-gradient(rgba(18, 25, 33, 0.8), rgba(18, 25, 33, 0.8)), 
-        url('../../assets/photo5.jpg'); 
-    }
-}
-
 
 .hero-badge-new {
     display: inline-flex;
@@ -178,8 +133,7 @@
 
 .hero-actions-new {
     display: flex;
-    justify-content: center; /* Centers the button horizontally */
-    width: 100%;            /* Spans the full width of the hero image */
+    gap: 1rem;
 }
 
 .btn-primary-new,
@@ -190,7 +144,7 @@
     padding: 1rem 2rem;
     border-radius: var(--radius-md);
     font-weight: 600;
-    transition: all 0.6s ease;
+    transition: all 0.3s ease;
     gap: 8px;
 }
 
@@ -229,7 +183,6 @@
     transition: all 0.3s ease;
     text-transform: uppercase;
     letter-spacing: 1px;
-    margin: 0 auto;
 }
 
 .btn-donate-now:hover {
@@ -837,132 +790,4 @@
     .map-mockup-wrapper {
         height: 300px;
     }
-}
-
-/* ═══════════════════════════════════════════════════════════
-   Dark Mode Overrides — LandingPage
-   All hardcoded colours that don't rely on CSS vars are
-   overridden here under [data-theme="dark"]
-   ═══════════════════════════════════════════════════════════ */
-
-/* Service Cards */
-[data-theme="dark"] .service-card-wrapper {
-    background: #1c2128;
-    box-shadow: 0px 0px 40px 0px rgba(0, 0, 0, 0.35);
-}
-
-[data-theme="dark"] .service-box-title {
-    color: #cdd3de;
-}
-
-[data-theme="dark"] .service-read-more {
-    background-color: #2d3142;
-}
-
-[data-theme="dark"] .service-card-wrapper:hover .service-read-more {
-    background-color: var(--color-primary);
-}
-
-[data-theme="dark"] .bg-dark {
-    background-color: #2d3142;
-}
-
-/* Stats Highlights strip */
-[data-theme="dark"] .highlights-section-new {
-    background: #161b22;
-}
-
-/* Why Donate Section */
-[data-theme="dark"] .why-donate-section {
-    background: #161b22;
-}
-
-[data-theme="dark"] .why-donate-content .section-title {
-    color: #cdd3de;
-}
-
-[data-theme="dark"] .benefits-grid {
-    background: #1c2128;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-}
-
-[data-theme="dark"] .benefit-item h4 {
-    color: #cdd3de;
-}
-
-/* Testimonials */
-[data-theme="dark"] .testimonials-section {
-    background: #161b22;
-}
-
-[data-theme="dark"] .testimonial-card {
-    background: #1c2128;
-}
-
-/* Blood Stock Panel */
-[data-theme="dark"] .stock-panel {
-    background: #1c2128;
-    color: #e6edf3;
-}
-
-[data-theme="dark"] .stock-panel h3 {
-    color: #cdd3de;
-}
-
-/* Map Section */
-[data-theme="dark"] .map-mockup-wrapper {
-    background-color: #1c2128;
-    background-image:
-        linear-gradient(#30363d 1px, transparent 1px),
-        linear-gradient(90deg, #30363d 1px, transparent 1px);
-}
-
-[data-theme="dark"] .map-pin {
-    background: #2d3142;
-    color: #e6edf3;
-}
-
-[data-theme="dark"] .map-overlay-card {
-    background: #1c2128;
-    color: #e6edf3;
-}
-
-[data-theme="dark"] .map-overlay-card h4 {
-    color: #cdd3de;
-}
-
-/* Footer — keep it deep dark in dark mode */
-[data-theme="dark"] .footer-new {
-    background: #0d1117;
-    color: #e6edf3;
-}
-
-[data-theme="dark"] .footer-brand h2 {
-    color: #e6edf3;
-}
-
-[data-theme="dark"] .footer-brand p {
-    color: #8b949e;
-}
-
-[data-theme="dark"] .footer-links h4,
-[data-theme="dark"] .footer-contact h4 {
-    color: #e6edf3;
-}
-
-[data-theme="dark"] .footer-links a {
-    color: #8b949e;
-}
-
-[data-theme="dark"] .footer-links a:hover {
-    color: var(--color-primary-light);
-}
-
-[data-theme="dark"] .footer-contact p {
-    color: #8b949e;
-}
-
-[data-theme="dark"] .footer-bottom {
-    background: rgba(0, 0, 0, 0.4);
-    color: #8b949e;
 }
