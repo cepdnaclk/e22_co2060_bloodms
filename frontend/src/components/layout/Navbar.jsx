@@ -5,7 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import { getRoleConfig, PUBLIC_NAV_ITEMS, ICON_MAP } from '../../config/roleConfig';
 import './Navbar.css';
-import logoIcon from '../../assets/logo-icon.png';
+import { LOGOS } from '../../config/imageAssets';
 
 const Navbar = () => {
     const location = useLocation();
@@ -64,7 +64,7 @@ const Navbar = () => {
 
                 {/* LOGO (left side) */}
                 <Link to="/" className="nav-logo" onClick={closeMenu}>
-                    <img src={logoIcon} alt="Logo" className="nav-logo-img" />
+                    <img src={LOGOS.icon} alt="HOPEDROP Logo" className="nav-logo-img" />
                     <span className="logo-text">HOPEDROP</span>
                 </Link>
 
