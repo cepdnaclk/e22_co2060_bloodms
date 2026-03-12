@@ -1,0 +1,336 @@
+/* ═══════════════════════════════════════════════════════════════
+   HospitalMapPicker — Styles
+   Autocomplete suggestions dropdown + Leaflet map below
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Container ── */
+.hospital-map-picker {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin-top: 0.25rem;
+}
+
+/* ── Autocomplete wrapper (input + dropdown) ── */
+.hmp-autocomplete-wrap {
+    position: relative;
+    z-index: 10;
+}
+
+/* ── Search Input ── */
+.hmp-search-input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.hmp-search-icon {
+    position: absolute;
+    left: 0.8rem;
+    color: #999;
+    pointer-events: none;
+    z-index: 1;
+}
+
+[data-theme="dark"] .hmp-search-icon {
+    color: #5a6370;
+}
+
+.hmp-search-input {
+    width: 100%;
+    padding: 0.72rem 2.4rem 0.72rem 2.4rem;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-family: inherit;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.25s, box-shadow 0.25s;
+    background-color: #f9f9f9;
+    border: 1.5px solid #e5e5e5;
+    color: #1a1a2e;
+}
+
+[data-theme="dark"] .hmp-search-input {
+    background-color: rgba(13, 17, 23, 0.72);
+    border: 1.5px solid #30363d;
+    color: #e6edf3;
+}
+
+.hmp-search-input:focus {
+    border-color: #C62828;
+    box-shadow: 0 0 0 3px rgba(198, 40, 40, 0.12);
+}
+
+[data-theme="dark"] .hmp-search-input:focus {
+    box-shadow: 0 0 0 3px rgba(198, 40, 40, 0.25);
+}
+
+.hmp-search-input::placeholder {
+    color: #b0b0b0;
+}
+
+[data-theme="dark"] .hmp-search-input::placeholder {
+    color: #484f58;
+}
+
+.hmp-search-input:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+/* Spinner inside input while loading */
+.hmp-input-spinner {
+    position: absolute;
+    right: 0.8rem;
+    color: #C62828;
+    animation: hmpSpin 0.9s linear infinite;
+}
+
+/* ── Suggestions Dropdown ── */
+.hmp-suggestions {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    max-height: 260px;
+    overflow-y: auto;
+    border-radius: 10px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    z-index: 20;
+    background: #ffffff;
+    border: 1.5px solid #e0e0e0;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.12);
+}
+
+[data-theme="dark"] .hmp-suggestions {
+    background: #1c2128;
+    border-color: #30363d;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55);
+}
+
+.hmp-suggestions-header {
+    padding: 0.45rem 0.8rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #999;
+    border-bottom: 1px solid #eee;
+    background: #fafafa;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    cursor: default;
+}
+
+[data-theme="dark"] .hmp-suggestions-header {
+    color: #6e7681;
+    border-bottom-color: #21262d;
+    background: #161b22;
+}
+
+.hmp-suggestion-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 0.6rem 0.8rem;
+    cursor: pointer;
+    transition: background 0.15s;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+[data-theme="dark"] .hmp-suggestion-item {
+    border-bottom-color: rgba(255, 255, 255, 0.03);
+}
+
+.hmp-suggestion-item:hover {
+    background: rgba(198, 40, 40, 0.06);
+}
+
+[data-theme="dark"] .hmp-suggestion-item:hover {
+    background: rgba(198, 40, 40, 0.12);
+}
+
+.hmp-suggestion-item.selected {
+    background: rgba(198, 40, 40, 0.1);
+    border-left: 3px solid #C62828;
+}
+
+[data-theme="dark"] .hmp-suggestion-item.selected {
+    background: rgba(198, 40, 40, 0.18);
+}
+
+.hmp-suggestion-item:last-child {
+    border-bottom: none;
+}
+
+.hmp-suggestions-footer {
+    padding: 0.45rem 0.8rem;
+    font-size: 0.72rem;
+    color: #999;
+    text-align: center;
+    font-style: italic;
+    cursor: default;
+    border-top: 1px solid #eee;
+}
+
+[data-theme="dark"] .hmp-suggestions-footer {
+    color: #6e7681;
+    border-top-color: #21262d;
+}
+
+/* ── Shared item styles ── */
+.hmp-item-icon {
+    color: #C62828;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.hmp-item-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+}
+
+.hmp-item-name {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+[data-theme="dark"] .hmp-item-name {
+    color: #e6edf3;
+}
+
+.hmp-item-address {
+    font-size: 0.72rem;
+    color: #999;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+[data-theme="dark"] .hmp-item-address {
+    color: #6e7681;
+}
+
+/* ── Status bar (loading) ── */
+.hmp-status-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.8rem;
+    color: #C62828;
+    padding: 0.4rem 0.6rem;
+    border-radius: 6px;
+    background: rgba(198, 40, 40, 0.05);
+}
+
+[data-theme="dark"] .hmp-status-bar {
+    background: rgba(198, 40, 40, 0.1);
+    color: #FF6B6B;
+}
+
+.hmp-status-bar strong {
+    font-weight: 700;
+}
+
+/* ── Spinner ── */
+.hmp-spinner {
+    animation: hmpSpin 0.9s linear infinite;
+}
+
+@keyframes hmpSpin {
+    to { transform: rotate(360deg); }
+}
+
+/* ── Error ── */
+.hmp-error {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.82rem;
+    color: #C62828;
+    padding: 0.4rem 0.6rem;
+    border-radius: 6px;
+    background: rgba(198, 40, 40, 0.06);
+}
+
+[data-theme="dark"] .hmp-error {
+    background: rgba(198, 40, 40, 0.12);
+    color: #FF6B6B;
+}
+
+/* ── Map Container ── */
+.hmp-map-container {
+    height: 320px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1.5px solid #e5e5e5;
+}
+
+[data-theme="dark"] .hmp-map-container {
+    border-color: #30363d;
+}
+
+.hmp-map {
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+/* Fix Leaflet z-index inside form */
+.hmp-map .leaflet-pane {
+    z-index: 1;
+}
+
+.hmp-map .leaflet-top,
+.hmp-map .leaflet-bottom {
+    z-index: 2;
+}
+
+/* ── Selected Badge ── */
+.hmp-selected-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.5rem 0.9rem;
+    border-radius: 8px;
+    font-size: 0.84rem;
+    background: rgba(198, 40, 40, 0.08);
+    color: #C62828;
+    border: 1px solid rgba(198, 40, 40, 0.2);
+    animation: badgeIn 0.3s ease;
+}
+
+.hmp-selected-badge strong {
+    font-weight: 700;
+}
+
+[data-theme="dark"] .hmp-selected-badge {
+    background: rgba(198, 40, 40, 0.14);
+    color: #FF6B6B;
+    border-color: rgba(198, 40, 40, 0.3);
+}
+
+@keyframes badgeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Responsive ── */
+@media (max-width: 700px) {
+    .hmp-map-container {
+        height: 260px;
+    }
+
+    .hmp-suggestions {
+        max-height: 200px;
+    }
+}

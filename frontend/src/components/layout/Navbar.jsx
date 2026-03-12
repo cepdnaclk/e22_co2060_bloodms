@@ -1,18 +1,23 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Heart, Activity, User, ShieldAlert, LogIn, LogOut, Moon, Sun, Mail, Calendar } from 'lucide-react';
+import { Heart, Activity, User, ShieldAlert, LogIn, LogOut, Moon, Sun, Mail, Calendar, ClipboardList, Stethoscope } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
+import { getRoleConfig, PUBLIC_NAV_ITEMS, ICON_MAP } from '../../config/roleConfig';
 import './Navbar.css';
 import logoIcon from '../../assets/logo-icon.png';
 
 const Navbar = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const { isAuthenticated, logout } = useAuth();
+    const { isAuthenticated, user, role, logout } = useAuth();
     const { theme, toggleTheme } = useTheme();
     const [scrolled, setScrolled] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
+
+    // ─── Build nav items based on role ───
+    const roleConfig = isAuthenticated ? getRoleConfig(role) : null;
+    const roleNavItems = roleConfig ? roleConfig.navItems : [];
 
     // Highlight active link
     const navLinkClass = (path) =>
@@ -46,6 +51,12 @@ const Navbar = () => {
         document.body.classList.remove('menu-open');
     };
 
+    /** Render a nav icon by its string name from roleConfig */
+    const renderIcon = (iconName, size = 16) => {
+        const IconComponent = ICON_MAP[iconName];
+        return IconComponent ? <IconComponent size={size} /> : null;
+    };
+
     return (
         <>
             {/* ==================== MAIN NAVIGATION ==================== */}
@@ -59,36 +70,21 @@ const Navbar = () => {
 
                 {/* DESKTOP LINKS (center — hidden below 1024px) */}
                 <div className="nav-links">
-                    <Link to="/donor" className={navLinkClass('/donor')}>
-                        <User size={16} />
-                        <span>Donor</span>
-                    </Link>
-                    <Link to="/events" className={navLinkClass('/events')}>
-                        <Calendar size={16} />
-                        <span>Events</span>
-                    </Link>
-                    <Link to="/doctor" className={navLinkClass('/doctor')}>
-                        <Activity size={16} />
-                        <span>Medical</span>
-                    </Link>
-                    <Link to="/staff" className={navLinkClass('/staff')}>
-                        <Activity size={16} />
-                        <span>Lab</span>
-                    </Link>
-                    <Link to="/admin" className={navLinkClass('/admin')}>
-                        <ShieldAlert size={16} />
-                        <span>Admin</span>
-                    </Link>
-                    <Link to="/contact" className={navLinkClass('/contact')}>
-                        <Mail size={16} />
-                        <span>Contact</span>
-                    </Link>
-                    <Link to="/about-us" className={navLinkClass('/about-us')}>
-                        <span>About Us</span>
-                    </Link>
-                    <Link to="/services" className={navLinkClass('/services')}>
-                        <span>Services</span>
-                    </Link>
+                    {/* Role-specific links (only when logged in) */}
+                    {isAuthenticated && roleNavItems.map((item) => (
+                        <Link key={item.path} to={item.path} className={navLinkClass(item.path)}>
+                            {renderIcon(item.icon)}
+                            <span>{item.label}</span>
+                        </Link>
+                    ))}
+
+                    {/* Public links (always visible) */}
+                    {PUBLIC_NAV_ITEMS.map((item) => (
+                        <Link key={item.path} to={item.path} className={navLinkClass(item.path)}>
+                            {item.icon && renderIcon(item.icon)}
+                            <span>{item.label}</span>
+                        </Link>
+                    ))}
                 </div>
 
                 {/* ACTIONS (right side) */}
@@ -144,30 +140,20 @@ const Navbar = () => {
             {/* ==================== MOBILE FULLSCREEN MENU ==================== */}
             <div className={`mobile-menu ${menuOpen ? 'active' : ''}`}>
                 <div className="mobile-menu-inner">
-                    <Link to="/donor" className={mobileLinkClass('/donor')} onClick={closeMenu}>
-                        <User size={24} /> Donor
-                    </Link>
-                    <Link to="/events" className={mobileLinkClass('/events')} onClick={closeMenu}>
-                        <Calendar size={24} /> Events
-                    </Link>
-                    <Link to="/doctor" className={mobileLinkClass('/doctor')} onClick={closeMenu}>
-                        <Activity size={24} /> Medical
-                    </Link>
-                    <Link to="/staff" className={mobileLinkClass('/staff')} onClick={closeMenu}>
-                        <Activity size={24} /> Lab
-                    </Link>
-                    <Link to="/admin" className={mobileLinkClass('/admin')} onClick={closeMenu}>
-                        <ShieldAlert size={24} /> Admin
-                    </Link>
-                    <Link to="/contact" className={mobileLinkClass('/contact')} onClick={closeMenu}>
-                        <Mail size={24} /> Contact
-                    </Link>
-                    <Link to="/about-us" className={mobileLinkClass('/about-us')} onClick={closeMenu}>
-                        <span>About Us</span>
-                    </Link>
-                    <Link to="/services" className={mobileLinkClass('/services')} onClick={closeMenu}>
-                        <span>Services</span>
-                    </Link>
+                    {/* Role-specific links (only when logged in) */}
+                    {isAuthenticated && roleNavItems.map((item) => (
+                        <Link key={item.path} to={item.path} className={mobileLinkClass(item.path)} onClick={closeMenu}>
+                            {renderIcon(item.icon, 24)} {item.label}
+                        </Link>
+                    ))}
+
+                    {/* Public links (always visible) */}
+                    {PUBLIC_NAV_ITEMS.map((item) => (
+                        <Link key={item.path} to={item.path} className={mobileLinkClass(item.path)} onClick={closeMenu}>
+                            {item.icon && renderIcon(item.icon, 24)}
+                            <span>{item.label}</span>
+                        </Link>
+                    ))}
 
                     {/* Mobile auth action */}
                     <div className="mobile-menu-actions">

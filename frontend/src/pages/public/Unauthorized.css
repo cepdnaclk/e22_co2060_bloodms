@@ -1,0 +1,105 @@
+/* ─── Unauthorized Page ───────────────────────────────── */
+.unauthorized-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 80vh;
+    padding: 2rem;
+}
+
+.unauthorized-card {
+    text-align: center;
+    max-width: 480px;
+    padding: 3rem 2.5rem;
+    border-radius: 1.25rem;
+    background: var(--color-surface, #fff);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--color-border, rgba(0, 0, 0, 0.06));
+}
+
+.unauthorized-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #C6282820, #C6282808);
+    color: #C62828;
+    margin-bottom: 1.5rem;
+}
+
+.unauthorized-card h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--color-text, #1a1a2e);
+    margin: 0 0 0.75rem;
+}
+
+.unauthorized-message {
+    font-size: 1rem;
+    color: var(--color-text-muted, #637381);
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+.unauthorized-message strong {
+    color: #C62828;
+    text-transform: capitalize;
+}
+
+.unauthorized-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.btn-go-dashboard {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.625rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    background: linear-gradient(135deg, #C62828, #E53935);
+    color: #fff;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.btn-go-dashboard:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(198, 40, 40, 0.35);
+}
+
+.btn-go-home {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.625rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    background: transparent;
+    color: var(--color-text-muted, #637381);
+    border: 1px solid var(--color-border, rgba(0, 0, 0, 0.1));
+    transition: background 0.2s, color 0.2s;
+}
+.btn-go-home:hover {
+    background: var(--color-hover, rgba(0, 0, 0, 0.04));
+    color: var(--color-text, #1a1a2e);
+}
+
+/* ─── Dark mode ─── */
+[data-theme="dark"] .unauthorized-card {
+    background: var(--color-surface, #1e1e2e);
+    border-color: rgba(255, 255, 255, 0.06);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+[data-theme="dark"] .unauthorized-card h1 {
+    color: var(--color-text, #e4e4e7);
+}
+[data-theme="dark"] .unauthorized-icon {
+    background: linear-gradient(135deg, #C6282830, #C6282812);
+}

@@ -414,7 +414,41 @@
     width: 50% !important;
 }
 
-/* ── Hospital autocomplete  ── */
+/* ── Inline field validation errors ── */
+.field-error {
+    font-size: 0.74rem;
+    color: #C62828;
+    font-weight: 500;
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    animation: fieldErrorIn 0.25s ease;
+}
+
+[data-theme="dark"] .field-error {
+    color: #FF6B6B;
+}
+
+@keyframes fieldErrorIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Error state on input/select borders */
+.form-group-new input.input-error,
+.form-group-new select.input-error,
+.auth-select-new.input-error {
+    border-color: #C62828 !important;
+    box-shadow: 0 0 0 2px rgba(198, 40, 40, 0.1) !important;
+}
+
+[data-theme="dark"] .form-group-new input.input-error,
+[data-theme="dark"] .form-group-new select.input-error,
+[data-theme="dark"] .auth-select-new.input-error {
+    border-color: #FF6B6B !important;
+    box-shadow: 0 0 0 2px rgba(255, 107, 107, 0.15) !important;
+}
 .hospital-autocomplete {
     position: relative;
 }

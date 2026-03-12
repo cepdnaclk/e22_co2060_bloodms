@@ -29,7 +29,6 @@ export const AuthProvider = ({ children }) => {
     const login = async (email, password) => {
         const response = await axios.post("http://localhost:5000/api/token", {
             email,
-            username,
             password,
         });
 
@@ -38,8 +37,10 @@ export const AuthProvider = ({ children }) => {
 
         setAuthTokens(tokens);
         setUser(userData);
-        localStorage.setItem('hopedrop_token', 'dummy-token');
-        localStorage.setItem('hopedrop_user', JSON.stringify(userData));
+        setIsAuthenticated(true);
+        localStorage.setItem("authTokens", JSON.stringify(tokens));
+
+        return userData;  // return user data so Login.jsx can use it
     };
 
     const logout = () => {
@@ -72,6 +73,7 @@ export const AuthProvider = ({ children }) => {
     const value = {
         isAuthenticated,
         user,
+        role: user?.role || null,   // ✅ Role from JWT for navbar & route guards
         authTokens,      // ✅ Added: expose tokens for useAxios hook
         setAuthTokens,   // ✅ Added: expose setter for useAxios hook
         setUser,         // ✅ Added: expose setter for useAxios hook
