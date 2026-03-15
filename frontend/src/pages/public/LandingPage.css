@@ -86,38 +86,7 @@
 }
 
 /* 3. The 6-Image Animation Logic */
-@keyframes heroSlideshow {
-    /* Image 1: Your URL */
-    0%, 12% { 
-        background-image: linear-gradient(rgba(18, 25, 33, 0.8), rgba(18, 25, 33, 0.8)), 
-        url('https://images.unsplash.com/photo-1615461066159-fea0960485d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80'); 
-    }
-    /* Image 2: Your Asset */
-    17%, 29% { 
-        background-image: linear-gradient(rgba(18, 25, 33, 0.8), rgba(18, 25, 33, 0.8)), 
-        url('../../assets/photo1.jpg'); 
-    }
-    /* Image 3: Your Asset */
-    34%, 46% { 
-        background-image: linear-gradient(rgba(18, 25, 33, 0.8), rgba(18, 25, 33, 0.8)), 
-        url('../../assets/photo2.jpg'); 
-    }
-    /* Image 4: Your Asset */
-    51%, 63% { 
-        background-image: linear-gradient(rgba(18, 25, 33, 0.8), rgba(18, 25, 33, 0.8)), 
-        url('../../assets/photo3.jpg'); 
-    }
-    /* Image 5: Your Asset */
-    68%, 80% { 
-        background-image: linear-gradient(rgba(18, 25, 33, 0.8), rgba(18, 25, 33, 0.8)), 
-        url('../../assets/photo4.jpg'); 
-    }
-    /* Image 6: Your Asset */
-    85%, 100% { 
-        background-image: linear-gradient(rgba(18, 25, 33, 0.8), rgba(18, 25, 33, 0.8)), 
-        url('../../assets/photo5.jpg'); 
-    }
-}
+
 
 
 .hero-badge-new {

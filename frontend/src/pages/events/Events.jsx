@@ -141,7 +141,12 @@ const Events = () => {
     return (
         <div className="events-page">
             {/* Hero Banner - Same as Contact Page */}
-            <div className="events-hero">
+            <div 
+                className="events-hero"
+                style={{
+                    backgroundImage: `linear-gradient(135deg, rgba(18, 25, 33, 0.92), rgba(183, 28, 28, 0.80)), url(${EVENTS.eventsHero})`
+                }}
+            >
                 <div className="events-hero-overlay"></div>
                 <div className="events-hero-content">
                     <span className="events-hero-badge">

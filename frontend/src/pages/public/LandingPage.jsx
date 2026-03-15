@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Heart, Activity, MapPin, Search, PhoneCall, ArrowRight, Shield, Clock } from 'lucide-react';
 import './LandingPage.css';
 import { LANDING } from '../../config/imageAssets';
+import { PHOTOS } from '../../config/imageAssets';
 
 const LandingPage = () => {
     const [bloodStock, setBloodStock] = useState({
@@ -30,7 +31,24 @@ const LandingPage = () => {
 
         return () => observer.disconnect();
     }, []);
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    
+    const heroImages = [
+        PHOTOS.photo1,
+        PHOTOS.photo2,
+        PHOTOS.photo3,
+        PHOTOS.photo4,
+        PHOTOS.photo5,
+        PHOTOS.photo6,
+    ];
 
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
+        }, 10000);
+        
+        return () => clearInterval(interval);
+    }, []);
     return (
         <div className="landing-page-new">
             {/* Emergency Banner */}
@@ -43,7 +61,13 @@ const LandingPage = () => {
             </div>
 
             {/* Hero Section */}
-            <section className="hero-section-new">
+            <section 
+                className="hero-section-new"
+                style={{
+                    backgroundImage: `linear-gradient(rgba(18, 25, 33, 0.8), rgba(18, 25, 33, 0.8)), url(${heroImages[currentImageIndex]})`,
+                    transition: 'background-image 1s ease-in-out'
+                }}
+            >
                 <div className="hero-container">
                     <div className="hero-content animate-on-scroll">
                         <div className="hero-badge-new">

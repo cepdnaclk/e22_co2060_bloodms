@@ -85,7 +85,12 @@ const ContactPage = () => {
         <div className="contact-page">
 
             {/* Hero Banner */}
-            <section className="contact-hero">
+            <section 
+                className="contact-hero"
+                style={{
+                    backgroundImage: `linear-gradient(135deg, rgba(18, 25, 33, 0.92), rgba(183, 28, 28, 0.80)), url(${CONTACT.contactHero})`
+                }}
+                >
                 <div className="contact-hero-overlay" />
                 <div className="contact-hero-content">
                     <div className="contact-hero-badge">

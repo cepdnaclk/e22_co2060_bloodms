@@ -30,12 +30,14 @@ export const CONTACT = {
   generalEnquiries: `${DRIVE_BASE}1onaaegQrVkokkXAqaap3RaqVUNFcqjwY${DRIVE_SUFFIX}`,
   hotlineEmergency: `${DRIVE_BASE}1MIRqQJOdAz_1GHsya4ehQA_cHfXQL9jM${DRIVE_SUFFIX}`,
   mainBranch: `${DRIVE_BASE}1JQtKJe0_58Z-HCVhQVg8eeIaa5vbWXAS${DRIVE_SUFFIX}`,
+  contactHero: `${DRIVE_BASE}1LTZLvD1XlWl_82stLrOZdITsOWy3cI_w${DRIVE_SUFFIX}`,
 };
 
 // ============================================
 // EVENTS PAGE
 // ============================================
 export const EVENTS = {
+  eventsHero: `${DRIVE_BASE}1m7l4LLCLpvCz53b-FuxlQ7FwbbsRkcKY${DRIVE_SUFFIX}`,
   // Upcoming Events
   upcomingEvent: `${DRIVE_BASE}1Rw8aRLwyLpUSv3Birqljcpuv98fENLIg${DRIVE_SUFFIX}`,
   onlineEvent: `${DRIVE_BASE}1rzJFt-H78PDdc8bfp9ML6JfEk9uXKh24${DRIVE_SUFFIX}`,
