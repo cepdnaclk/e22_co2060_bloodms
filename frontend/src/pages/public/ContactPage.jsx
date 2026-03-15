@@ -4,7 +4,9 @@ import {
     Mail, Phone, MapPin, Clock, Send, Heart,
     CheckCircle, User, MessageSquare, ChevronRight
 } from 'lucide-react';
+import { CONTACT } from '../../config/imageAssets';
 import './ContactPage.css';
+
 
 const ContactPage = () => {
     const [formData, setFormData] = useState({
@@ -55,7 +57,7 @@ const ContactPage = () => {
             sub: 'support@hopedrop.lk',
             href: 'mailto:info@hopedrop.lk',
             cta: 'Send an Email',
-            image: 'https://images.unsplash.com/photo-1596526131083-e8c633c948d2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+            image: CONTACT.generalEnquiries,
         },
         {
             icon: <Phone size={36} color="white" />,
@@ -65,7 +67,7 @@ const ContactPage = () => {
             sub: 'Emergency: 1990',
             href: 'tel:0112369931',
             cta: 'Call Now',
-            image: 'https://images.unsplash.com/photo-1553775282-20af80779df7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+            image: CONTACT.hotlineEmergency,
         },
         {
             icon: <MapPin size={36} color="white" />,
@@ -75,7 +77,7 @@ const ContactPage = () => {
             sub: '555/5, Elvitigala Mawatha, Narahenpita, Colombo 00500, Sri Lanka',
             href: 'https://maps.google.com/?q=National+Blood+Center+Colombo',
             cta: 'Get Directions',
-            image: 'https://images.unsplash.com/photo-1486325212027-8081e485255e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+            image: CONTACT.mainBranch,
         },
     ];
 

@@ -13,6 +13,7 @@ import {
   Waves
 } from 'lucide-react';
 import './Services.css';
+import { SERVICES } from '../../config/imageAssets';
 
 // ServiceCard Component
 function ServiceCard({ icon: Icon, title, description, features }) {
@@ -165,7 +166,7 @@ export default function Services() {
       icon: Clock,
       title: '24/7 Emergency Services',
       description: 'Our emergency blood supply service operates around the clock to ensure that life-saving blood is available whenever and wherever it\'s needed. With our rapid response team and streamlined processes, we guarantee quick delivery to hospitals and medical facilities during critical situations.',
-      imageUrl: 'https://images.unsplash.com/photo-1612574935301-af13ccce9258?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxlbWVyZ2VuY3klMjBhbWJ1bGFuY2UlMjByZXNwb25zZXxlbnwxfHx8fDE3NzI4ODgyNDR8MA&ixlib=rb-4.1.0&q=80&w=1080',
+      image: SERVICES.advancedTesting,
       imageAlt: 'Emergency medical response'
     },
     {

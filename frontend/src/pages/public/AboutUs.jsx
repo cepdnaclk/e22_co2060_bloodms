@@ -4,7 +4,7 @@ import {
   Target, Eye, Users, Droplet,
   Shield, Clock, Award, Moon, Sun,
 } from 'lucide-react';
-import { PHOTOS } from '../../config/imageAssets';
+import { ABOUT_US } from '../../config/imageAssets';
 import { useTheme } from '../../context/ThemeContext';
 import './AboutUs.css';
 
@@ -264,7 +264,7 @@ export function AboutUs() {
             {/* Image side */}
             <div className="au-working__img-wrap">
               <img
-                src={PHOTOS.photo6}
+                src={ABOUT_US.workingTogether}
                 alt="Healthcare professionals working together"
               />
             </div>
