@@ -4,7 +4,7 @@ import {
   Target, Eye, Users, Droplet,
   Shield, Clock, Award, Moon, Sun,
 } from 'lucide-react';
-import { PHOTOS } from '../../config/imageAssets';
+import { ABOUT_US } from '../../config/imageAssets';
 import { useTheme } from '../../context/ThemeContext';
 import './AboutUs.css';
 
@@ -122,7 +122,9 @@ export function AboutUs() {
       </button>
 
       {/* ══════════════ HERO ══════════════ */}
-      <section className="au-hero animate-on-scroll">
+      <section className="au-hero animate-on-scroll" style={{
+    backgroundImage: `linear-gradient(135deg, rgba(18, 25, 33, 0.93), rgba(183, 28, 28, 0.82)), url(${ABOUT_US.auHero})`
+        }}>
         <div className="au-hero__inner">
           {/* "Behind the Drop" badge */}
           <div className="au-hero__badge">
@@ -264,7 +266,7 @@ export function AboutUs() {
             {/* Image side */}
             <div className="au-working__img-wrap">
               <img
-                src={PHOTOS.photo6}
+                src={ABOUT_US.workingTogether}
                 alt="Healthcare professionals working together"
               />
             </div>
