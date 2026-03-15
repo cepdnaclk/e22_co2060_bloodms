@@ -99,6 +99,7 @@ export default {
   CONTACT,
   EVENTS,
   LANDING,
+  SERVICES,
   getAllPhotos, 
   getAllLogos 
 };

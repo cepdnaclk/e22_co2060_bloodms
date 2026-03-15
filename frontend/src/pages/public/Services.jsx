@@ -166,14 +166,14 @@ export default function Services() {
       icon: Clock,
       title: '24/7 Emergency Services',
       description: 'Our emergency blood supply service operates around the clock to ensure that life-saving blood is available whenever and wherever it\'s needed. With our rapid response team and streamlined processes, we guarantee quick delivery to hospitals and medical facilities during critical situations.',
-      image: SERVICES.advancedTesting,
+      imageUrl: SERVICES.emergencyServices,
       imageAlt: 'Emergency medical response'
     },
     {
       icon: Shield,
       title: 'Advanced Testing & Quality Assurance',
       description: 'Every unit of blood undergoes rigorous testing using state-of-the-art laboratory equipment. Our quality assurance protocols exceed industry standards, ensuring that all blood products are safe, properly typed, and screened for infectious diseases before being made available for transfusion.',
-      imageUrl: 'https://images.unsplash.com/photo-1599557835468-29bb0b3155cd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtZWRpY2FsJTIwbGFib3JhdG9yeSUyMHRlc3Rpbmd8ZW58MXx8fHwxNzcyODAyMTI2fDA&ixlib=rb-4.1.0&q=80&w=1080',
+      imageUrl: SERVICES.advancedTesting,
       imageAlt: 'Medical laboratory testing',
       reverse: true
     }
@@ -184,7 +184,7 @@ export default function Services() {
       {/* Hero Section */}
       <section className="hero-section">
         <img
-          src="https://images.unsplash.com/photo-1683791895200-201c0c40310f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxibG9vZCUyMGRvbmF0aW9uJTIwaGVhbHRoY2FyZSUyMGhlcm9lc3xlbnwxfHx8fDE3NzI4ODkxOTB8MA&ixlib=rb-4.1.0&q=80&w=1080"
+          src={SERVICES.heroImage}
           alt="Blood donation healthcare"
           className="hero-image"
         />
