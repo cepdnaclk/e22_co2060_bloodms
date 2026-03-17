@@ -66,11 +66,15 @@ INSTALLED_APPS = [
     'Certificate',
     'DonationRecord',
     'rest_framework_simplejwt.token_blacklist',
+    'phonenumber_field',
+
 
 
 
 
 ]
+PHONENUMBER_DEFAULT_REGION = 'LK' # Example: US, GB, IN
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

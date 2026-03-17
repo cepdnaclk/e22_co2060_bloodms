@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import Swal from 'sweetalert2';
 import { ROLE_OPTIONS } from '../../config/roleConfig';
 import { getCountries, getDistricts, getDistrictCenter, getCountryCenter } from '../../config/locationData';
@@ -151,7 +152,7 @@ const SignUp = () => {
     const countryData = formData.country ? getCountryCenter(formData.country) : { center: [7.8731, 80.7718], zoom: 8 };
 
     /* ── Submit ── */
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
 
@@ -174,11 +175,28 @@ const SignUp = () => {
 
         setLoading(true);
 
-        /* Mock API — replace with real backend call */
-        setTimeout(() => {
-            setLoading(false);
-            setSuccess(true);
+        try {
+            // Build the payload matching Django's RegisterSerializer
+            const payload = {
+                username: formData.username,
+                email: formData.email,
+                role: formData.role || 'patient',
+                password: formData.password,
+                password2: formData.confirmPassword,
+                profile: {
+                    fullName: formData.username,
+                    nic_number: formData.nic,
+                    phoneNumber: formData.phone,
+                    blood_group: formData.bloodGroup,
+                    country: null,    // ForeignKey — needs ID, wire up later
+                    district: null,   // ForeignKey — needs ID, wire up later
+                    hospital: selectedHospital?.id || null,
+                },
+            };
 
+            await axios.post('http://localhost:8000/api/register/', payload);
+
+            setSuccess(true);
             Swal.fire({
                 ...swalBase,
                 position: 'top-end',
@@ -192,7 +210,41 @@ const SignUp = () => {
             }).then(() => {
                 navigate('/login');
             });
-        }, 1500);
+
+        } catch (err) {
+            // Extract error messages from Django's response
+            const data = err.response?.data;
+            let message = 'Registration failed. Please try again.';
+
+            if (data) {
+                // Django REST Framework returns field-level errors as { field: [msgs] }
+                const messages = [];
+                if (typeof data === 'object') {
+                    Object.entries(data).forEach(([key, val]) => {
+                        const fieldMsg = Array.isArray(val) ? val.join(', ') : val;
+                        messages.push(`${key}: ${fieldMsg}`);
+                    });
+                }
+                if (messages.length > 0) {
+                    message = messages.join('\n');
+                }
+            }
+
+            setError(message);
+            Swal.fire({
+                ...swalBase,
+                position: 'top-end',
+                icon: 'error',
+                title: 'Registration Failed',
+                text: message,
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                toast: true,
+            });
+        } finally {
+            setLoading(false);
+        }
     };
 
     /* ── Helper to add error class ── */

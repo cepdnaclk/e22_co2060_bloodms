@@ -1,40 +1,67 @@
+from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.db.models.signals import post_save
+from django.core.validators import RegexValidator
+from phonenumber_field.modelfields import PhoneNumberField
 
-__all__=['User','Profile'] #run User class only
+from .location import District, Country
+from .hospital import Hospital
 
+__all__ = ["User", "Profile"]
 
+nic_validator = RegexValidator(
+    regex=r"^(\d{12}|\d{9}[vVxX])$",
+    message="Enter a valid 12-digit NIC or 9-digit with a letter (V/X).",
+)
 
 
 class User(AbstractUser):
-    username=models.CharField(max_length=10)
-    email=models.EmailField(unique=True)
+    PATIENT = "patient"
+    DOCTOR = "doctor"
+    ADMIN = "admin"
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']
+    ROLE_CHOICES = [
+        (PATIENT, "Patient"),
+        (DOCTOR, "Doctor"),
+        (ADMIN, "Admin"),
+    ]
+
+    username = models.CharField(max_length=10, unique=True)
+    email = models.EmailField(unique=True)
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default=PATIENT)
+
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ["username"]
 
     def __str__(self):
         return self.username
 
+
 class Profile(models.Model):
-    user=models.OneToOneField(User,on_delete=models.CASCADE)
-    fullName=models.CharField(max_length=20)
-    bio=models.CharField(max_length=300)
-    image=models.ImageField(default='default.jpg',upload_to="user_images")
-    verified=models.BooleanField(default=False)
+    BLOOD_GROUP_CHOICES = (
+        ("A+", "A Positive"),
+        ("A-", "A Negative"),
+        ("B+", "B Positive"),
+        ("B-", "B Negative"),
+        ("AB+", "AB Positive"),
+        ("AB-", "AB Negative"),
+        ("O+", "O Positive"),
+        ("O-", "O Negative"),
+    )
+
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="profile")
+    fullName = models.CharField(max_length=20)
+    nic_number = models.CharField(
+        max_length=12,
+        unique=True,
+        validators=[nic_validator],
+        help_text="Format: 200213500619",
+    )
+    blood_group = models.CharField(max_length=3, choices=BLOOD_GROUP_CHOICES, default="O+")
+    phoneNumber = PhoneNumberField(blank=True, null=True, unique=True)
+    country = models.ForeignKey(Country, on_delete=models.SET_NULL, null=True, related_name="users")
+    district = models.ForeignKey(District, on_delete=models.SET_NULL, null=True)
+    hospital = models.ForeignKey(Hospital, on_delete=models.SET_NULL, null=True, related_name="users")
 
     def __str__(self):
         return self.fullName
-
-    #create user profile
-def createUserProfile(sender,instance,created,**kwargs):
-    if created:
-          Profile.objects.create(user=instance)
-
-        #save user
-def saveUser(sender,instance,**kwargs):
-    instance.profile.save()
-
-post_save.connect(createUserProfile,sender=User)
-post_save.connect(saveUser,sender=User)

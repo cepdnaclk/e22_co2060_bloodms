@@ -54,6 +54,7 @@ class RegisterView(generics.CreateAPIView):
                 "id": user.id,
                 "username": user.username,
                 "email": user.email,
+                "role":user.role,
             },
             "message": "User registered successfully",
             "tokens": {
@@ -152,4 +153,5 @@ def get_user_info(request):
         "user": serializer.data,
         "message": "User data retrieved successfully"
     }, status=status.HTTP_200_OK)
+
 
