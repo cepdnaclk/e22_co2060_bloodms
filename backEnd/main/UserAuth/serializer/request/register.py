@@ -1,36 +1,67 @@
-from ...models import User
-from django.contrib.auth.password_validation import validate_password
+from django.db import IntegrityError, transaction
 from rest_framework import serializers
+from ...models import User, Profile
+from ..serializer import ProfileSerializer
 
 
 class RegisterSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(
-        write_only=True,
-        required=True,
-        validators=[validate_password],
-    )
-    password2 = serializers.CharField(
-        write_only=True,
-        required=True,
-    )
+    # Nest the ProfileSerializer here
+    profile = ProfileSerializer()
+    password = serializers.CharField(write_only=True)
+    password2 = serializers.CharField(write_only=True)
 
     class Meta:
         model = User
-        fields = ['email', 'username', 'password', 'password2']
+        fields = ['username', 'email', 'role', 'password', 'password2', 'profile']
 
-    def validate(self, attrs):
-        if attrs['password'] != attrs['password2']:
-            raise serializers.ValidationError(
-                {"password": "Password fields do not match"}
-            )
-        return attrs
+    def validate(self, data):
+        if data['password'] != data['password2']:
+            raise serializers.ValidationError("Passwords do not match.")
+
+        if User.objects.filter(username=data['username']).exists():
+            raise serializers.ValidationError({"username": "This username is already taken."})
+
+        if User.objects.filter(email__iexact=data['email']).exists():
+            raise serializers.ValidationError({"email": "An account already exists with this email."})
+
+        profile_data = data.get('profile', {})
+        nic_number = profile_data.get('nic_number')
+        phone_number = profile_data.get('phoneNumber')
+        country = profile_data.get('country')
+        district = profile_data.get('district')
+        hospital = profile_data.get('hospital')
+
+        #validations
+
+        if nic_number and Profile.objects.filter(nic_number=nic_number).exists():
+            raise serializers.ValidationError({"profile": {"nic_number": "This NIC is already registered."}})
+
+        if phone_number and Profile.objects.filter(phoneNumber=phone_number).exists():
+            raise serializers.ValidationError({"profile": {"phoneNumber": "This phone number is already registered."}})
+
+        if country and district and district.country_id != country.id:
+            raise serializers.ValidationError({"profile": {"district": "Selected district does not belong to selected country."}})
+
+        if hospital and district and hospital.district_id and hospital.district_id != district.id:
+            raise serializers.ValidationError({"profile": {"hospital": "Selected hospital does not belong to selected district."}})
+
+        if hospital and country and hospital.country_id and hospital.country_id != country.id:
+            raise serializers.ValidationError({"profile": {"hospital": "Selected hospital does not belong to selected country."}})
+
+        return data
 
     def create(self, validated_data):
-        user = User.objects.create(
-            username=validated_data['username'],
-            email=validated_data['email']
-        )
-        user.set_password(validated_data['password'])
-        user.save()
+        profile_data = validated_data.pop('profile')
+        password = validated_data.pop('password')
+        validated_data.pop('password2')
 
-        return user
+        try:
+            with transaction.atomic():
+                user = User.objects.create_user(password=password, **validated_data)
+                Profile.objects.create(user=user, **profile_data)
+                return user
+        except IntegrityError:
+            raise serializers.ValidationError(
+                "Could not create account due to duplicate or invalid profile data."
+            )
+

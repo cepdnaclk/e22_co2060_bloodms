@@ -6,14 +6,15 @@ from .views import (
     get_user_profile,
     update_user_profile,
     logout_view,
-    get_user_info
+    get_user_info, resolve_hospital
+
 )
 
 
 urlpatterns = [
     # Authentication endpoints
     path('register/', RegisterView.as_view(), name='register'),
-    path('token', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('logout/', logout_view, name='logout'),
 
@@ -21,5 +22,6 @@ urlpatterns = [
     path('profile/', get_user_profile, name='user_profile'),
     path('profile/update/', update_user_profile, name='update_profile'),
     path('getuser/', get_user_info, name='user_info'),
+path("hospitals/resolve/", resolve_hospital, name="resolve_hospital"),
 ]
 

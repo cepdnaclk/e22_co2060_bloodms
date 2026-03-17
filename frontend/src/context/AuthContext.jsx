@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }) => {
 
     // ✅ Fixed: login receives email & password, calls Django API
     const login = async (email, password) => {
-        const response = await axios.post("http://localhost:5000/api/token", {
+        const response = await axios.post("http://localhost:8000/api/token/", {
             email,
             password,
         });

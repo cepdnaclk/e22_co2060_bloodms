@@ -449,54 +449,228 @@
     border-color: #FF6B6B !important;
     box-shadow: 0 0 0 2px rgba(255, 107, 107, 0.15) !important;
 }
-.hospital-autocomplete {
+/* ── Hospital Autocomplete ── */
+.hospital-autocomplete-wrap {
     position: relative;
 }
 
-.suggestions-list-new {
+.hospital-search-input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.hospital-search-icon {
+    position: absolute;
+    left: 0.85rem;
+    color: #999;
+    pointer-events: none;
+    z-index: 1;
+}
+
+[data-theme="dark"] .hospital-search-icon {
+    color: #6e7681;
+}
+
+.hospital-search-input {
+    width: 100%;
+    padding: 0.76rem 2.6rem 0.76rem 2.5rem;
+    border-radius: 10px;
+    font-size: 0.92rem;
+    font-family: inherit;
+    box-sizing: border-box;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+    outline: none;
+    background-color: #f9f9f9;
+    border: 1.5px solid #e5e5e5;
+    color: #1a1a2e;
+}
+
+[data-theme="dark"] .hospital-search-input {
+    background-color: rgba(13, 17, 23, 0.72);
+    border: 1.5px solid #30363d;
+    color: #e6edf3;
+}
+
+.hospital-search-input::placeholder {
+    color: #c0c0c0;
+}
+
+[data-theme="dark"] .hospital-search-input::placeholder {
+    color: #484f58;
+}
+
+.hospital-search-input:focus {
+    border-color: #C62828;
+    box-shadow: 0 0 0 3px rgba(198, 40, 40, 0.12);
+    background-color: #ffffff;
+}
+
+[data-theme="dark"] .hospital-search-input:focus {
+    border-color: #C62828;
+    box-shadow: 0 0 0 3px rgba(198, 40, 40, 0.25);
+    background-color: rgba(13, 17, 23, 0.92);
+}
+
+.hospital-input-spinner {
+    position: absolute;
+    right: 0.85rem;
+    color: #C62828;
+    animation: spin 0.85s linear infinite;
+}
+
+.hospital-clear-btn {
+    position: absolute;
+    right: 0.7rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #999;
+    padding: 4px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s, background 0.2s;
+}
+
+.hospital-clear-btn:hover {
+    color: #C62828;
+    background: rgba(198, 40, 40, 0.08);
+}
+
+[data-theme="dark"] .hospital-clear-btn {
+    color: #6e7681;
+}
+
+[data-theme="dark"] .hospital-clear-btn:hover {
+    color: #FF6B6B;
+    background: rgba(255, 107, 107, 0.12);
+}
+
+/* Suggestions dropdown */
+.hospital-suggestions {
     position: absolute;
     top: calc(100% + 4px);
     left: 0;
     right: 0;
     border-radius: 10px;
-    max-height: 160px;
+    max-height: 220px;
     overflow-y: auto;
     z-index: 20;
     list-style: none;
     padding: 0.3rem 0;
     margin: 0;
-
-    /* Light */
     background: #ffffff;
     border: 1.5px solid #e0e0e0;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
 }
 
-[data-theme="dark"] .suggestions-list-new {
+[data-theme="dark"] .hospital-suggestions {
     background: #1c2128;
     border-color: #30363d;
     box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5);
 }
 
-.suggestions-list-new li {
-    padding: 0.65rem 1rem;
+.hospital-suggestions-header {
+    padding: 0.45rem 1rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #999;
+    border-bottom: 1px solid #eee;
+}
+
+[data-theme="dark"] .hospital-suggestions-header {
+    color: #6e7681;
+    border-bottom-color: #21262d;
+}
+
+.hospital-suggestion-item {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.6rem 1rem;
     cursor: pointer;
     font-size: 0.88rem;
-    transition: background 0.18s;
+    transition: background 0.18s, color 0.18s;
     color: #444;
 }
 
-[data-theme="dark"] .suggestions-list-new li {
+[data-theme="dark"] .hospital-suggestion-item {
     color: #c9d1d9;
 }
 
-.suggestions-list-new li:hover {
+.hospital-suggestion-item:hover {
     background-color: rgba(198, 40, 40, 0.06);
     color: #C62828;
 }
 
-[data-theme="dark"] .suggestions-list-new li:hover {
+[data-theme="dark"] .hospital-suggestion-item:hover {
     background-color: rgba(198, 40, 40, 0.14);
+    color: #FF6B6B;
+}
+
+.hospital-suggestion-item.selected {
+    background-color: rgba(198, 40, 40, 0.1);
+    color: #C62828;
+}
+
+[data-theme="dark"] .hospital-suggestion-item.selected {
+    background-color: rgba(198, 40, 40, 0.2);
+    color: #FF6B6B;
+}
+
+.hospital-item-icon {
+    flex-shrink: 0;
+    color: #C62828;
+    opacity: 0.7;
+}
+
+.hospital-item-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.hospital-item-name {
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.hospital-item-address {
+    font-size: 0.74rem;
+    color: #999;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+[data-theme="dark"] .hospital-item-address {
+    color: #6e7681;
+}
+
+/* Selected hospital badge */
+.hospital-selected-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    padding: 0.5rem 0.85rem;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    animation: fieldErrorIn 0.25s ease;
+    background: rgba(198, 40, 40, 0.06);
+    border: 1px solid rgba(198, 40, 40, 0.15);
+    color: #C62828;
+}
+
+[data-theme="dark"] .hospital-selected-badge {
+    background: rgba(198, 40, 40, 0.12);
+    border-color: rgba(198, 40, 40, 0.25);
     color: #FF6B6B;
 }
 

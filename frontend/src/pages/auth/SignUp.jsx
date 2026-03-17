@@ -1,9 +1,11 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import Swal from 'sweetalert2';
 import { ROLE_OPTIONS } from '../../config/roleConfig';
-import { getCountries, getDistricts, getDistrictCenter, getCountryCenter } from '../../config/locationData';
-import HospitalMapPicker from '../../components/ui/HospitalMapPicker';
+import { getCountries, getDistricts } from '../../config/locationData';
+import { searchHospitalsByName } from '../../utils/overpassApi';
+import { Search, MapPin, Loader, X } from 'lucide-react';
 import './Login.css';
 import './SignUp.css';
 
@@ -73,6 +75,7 @@ const SignUp = () => {
     });
 
     const [selectedHospital, setSelectedHospital] = useState(null);
+    const [resolvedHospitalId, setResolvedHospitalId] = useState(null);
     const [fieldErrors, setFieldErrors] = useState({});
     const [passwordStrength, setPasswordStrength] = useState(0);
     const [loading, setLoading] = useState(false);
@@ -81,6 +84,15 @@ const SignUp = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [districts, setDistricts] = useState([]);
     const navigate = useNavigate();
+
+    /* ── Hospital autocomplete state ── */
+    const [hospitalSearch, setHospitalSearch] = useState('');
+    const [hospitalSuggestions, setHospitalSuggestions] = useState([]);
+    const [hospitalSearching, setHospitalSearching] = useState(false);
+    const [showHospitalDropdown, setShowHospitalDropdown] = useState(false);
+    const hospitalInputRef = useRef(null);
+    const hospitalDropdownRef = useRef(null);
+    const hospitalDebounceRef = useRef(null);
 
     /* ── Countries list ── */
     const countries = getCountries();
@@ -91,6 +103,7 @@ const SignUp = () => {
             setDistricts(getDistricts(formData.country));
             setFormData((prev) => ({ ...prev, district: '' }));
             setSelectedHospital(null);
+            setResolvedHospitalId(null);
         } else {
             setDistricts([]);
         }
@@ -139,19 +152,129 @@ const SignUp = () => {
         return Object.keys(errors).length === 0;
     };
 
-    /* ── Hospital selection from map ── */
-    const handleSelectHospital = useCallback((hospital) => {
-        setSelectedHospital(hospital);
+    /* ── Hospital autocomplete: debounced Nominatim search ── */
+    useEffect(() => {
+        if (hospitalDebounceRef.current) clearTimeout(hospitalDebounceRef.current);
+
+        if (!hospitalSearch || hospitalSearch.length < 2) {
+            setHospitalSuggestions([]);
+            setShowHospitalDropdown(false);
+            return;
+        }
+
+        hospitalDebounceRef.current = setTimeout(async () => {
+            setHospitalSearching(true);
+            try {
+                const results = await searchHospitalsByName(hospitalSearch, formData.district || '');
+                setHospitalSuggestions(results);
+                setShowHospitalDropdown(results.length > 0);
+            } catch {
+                setHospitalSuggestions([]);
+            } finally {
+                setHospitalSearching(false);
+            }
+        }, 400);
+
+        return () => clearTimeout(hospitalDebounceRef.current);
+    }, [hospitalSearch, formData.district]);
+
+    /* ── Close hospital dropdown on outside click ── */
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (
+                hospitalDropdownRef.current && !hospitalDropdownRef.current.contains(e.target) &&
+                hospitalInputRef.current && !hospitalInputRef.current.contains(e.target)
+            ) {
+                setShowHospitalDropdown(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
-    /* ── Map props ── */
-    const districtCenter = formData.country && formData.district
-        ? getDistrictCenter(formData.country, formData.district)
-        : null;
-    const countryData = formData.country ? getCountryCenter(formData.country) : { center: [7.8731, 80.7718], zoom: 8 };
+    /* ── Select a hospital from suggestions ── */
+    const handleSelectHospital = useCallback(async (hospital) => {
+        setHospitalSearch(hospital.name);
+        setShowHospitalDropdown(false);
+
+        try {
+            const response = await axios.post('http://localhost:8000/api/hospitals/resolve/', {
+                place_id: hospital.id,
+                name: hospital.name,
+                lat: hospital.lat,
+                lon: hospital.lon,
+                address: hospital.address,
+            });
+
+            setSelectedHospital(hospital);
+            setResolvedHospitalId(response.data.id);
+        } catch {
+            setSelectedHospital(null);
+            setResolvedHospitalId(null);
+            Swal.fire({
+                ...swalBase,
+                position: 'top-end',
+                icon: 'error',
+                title: 'Hospital Selection Failed',
+                text: 'Could not resolve selected hospital. Please try another one.',
+                showConfirmButton: false,
+                timer: 2500,
+                timerProgressBar: true,
+                toast: true,
+            });
+        }
+    }, []);
+
+    /* ── Clear selected hospital ── */
+    const handleClearHospital = () => {
+        setSelectedHospital(null);
+        setResolvedHospitalId(null);
+        setHospitalSearch('');
+        setHospitalSuggestions([]);
+        setShowHospitalDropdown(false);
+    };
+
+    const flattenApiErrors = (value, parentKey = '') => {
+        if (Array.isArray(value)) {
+            return value.flatMap((item) => {
+                if (item && typeof item === 'object') {
+                    return flattenApiErrors(item, parentKey);
+                }
+                return [{ key: parentKey, message: String(item) }];
+            });
+        }
+
+        if (value && typeof value === 'object') {
+            return Object.entries(value).flatMap(([key, nested]) => {
+                const fullKey = parentKey ? `${parentKey}.${key}` : key;
+                return flattenApiErrors(nested, fullKey);
+            });
+        }
+
+        return [{ key: parentKey, message: String(value) }];
+    };
+
+    const mapApiKeyToFormField = (apiKey) => {
+        const key = apiKey.replace(/^profile\./, '');
+        const fieldMap = {
+            username: 'username',
+            email: 'email',
+            role: 'role',
+            password: 'password',
+            password2: 'confirmPassword',
+            fullName: 'username',
+            nic_number: 'nic',
+            phoneNumber: 'phone',
+            blood_group: 'bloodGroup',
+            country: 'country',
+            district: 'district',
+            hospital: 'hospital',
+        };
+        return fieldMap[key] || null;
+    };
 
     /* ── Submit ── */
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
 
@@ -174,11 +297,42 @@ const SignUp = () => {
 
         setLoading(true);
 
-        /* Mock API — replace with real backend call */
-        setTimeout(() => {
-            setLoading(false);
-            setSuccess(true);
+        try {
+            // Build the payload matching Django's RegisterSerializer
+            let hospitalId = resolvedHospitalId;
 
+            if (selectedHospital && !hospitalId) {
+                const response = await axios.post('http://localhost:8000/api/hospitals/resolve/', {
+                    place_id: selectedHospital.id,
+                    name: selectedHospital.name,
+                    lat: selectedHospital.lat,
+                    lon: selectedHospital.lon,
+                    address: selectedHospital.address,
+                });
+                hospitalId = response.data.id;
+                setResolvedHospitalId(hospitalId);
+            }
+
+            const payload = {
+                username: formData.username,
+                email: formData.email,
+                role: formData.role || 'patient',
+                password: formData.password,
+                password2: formData.confirmPassword,
+                profile: {
+                    fullName: formData.username,
+                    nic_number: formData.nic,
+                    phoneNumber: formData.phone,
+                    blood_group: formData.bloodGroup,
+                    country: null,    // ForeignKey — needs ID, wire up later
+                    district: null,   // ForeignKey — needs ID, wire up later
+                    hospital: hospitalId || null,
+                },
+            };
+
+            await axios.post('http://localhost:8000/api/register/', payload);
+
+            setSuccess(true);
             Swal.fire({
                 ...swalBase,
                 position: 'top-end',
@@ -192,7 +346,55 @@ const SignUp = () => {
             }).then(() => {
                 navigate('/login');
             });
-        }, 1500);
+
+        } catch (err) {
+            // Extract error messages from Django's response
+            const data = err.response?.data;
+            let message = 'Registration failed. Please try again.';
+            let popupTitle = 'Registration Failed';
+
+            if (data && typeof data === 'object') {
+                const flattened = flattenApiErrors(data);
+                const inlineErrors = {};
+                const messages = flattened.map(({ key, message: msg }) => {
+                    const mappedField = mapApiKeyToFormField(key);
+                    if (mappedField) {
+                        inlineErrors[mappedField] = msg;
+                    }
+                    return key ? `${key}: ${msg}` : msg;
+                });
+
+                if (Object.keys(inlineErrors).length > 0) {
+                    setFieldErrors((prev) => ({ ...prev, ...inlineErrors }));
+                }
+
+                if (messages.length > 0) {
+                    message = messages.join('\n');
+                }
+
+                const hasExistingDataError = flattened.some(({ message: msg }) =>
+                    /(already|exists|taken|registered|unique)/i.test(msg)
+                );
+                if (hasExistingDataError) {
+                    popupTitle = 'Existing Data Found';
+                }
+            }
+
+            setError(message);
+            Swal.fire({
+                ...swalBase,
+                position: 'top-end',
+                icon: 'error',
+                title: popupTitle,
+                text: message,
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                toast: true,
+            });
+        } finally {
+            setLoading(false);
+        }
     };
 
     /* ── Helper to add error class ── */
@@ -396,18 +598,71 @@ const SignUp = () => {
                             </div>
                         </div>
 
-                        {/* ── Nearest Hospital (Map Picker) ── */}
+                        {/* ── Nearest Hospital (Autocomplete) ── */}
                         <div className="form-group-new">
                             <label>Nearest Hospital</label>
-                            <HospitalMapPicker
-                                districtName={formData.district}
-                                districtCenter={districtCenter}
-                                countryCenter={countryData.center}
-                                countryZoom={countryData.zoom}
-                                selectedHospital={selectedHospital}
-                                onSelectHospital={handleSelectHospital}
-                                disabled={loading || success}
-                            />
+                            <div className="hospital-autocomplete-wrap">
+                                <div className="hospital-search-input-wrap">
+                                    <Search size={16} className="hospital-search-icon" />
+                                    <input
+                                        ref={hospitalInputRef}
+                                        type="text"
+                                        placeholder="Type hospital name… (e.g. Colombo General)"
+                                        value={hospitalSearch}
+                                        onChange={(e) => {
+                                            setHospitalSearch(e.target.value);
+                                            if (!e.target.value) handleClearHospital();
+                                        }}
+                                        onFocus={() => {
+                                            if (hospitalSuggestions.length > 0) setShowHospitalDropdown(true);
+                                        }}
+                                        disabled={loading || success}
+                                        className="hospital-search-input"
+                                        autoComplete="off"
+                                    />
+                                    {hospitalSearching && <Loader size={16} className="hospital-input-spinner" />}
+                                    {selectedHospital && (
+                                        <button
+                                            type="button"
+                                            className="hospital-clear-btn"
+                                            onClick={handleClearHospital}
+                                            title="Clear selection"
+                                        >
+                                            <X size={14} />
+                                        </button>
+                                    )}
+                                </div>
+
+                                {/* Suggestions Dropdown */}
+                                {showHospitalDropdown && (
+                                    <ul className="hospital-suggestions" ref={hospitalDropdownRef}>
+                                        <li className="hospital-suggestions-header">
+                                            {hospitalSuggestions.length} result{hospitalSuggestions.length !== 1 ? 's' : ''} for "{hospitalSearch}"
+                                        </li>
+                                        {hospitalSuggestions.map((h) => (
+                                            <li
+                                                key={h.id}
+                                                className={`hospital-suggestion-item ${selectedHospital?.id === h.id ? 'selected' : ''}`}
+                                                onClick={() => handleSelectHospital(h)}
+                                            >
+                                                <MapPin size={14} className="hospital-item-icon" />
+                                                <div className="hospital-item-info">
+                                                    <span className="hospital-item-name">{h.name}</span>
+                                                    {h.shortAddress && <span className="hospital-item-address">{h.shortAddress}</span>}
+                                                </div>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
+                            </div>
+
+                            {/* Selected Hospital Badge */}
+                            {selectedHospital && (
+                                <div className="hospital-selected-badge">
+                                    <MapPin size={14} />
+                                    <span>Selected: <strong>{selectedHospital.name}</strong></span>
+                                </div>
+                            )}
                         </div>
 
                         {/* ── Passwords ── */}
