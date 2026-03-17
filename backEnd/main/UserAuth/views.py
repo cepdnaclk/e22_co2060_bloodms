@@ -1,4 +1,6 @@
 
+from decimal import Decimal, InvalidOperation
+
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -13,9 +15,8 @@ from .serializer.serializer import (
     UserSerializer,
     ProfileSerializer
 )
-
 from .models.models import Profile
-
+from .models.hospital import Hospital
 User = get_user_model()
 
 
@@ -153,5 +154,63 @@ def get_user_info(request):
         "user": serializer.data,
         "message": "User data retrieved successfully"
     }, status=status.HTTP_200_OK)
+
+@api_view(["POST"])
+@permission_classes([AllowAny])
+def resolve_hospital(request):
+    place_id = request.data.get("place_id")
+    name = request.data.get("name")
+    lat = request.data.get("lat")
+    lon = request.data.get("lon")
+    address = request.data.get("address", "")
+
+    if not place_id or not name:
+        return Response({"error": "place_id and name are required"}, status=400)
+
+    try:
+        place_id = int(place_id)
+    except (TypeError, ValueError):
+        return Response({"error": "place_id must be a valid integer"}, status=400)
+
+    latitude = None
+    longitude = None
+    if lat is not None and lat != "":
+        try:
+            latitude = Decimal(str(lat))
+        except (InvalidOperation, ValueError):
+            return Response({"error": "lat must be a valid number"}, status=400)
+
+    if lon is not None and lon != "":
+        try:
+            longitude = Decimal(str(lon))
+        except (InvalidOperation, ValueError):
+            return Response({"error": "lon must be a valid number"}, status=400)
+
+    hospital, created = Hospital.objects.get_or_create(
+        osm_place_id=place_id,
+        defaults={
+            "hosName": name[:30],
+            "latitude": latitude,
+            "longitude": longitude,
+            "address": address,
+        },
+    )
+
+    # Optional: update changed details
+    if not created:
+        changed = False
+        if latitude is not None and hospital.latitude != latitude:
+            hospital.latitude = latitude
+            changed = True
+        if longitude is not None and hospital.longitude != longitude:
+            hospital.longitude = longitude
+            changed = True
+        if address and hospital.address != address:
+            hospital.address = address
+            changed = True
+        if changed:
+            hospital.save()
+
+    return Response({"id": hospital.id, "name": hospital.hosName}, status=200)
 
 

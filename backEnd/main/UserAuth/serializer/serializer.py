@@ -1,5 +1,6 @@
-from ..models.models import User, Profile
 from rest_framework import serializers
+from ..models.hospital import Hospital
+from ..models.models import User, Profile
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -11,5 +12,15 @@ class UserSerializer(serializers.ModelSerializer):
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
-        # Match the actual field names in the model
         fields = ['fullName', 'nic_number', 'phoneNumber', 'blood_group', 'country', 'district', 'hospital']
+        extra_kwargs = {
+            'country': {'required': False, 'allow_null': True},
+            'district': {'required': False, 'allow_null': True},
+            'hospital': {'required': False, 'allow_null': True},
+        }
+
+
+class HospitalSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Hospital
+        fields = ["id", "hosName", "district", "country", "address", "phone", "latitude", "longitude"]
