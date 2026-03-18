@@ -11,7 +11,7 @@ from django.contrib.auth import get_user_model
 from .serializer.request.register import (
     RegisterSerializer)
 from .serializer.payload.payload import MyTokenObtainPairSerializer
-from .serializer.serializer import (
+from .serializer.response.serializer import (
     UserSerializer,
     ProfileSerializer
 )
@@ -55,7 +55,7 @@ class RegisterView(generics.CreateAPIView):
                 "id": user.id,
                 "username": user.username,
                 "email": user.email,
-                "role":user.role,
+                "role": user.role,
             },
             "message": "User registered successfully",
             "tokens": {
@@ -155,6 +155,7 @@ def get_user_info(request):
         "message": "User data retrieved successfully"
     }, status=status.HTTP_200_OK)
 
+
 @api_view(["POST"])
 @permission_classes([AllowAny])
 def resolve_hospital(request):
@@ -212,5 +213,3 @@ def resolve_hospital(request):
             hospital.save()
 
     return Response({"id": hospital.id, "name": hospital.hosName}, status=200)
-
-

@@ -1,0 +1,36 @@
+[flake8]
+# Max characters per line (PEP8 recommends 79, but 88 is common with black)
+max-line-length = 88
+
+# Cyclomatic complexity (optional, 10 is reasonable)
+max-complexity = 10
+
+# Files/folders to exclude (don’t check these)
+exclude =
+    .git,
+    __pycache__,
+    .venv,
+    backEnd/.venv,
+    **/.venv,
+    env/,
+    venv/,
+    **/venv,
+    **/env,
+    migrations/,
+    **/migrations,
+    static/,
+    media/,
+    node_modules/,
+    **/node_modules,
+    frontend/node_modules/
+
+# Ignore specific warnings/errors
+# Common in Django projects:
+# E203 whitespace before ':', W503 line break before binary operator
+ignore =
+    E203,
+    W503
+
+per-file-ignores =
+    */migrations/*.py:E501
+    backEnd/main/UserAuth/views.py:C901

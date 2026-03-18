@@ -49,7 +49,11 @@ class Profile(models.Model):
         ("O-", "O Negative"),
     )
 
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="profile")
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="profile",
+    )
     fullName = models.CharField(max_length=20)
     nic_number = models.CharField(
         max_length=12,
@@ -57,11 +61,25 @@ class Profile(models.Model):
         validators=[nic_validator],
         help_text="Format: 200213500619",
     )
-    blood_group = models.CharField(max_length=3, choices=BLOOD_GROUP_CHOICES, default="O+")
+    blood_group = models.CharField(
+        max_length=3,
+        choices=BLOOD_GROUP_CHOICES,
+        default="O+",
+    )
     phoneNumber = PhoneNumberField(blank=True, null=True, unique=True)
-    country = models.ForeignKey(Country, on_delete=models.SET_NULL, null=True, related_name="users")
+    country = models.ForeignKey(
+        Country,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="users",
+    )
     district = models.ForeignKey(District, on_delete=models.SET_NULL, null=True)
-    hospital = models.ForeignKey(Hospital, on_delete=models.SET_NULL, null=True, related_name="users")
+    hospital = models.ForeignKey(
+        Hospital,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="users",
+    )
 
     def __str__(self):
         return self.fullName

@@ -6,8 +6,8 @@ from .views import (
     get_user_profile,
     update_user_profile,
     logout_view,
-    get_user_info, resolve_hospital
-
+    get_user_info,
+    resolve_hospital,
 )
 
 
@@ -22,6 +22,5 @@ urlpatterns = [
     path('profile/', get_user_profile, name='user_profile'),
     path('profile/update/', update_user_profile, name='update_profile'),
     path('getuser/', get_user_info, name='user_info'),
-path("hospitals/resolve/", resolve_hospital, name="resolve_hospital"),
+    path("hospitals/resolve/", resolve_hospital, name="resolve_hospital"),
 ]
-

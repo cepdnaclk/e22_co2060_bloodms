@@ -73,7 +73,7 @@ INSTALLED_APPS = [
 
 
 ]
-PHONENUMBER_DEFAULT_REGION = 'LK' # Example: US, GB, IN
+PHONENUMBER_DEFAULT_REGION = 'LK'  # Example: US, GB, IN
 
 
 MIDDLEWARE = [
@@ -125,7 +125,9 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME': (
+            'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'
+        ),
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
@@ -176,7 +178,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:5173",
 ]
 
-CORS_ALLOW_CREDENTIALS = True #it tells to browser that is safe to send to cookies
+CORS_ALLOW_CREDENTIALS = True  # It tells browser that sending cookies is safe.
 
 # REST Framework Settings
 REST_FRAMEWORK = {
@@ -207,7 +209,8 @@ SIMPLE_JWT = {
     # If True, every time a refresh token is used, a NEW refresh token is issued
     'ROTATE_REFRESH_TOKENS': True,
 
-    # If True, the old refresh token is blacklisted after being used (requires Blacklist app)
+    # If True, the old refresh token is blacklisted after being used.
+    # (requires Blacklist app)
     'BLACKLIST_AFTER_ROTATION': True,
 
     # The prefix required in the header, e.g., "Authorization: Bearer <token>"
@@ -220,4 +223,3 @@ SIMPLE_JWT = {
     'USER_ID_FIELD': 'id',
     'USER_ID_CLAIM': 'user_id',
 }
-
