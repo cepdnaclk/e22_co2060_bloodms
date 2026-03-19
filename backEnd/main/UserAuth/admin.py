@@ -1,7 +1,8 @@
 
 # Register your models here.
 from django.contrib import admin
-from .models import User, Profile
+
+from .models import Profile, User
 
 
 class UserAdmin(admin.ModelAdmin):

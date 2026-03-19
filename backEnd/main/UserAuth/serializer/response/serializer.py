@@ -1,6 +1,7 @@
 from rest_framework import serializers
+
+from ...models import Profile, User
 from ...models.hospital import Hospital
-from ...models import User, Profile
 
 
 class UserSerializer(serializers.ModelSerializer):

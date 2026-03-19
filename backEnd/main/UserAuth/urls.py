@@ -1,15 +1,15 @@
 from django.urls import path
 from rest_framework_simplejwt.views import TokenRefreshView
-from .views import (
-    RegisterView,
-    MyTokenObtainPairView,
-    get_user_profile,
-    update_user_profile,
-    logout_view,
-    get_user_info,
-    resolve_hospital,
-)
 
+from .views import (
+    MyTokenObtainPairView,
+    RegisterView,
+    get_user_info,
+    get_user_profile,
+    logout_view,
+    resolve_hospital,
+    update_user_profile,
+)
 
 urlpatterns = [
     # Authentication endpoints

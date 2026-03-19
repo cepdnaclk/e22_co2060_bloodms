@@ -1,4 +1,5 @@
 from django.db import models
+
 from .location import Country, District
 
 __all__ = ['Hospital']

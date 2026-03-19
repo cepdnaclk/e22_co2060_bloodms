@@ -1,6 +1,7 @@
 from django.db import IntegrityError, transaction
 from rest_framework import serializers
-from ...models import User, Profile
+
+from ...models import Profile, User
 from ..response.serializer import ProfileSerializer
 
 

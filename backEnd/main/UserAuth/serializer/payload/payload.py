@@ -1,6 +1,7 @@
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from django.core.exceptions import ObjectDoesNotExist
 import logging
+
+from django.core.exceptions import ObjectDoesNotExist
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 logger = logging.getLogger(__name__)  # For logging errors
 

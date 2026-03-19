@@ -1,22 +1,20 @@
 
 from decimal import Decimal, InvalidOperation
 
-from rest_framework import generics, status
-from rest_framework.response import Response
-from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework_simplejwt.views import TokenObtainPairView
-from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import get_user_model
-from .serializer.request.register import (
-    RegisterSerializer)
-from .serializer.payload.payload import MyTokenObtainPairSerializer
-from .serializer.response.serializer import (
-    UserSerializer,
-    ProfileSerializer
-)
-from .models.models import Profile
+from rest_framework import generics, status
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.views import TokenObtainPairView
+
 from .models.hospital import Hospital
+from .models.models import Profile
+from .serializer.payload.payload import MyTokenObtainPairSerializer
+from .serializer.request.register import RegisterSerializer
+from .serializer.response.serializer import ProfileSerializer, UserSerializer
+
 User = get_user_model()
 
 

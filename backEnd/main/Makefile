@@ -6,8 +6,11 @@ lint:
 
 # Auto-fix errors
 fix:
-	ruff check . --fix
+	 python -m ruff check . --fix
 
+
+show:
+	python -m ruff check . --show-fixes
 
 run:
 	python manage.py runserver

@@ -1,11 +1,11 @@
 from django.conf import settings
-from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator
+from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 
-from .location import District, Country
 from .hospital import Hospital
+from .location import Country, District
 
 __all__ = ["User", "Profile"]
 
