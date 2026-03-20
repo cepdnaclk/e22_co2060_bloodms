@@ -381,3 +381,39 @@ body.disaster-mode {
     border-radius: 10px !important;
   }
 }
+
+/* ═══════════════════════════════════════════════════
+   Global Card Animations (from user request)
+   ═══════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: no-preference) {
+  .card,
+  .service-card-wrapper,
+  .stock-card,
+  .testimonial-card,
+  .stat-box,
+  .fifo-item,
+  .hospital-item,
+  [class*="-card"],
+  [class*="card-"] {
+    --animation-duration: 1200ms;
+    animation: fade-in var(--animation-duration), multi-slide-right-1 var(--animation-duration) ease-in-out 25ms 1 normal none;
+  }
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes multi-slide-right-1 {
+  0% {
+    transform: translateX(-30px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}

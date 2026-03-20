@@ -2,13 +2,10 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import RoleRoute from './api/RoleRoute';
-
 import Navbar from './components/layout/Navbar';
 import LandingPage from './pages/public/LandingPage';
-
 import Login from './pages/auth/Login';
 import SignUp from './pages/auth/SignUp';
-
 import DonorDashboard from './pages/donor/DonorDashboard';
 import DonorEligibility from './pages/donor/DonorEligibility';
 import DonorRegistration from './pages/donor/DonorRegistration';
