@@ -1,368 +1,1358 @@
-/* Doctor Dashboard Styles */
-.alert-box {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-4);
-    padding: var(--spacing-4) var(--spacing-6);
-    border-radius: var(--radius-md);
-    margin-bottom: var(--spacing-6);
-    border-left: 4px solid transparent;
+/* HOPEDROP Doctor Dashboard - Fully Isolated Scoped Styles */
+/* All styles are scoped under .hopedrop-dashboard to prevent conflicts */
+
+.hopedrop-dashboard {
+  display: flex;
+  min-height: calc(100vh - 80px);
+  width: 100%;
+  background: #f8fafc;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
+  box-sizing: border-box;
+  position: relative;
+  transition: margin-top 0.3s ease;
+  
+  /* Color variables for theming */
+  --hopedrop-bg-primary: #f8fafc;
+  --hopedrop-bg-secondary: #ffffff;
+  --hopedrop-bg-tertiary: #f1f5f9;
+  --hopedrop-text-primary: #1e293b;
+  --hopedrop-text-secondary: #475569;
+  --hopedrop-text-muted: #64748b;
+  --hopedrop-border-color: #e2e8f0;
+  --hopedrop-border-light: #f1f5f9;
+  --hopedrop-hover-bg: #f8fafc;
+  --hopedrop-input-bg: #ffffff;
+  --hopedrop-shadow-sm: rgba(0, 0, 0, 0.05);
+  --hopedrop-shadow-md: rgba(0, 0, 0, 0.1);
 }
 
-.alert-box.critical {
-    background-color: var(--color-critical-bg);
-    border-left-color: var(--color-critical);
+/* ===== DARK MODE OVERRIDES ===== */
+[data-theme="dark"] .hopedrop-dashboard {
+  background: #0d1117;
+  
+  --hopedrop-bg-primary: #0d1117;
+  --hopedrop-bg-secondary: #161b22;
+  --hopedrop-bg-tertiary: #1c2128;
+  --hopedrop-text-primary: #e6edf3;
+  --hopedrop-text-secondary: #c9d1d9;
+  --hopedrop-text-muted: #8b949e;
+  --hopedrop-border-color: #30363d;
+  --hopedrop-border-light: #21262d;
+  --hopedrop-hover-bg: #1c2128;
+  --hopedrop-input-bg: #0d1117;
+  --hopedrop-shadow-sm: rgba(0, 0, 0, 0.3);
+  --hopedrop-shadow-md: rgba(0, 0, 0, 0.5);
 }
 
-.alert-box.warning {
-    background-color: var(--color-warning-bg);
-    border-left-color: var(--color-warning);
+.hopedrop-dashboard *,
+.hopedrop-dashboard *::before,
+.hopedrop-dashboard *::after {
+  box-sizing: border-box;
 }
 
-.alert-icon {
-    color: var(--color-critical);
-    display: flex;
+/* ===== SIDEBAR ===== */
+.hopedrop-dashboard .hopedrop-sidebar {
+  background: linear-gradient(180deg, #dc2626 0%, #991b1b 100%);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  transition: width 0.3s ease;
+  position: sticky;
+  top: 0;
+  height: calc(100vh - 80px);
+  z-index: 100;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.alert-content {
-    flex: 1;
+.hopedrop-dashboard .hopedrop-sidebar-open {
+  width: 260px;
 }
 
-.alert-content h4 {
-    margin: 0 0 var(--spacing-1) 0;
-    color: var(--color-critical);
+.hopedrop-dashboard .hopedrop-sidebar-closed {
+  width: 70px;
 }
 
-.alert-content p {
-    margin: 0;
-    font-size: var(--font-size-sm);
-    color: var(--color-secondary);
+.hopedrop-dashboard .hopedrop-sidebar-nav {
+  flex: 1;
+  padding: 1.5rem 0;
+  overflow-y: auto;
 }
 
-/* Data Table */
-.data-table {
-    width: 100%;
-    border-collapse: collapse;
+.hopedrop-dashboard .hopedrop-nav-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1.5rem;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  border-left: 3px solid transparent;
+  text-align: left;
 }
 
-.data-table th,
-.data-table td {
-    padding: var(--spacing-4) var(--spacing-6);
-    text-align: left;
-    border-bottom: 1px solid var(--color-border);
-    font-size: var(--font-size-sm);
+.hopedrop-dashboard .hopedrop-nav-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
 }
 
-.data-table th {
-    background-color: var(--color-background);
-    color: var(--color-text-muted);
-    font-weight: 600;
-    text-transform: uppercase;
-    font-size: var(--font-size-xs);
-    letter-spacing: 0.5px;
+.hopedrop-dashboard .hopedrop-nav-item svg {
+  flex-shrink: 0;
 }
 
-.data-table tr:last-child td {
-    border-bottom: none;
+.hopedrop-dashboard .hopedrop-nav-active {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  border-left-color: white;
 }
 
-.data-table tbody tr:hover {
-    background-color: #FAFAFA;
+/* ===== MAIN CONTENT ===== */
+.hopedrop-dashboard .hopedrop-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
-[data-theme="dark"] .data-table tbody tr:hover {
-    background-color: #1c2128;
+.hopedrop-dashboard .hopedrop-header {
+  background: var(--hopedrop-bg-secondary);
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 1px 3px var(--hopedrop-shadow-sm);
+  z-index: 50;
 }
 
-.badge {
-    padding: var(--spacing-1) var(--spacing-3);
-    border-radius: var(--radius-full);
-    font-size: var(--font-size-xs);
-    font-weight: 600;
-    display: inline-block;
+.hopedrop-dashboard .hopedrop-header-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
-.badge.safe {
-    background-color: var(--color-success-bg);
-    color: var(--color-success);
-    border: 1px solid var(--color-success);
+.hopedrop-dashboard .hopedrop-menu-btn {
+  background: var(--hopedrop-bg-tertiary);
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--hopedrop-text-secondary);
+  transition: all 0.2s;
 }
 
-.badge.warning {
-    background-color: var(--color-warning-bg);
-    color: var(--color-warning);
-    border: 1px solid var(--color-warning);
+.hopedrop-dashboard .hopedrop-menu-btn:hover {
+  background: var(--hopedrop-border-color);
 }
 
-.badge.critical {
-    background-color: var(--color-critical-bg);
-    color: var(--color-critical);
-    border: 1px solid var(--color-critical);
+.hopedrop-dashboard .hopedrop-page-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--hopedrop-text-primary);
+  margin: 0;
 }
 
-.text-expiring {
-    color: var(--color-expiring);
-    font-weight: 600;
+.hopedrop-dashboard .hopedrop-header-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
-/* Search Bar in Header */
-.search-bar {
-    display: flex;
-    align-items: center;
-    background-color: var(--color-background);
-    border-radius: var(--radius-full);
-    padding: var(--spacing-2) var(--spacing-4);
-    gap: var(--spacing-2);
+.hopedrop-dashboard .hopedrop-search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
 }
 
-.search-bar input {
-    border: none;
-    background: transparent;
-    outline: none;
-    font-size: var(--font-size-sm);
-    width: 200px;
+.hopedrop-dashboard .hopedrop-search-box svg {
+  position: absolute;
+  left: 0.75rem;
+  color: var(--hopedrop-text-muted);
 }
 
-.search-bar svg {
-    color: var(--color-text-muted);
+.hopedrop-dashboard .hopedrop-search-box input {
+  padding: 0.625rem 1rem 0.625rem 2.5rem;
+  border: 1px solid var(--hopedrop-border-color);
+  border-radius: 8px;
+  width: 280px;
+  font-size: 0.875rem;
+  outline: none;
+  transition: all 0.2s;
+  background: var(--hopedrop-input-bg);
+  color: var(--hopedrop-text-primary);
 }
 
-/* Network Side Panel */
-.network-status {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-3);
-    padding: var(--spacing-3);
-    background-color: var(--color-surface);
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-sm);
+.hopedrop-dashboard .hopedrop-search-box input:focus {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
 }
 
-.network-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
+.hopedrop-dashboard .hopedrop-notification-btn {
+  position: relative;
+  background: var(--hopedrop-bg-tertiary);
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--hopedrop-text-secondary);
+  transition: all 0.2s;
 }
 
-.pulse-green {
-    background-color: var(--color-success);
-    box-shadow: 0 0 0 0 rgba(46, 125, 50, 0.4);
-    animation: pulse-green 2s infinite;
+.hopedrop-dashboard .hopedrop-notification-btn:hover {
+  background: var(--hopedrop-border-color);
 }
 
-@keyframes pulse-green {
-    0% {
-        transform: scale(0.95);
-        box-shadow: 0 0 0 0 rgba(46, 125, 50, 0.7);
-    }
-
-    70% {
-        transform: scale(1);
-        box-shadow: 0 0 0 6px rgba(46, 125, 50, 0);
-    }
-
-    100% {
-        transform: scale(0.95);
-        box-shadow: 0 0 0 0 rgba(46, 125, 50, 0);
-    }
+.hopedrop-dashboard .hopedrop-notification-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: #dc2626;
+  color: white;
+  font-size: 0.625rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 10px;
 }
 
-.section-label {
-    font-size: var(--font-size-xs);
-    text-transform: uppercase;
-    color: var(--color-text-muted);
-    letter-spacing: 0.5px;
-    margin-bottom: var(--spacing-3);
+/* ===== CONTENT AREA ===== */
+.hopedrop-dashboard .hopedrop-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 2rem;
 }
 
-.mt-4 {
-    margin-top: var(--spacing-4);
+/* ===== ALERTS ===== */
+.hopedrop-dashboard .hopedrop-alerts-section {
+  margin-bottom: 2rem;
 }
 
-.mt-2 {
-    margin-top: var(--spacing-2);
+.hopedrop-dashboard .hopedrop-alert {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border-radius: 10px;
+  margin-bottom: 0.75rem;
+  border-left: 4px solid;
 }
 
-.mt-1 {
-    margin-top: var(--spacing-1);
+.hopedrop-dashboard .hopedrop-alert-critical {
+  background: rgba(220, 38, 38, 0.1);
+  border-left-color: #dc2626;
+  color: #991b1b;
 }
 
-.mb-2 {
-    margin-bottom: var(--spacing-2);
+.hopedrop-dashboard .hopedrop-alert-warning {
+  background: rgba(245, 158, 11, 0.1);
+  border-left-color: #f59e0b;
+  color: #92400e;
 }
 
-.p-0 {
-    padding: 0 !important;
+.hopedrop-dashboard .hopedrop-alert svg {
+  flex-shrink: 0;
 }
 
-.transfer-request {
-    background-color: var(--color-surface);
-    border-radius: var(--radius-md);
-    padding: var(--spacing-4);
-    border-left: 3px solid var(--color-primary);
-    box-shadow: var(--shadow-sm);
+.hopedrop-dashboard .hopedrop-alert-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 
-.transfer-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.hopedrop-dashboard .hopedrop-alert-content strong {
+  font-weight: 600;
+  font-size: 0.9375rem;
 }
 
-.btn-group {
-    display: flex;
-    gap: var(--spacing-2);
+.hopedrop-dashboard .hopedrop-alert-content span {
+  font-size: 0.875rem;
+  opacity: 0.9;
 }
 
-/* DISASTER MODE UI */
-.fade-in {
-    animation: fadeIn var(--transition-normal);
+/* ===== SECTIONS ===== */
+.hopedrop-dashboard .hopedrop-section {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.hopedrop-dashboard .hopedrop-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
 }
 
-.emergency-banner {
-    background-color: var(--color-critical);
-    color: white;
-    padding: var(--spacing-4) var(--spacing-6);
-    border-radius: var(--radius-md);
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-4);
-    margin-bottom: var(--spacing-6);
-    box-shadow: var(--shadow-md);
+.hopedrop-dashboard .hopedrop-section-header h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
 }
 
-.emergency-banner h2 {
-    margin: 0;
-    color: white;
-    font-size: var(--font-size-lg);
+.hopedrop-dashboard .hopedrop-section-description {
+  margin-top: -0.75rem;
+  margin-bottom: 1.5rem;
+  color: #64748b;
+  font-size: 0.875rem;
 }
 
-.disaster-card {
-    border-color: var(--color-critical) !important;
-    box-shadow: 0 4px 20px rgba(211, 47, 47, 0.15) !important;
+.hopedrop-dashboard .hopedrop-header-actions {
+  display: flex;
+  gap: 0.75rem;
 }
 
-.disaster-card .card-header {
-    background-color: var(--color-critical-bg);
-    border-bottom-color: #FFCDD2;
+/* ===== BLOOD STOCK GRID ===== */
+.hopedrop-dashboard .hopedrop-blood-stock-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 1rem;
 }
 
-.disaster-card .card-header h2 {
-    color: var(--color-critical);
-    font-weight: 700;
+.hopedrop-dashboard .hopedrop-blood-card {
+  background: white;
+  border: 2px solid;
+  border-radius: 10px;
+  padding: 1.25rem;
+  text-align: center;
+  transition: all 0.3s;
 }
 
-.form-group-large label {
-    display: block;
-    font-weight: 600;
-    margin-bottom: var(--spacing-3);
-    color: var(--color-secondary);
-    font-size: var(--font-size-lg);
+.hopedrop-dashboard .hopedrop-blood-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
-.input-large {
-    width: 100%;
-    padding: var(--spacing-4);
-    font-size: var(--font-size-xl);
-    border: 2px solid var(--color-border);
-    border-radius: var(--radius-md);
-    outline: none;
-    transition: border-color var(--transition-fast);
-    text-align: center;
-    font-weight: 700;
-    background-color: var(--color-surface);
+.hopedrop-dashboard .hopedrop-status-safe {
+  border-color: #22c55e;
+  background: rgba(34, 197, 94, 0.05);
 }
 
-.input-large:focus {
-    border-color: var(--color-critical);
+.hopedrop-dashboard .hopedrop-status-low {
+  border-color: #f59e0b;
+  background: rgba(245, 158, 11, 0.05);
 }
 
-.blood-type-grid {
-    display: grid;
+.hopedrop-dashboard .hopedrop-status-critical {
+  border-color: #dc2626;
+  background: rgba(220, 38, 38, 0.05);
+}
+
+.hopedrop-dashboard .hopedrop-blood-type {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 0.5rem;
+}
+
+.hopedrop-dashboard .hopedrop-blood-units {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #475569;
+  margin-bottom: 0.5rem;
+}
+
+.hopedrop-dashboard .hopedrop-blood-status {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.75rem;
+}
+
+.hopedrop-dashboard .hopedrop-status-safe .hopedrop-blood-status {
+  color: #16a34a;
+}
+
+.hopedrop-dashboard .hopedrop-status-low .hopedrop-blood-status {
+  color: #d97706;
+}
+
+.hopedrop-dashboard .hopedrop-status-critical .hopedrop-blood-status {
+  color: #dc2626;
+}
+
+.hopedrop-dashboard .hopedrop-blood-progress {
+  width: 100%;
+  height: 6px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.hopedrop-dashboard .hopedrop-blood-progress-bar {
+  height: 100%;
+  background: currentColor;
+  transition: width 0.3s;
+}
+
+.hopedrop-dashboard .hopedrop-status-safe .hopedrop-blood-progress-bar {
+  background: #22c55e;
+}
+
+.hopedrop-dashboard .hopedrop-status-low .hopedrop-blood-progress-bar {
+  background: #f59e0b;
+}
+
+.hopedrop-dashboard .hopedrop-status-critical .hopedrop-blood-progress-bar {
+  background: #dc2626;
+}
+
+/* ===== STATS GRID ===== */
+.hopedrop-dashboard .hopedrop-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.hopedrop-dashboard .hopedrop-stat-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  gap: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s;
+}
+
+.hopedrop-dashboard .hopedrop-stat-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.hopedrop-dashboard .hopedrop-stat-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.hopedrop-dashboard .hopedrop-stat-icon-blue {
+  background: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
+}
+
+.hopedrop-dashboard .hopedrop-stat-icon-red {
+  background: rgba(220, 38, 38, 0.1);
+  color: #dc2626;
+}
+
+.hopedrop-dashboard .hopedrop-stat-icon-green {
+  background: rgba(34, 197, 94, 0.1);
+  color: #22c55e;
+}
+
+.hopedrop-dashboard .hopedrop-stat-icon-purple {
+  background: rgba(168, 85, 247, 0.1);
+  color: #a855f7;
+}
+
+.hopedrop-dashboard .hopedrop-stat-content {
+  flex: 1;
+}
+
+.hopedrop-dashboard .hopedrop-stat-label {
+  font-size: 0.875rem;
+  color: #64748b;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.hopedrop-dashboard .hopedrop-stat-value {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 0.25rem 0;
+}
+
+.hopedrop-dashboard .hopedrop-stat-change {
+  font-size: 0.8125rem;
+  color: #64748b;
+}
+
+/* ===== TABLE ===== */
+.hopedrop-dashboard .hopedrop-table-container {
+  overflow-x: auto;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.hopedrop-dashboard .hopedrop-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.hopedrop-dashboard .hopedrop-table thead {
+  background: #f8fafc;
+}
+
+.hopedrop-dashboard .hopedrop-table th {
+  text-align: left;
+  padding: 0.875rem 1rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.hopedrop-dashboard .hopedrop-table td {
+  padding: 1rem;
+  font-size: 0.875rem;
+  color: #334155;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.hopedrop-dashboard .hopedrop-table tbody tr:hover {
+  background: #f8fafc;
+}
+
+.hopedrop-dashboard .hopedrop-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.hopedrop-dashboard .hopedrop-row-warning {
+  background: rgba(245, 158, 11, 0.05);
+}
+
+.hopedrop-dashboard .hopedrop-blood-badge {
+  display: inline-block;
+  padding: 0.375rem 0.75rem;
+  background: #dc2626;
+  color: white;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.8125rem;
+}
+
+.hopedrop-dashboard .hopedrop-urgency-badge {
+  display: inline-block;
+  padding: 0.375rem 0.75rem;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.75rem;
+  text-transform: capitalize;
+}
+
+.hopedrop-dashboard .hopedrop-urgency-high {
+  background: rgba(220, 38, 38, 0.1);
+  color: #dc2626;
+}
+
+.hopedrop-dashboard .hopedrop-urgency-medium {
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+}
+
+.hopedrop-dashboard .hopedrop-urgency-low {
+  background: rgba(34, 197, 94, 0.1);
+  color: #22c55e;
+}
+
+.hopedrop-dashboard .hopedrop-status-badge {
+  display: inline-block;
+  padding: 0.375rem 0.75rem;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.75rem;
+  text-transform: capitalize;
+}
+
+.hopedrop-dashboard .hopedrop-status-pending {
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+}
+
+.hopedrop-dashboard .hopedrop-status-approved {
+  background: rgba(34, 197, 94, 0.1);
+  color: #22c55e;
+}
+
+.hopedrop-dashboard .hopedrop-status-completed {
+  background: rgba(100, 116, 139, 0.1);
+  color: #475569;
+}
+
+.hopedrop-dashboard .hopedrop-status-available {
+  background: rgba(34, 197, 94, 0.1);
+  color: #22c55e;
+}
+
+.hopedrop-dashboard .hopedrop-status-expiring {
+  background: rgba(220, 38, 38, 0.1);
+  color: #dc2626;
+}
+
+.hopedrop-dashboard .hopedrop-expiry-warning {
+  color: #dc2626;
+  font-weight: 600;
+}
+
+/* ===== BUTTONS ===== */
+.hopedrop-dashboard .hopedrop-btn-primary,
+.hopedrop-dashboard .hopedrop-btn-secondary,
+.hopedrop-dashboard .hopedrop-btn-text {
+  border: none;
+  padding: 0.625rem 1.25rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
+}
+
+.hopedrop-dashboard .hopedrop-btn-primary {
+  background: #dc2626;
+  color: white;
+}
+
+.hopedrop-dashboard .hopedrop-btn-primary:hover {
+  background: #b91c1c;
+}
+
+.hopedrop-dashboard .hopedrop-btn-secondary {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.hopedrop-dashboard .hopedrop-btn-secondary:hover {
+  background: #e2e8f0;
+}
+
+.hopedrop-dashboard .hopedrop-btn-text {
+  background: none;
+  color: #dc2626;
+  padding: 0.375rem 0.75rem;
+}
+
+.hopedrop-dashboard .hopedrop-btn-text:hover {
+  background: rgba(220, 38, 38, 0.1);
+}
+
+.hopedrop-dashboard .hopedrop-btn-sm {
+  padding: 0.5rem 1rem;
+  font-size: 0.8125rem;
+}
+
+.hopedrop-dashboard .hopedrop-btn-block {
+  width: 100%;
+  justify-content: center;
+}
+
+/* ===== EXPIRING GRID ===== */
+.hopedrop-dashboard .hopedrop-expiring-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.hopedrop-dashboard .hopedrop-expiring-card {
+  border: 2px solid #fca5a5;
+  border-radius: 12px;
+  padding: 1.25rem;
+  background: rgba(220, 38, 38, 0.02);
+  transition: all 0.3s;
+}
+
+.hopedrop-dashboard .hopedrop-expiring-card:hover {
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.15);
+  transform: translateY(-2px);
+}
+
+.hopedrop-dashboard .hopedrop-expiring-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.hopedrop-dashboard .hopedrop-blood-badge-large {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: #dc2626;
+  color: white;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 1.125rem;
+}
+
+.hopedrop-dashboard .hopedrop-expiry-badge {
+  padding: 0.375rem 0.75rem;
+  background: rgba(220, 38, 38, 0.1);
+  color: #dc2626;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+
+.hopedrop-dashboard .hopedrop-expiring-body {
+  margin-bottom: 1.25rem;
+}
+
+.hopedrop-dashboard .hopedrop-expiring-info {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.625rem 0;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 0.875rem;
+}
+
+.hopedrop-dashboard .hopedrop-expiring-info span {
+  color: #64748b;
+}
+
+.hopedrop-dashboard .hopedrop-expiring-info strong {
+  color: #1e293b;
+}
+
+.hopedrop-dashboard .hopedrop-expiring-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.hopedrop-dashboard .hopedrop-expiring-actions button {
+  flex: 1;
+}
+
+/* ===== HOSPITALS GRID ===== */
+.hopedrop-dashboard .hopedrop-hospitals-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.5rem;
+}
+
+.hopedrop-dashboard .hopedrop-hospital-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.3s;
+}
+
+.hopedrop-dashboard .hopedrop-hospital-card:hover {
+  border-color: #dc2626;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.1);
+}
+
+.hopedrop-dashboard .hopedrop-hospital-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.hopedrop-dashboard .hopedrop-hospital-header svg {
+  color: #dc2626;
+  flex-shrink: 0;
+}
+
+.hopedrop-dashboard .hopedrop-hospital-header h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 0.25rem 0;
+}
+
+.hopedrop-dashboard .hopedrop-hospital-distance {
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+.hopedrop-dashboard .hopedrop-hospital-inventory h4 {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #475569;
+  margin: 0 0 0.75rem 0;
+}
+
+.hopedrop-dashboard .hopedrop-hospital-blood-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.hopedrop-dashboard .hopedrop-hospital-blood-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.625rem 0.875rem;
+  background: #f8fafc;
+  border-radius: 6px;
+}
+
+.hopedrop-dashboard .hopedrop-blood-type-small {
+  font-weight: 600;
+  color: #dc2626;
+  font-size: 0.875rem;
+}
+
+.hopedrop-dashboard .hopedrop-blood-units-small {
+  font-size: 0.875rem;
+  color: #475569;
+}
+
+/* ===== MODAL ===== */
+.hopedrop-dashboard .hopedrop-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.hopedrop-dashboard .hopedrop-modal {
+  margin: 0;
+  border-radius: 0;
+  max-height: 100vh;
+}
+
+.hopedrop-dashboard .hopedrop-modal-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 10;
+}
+
+.hopedrop-dashboard .hopedrop-modal-header h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+}
+
+.hopedrop-dashboard .hopedrop-modal-close {
+  background: #f1f5f9;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  transition: all 0.2s;
+}
+
+.hopedrop-dashboard .hopedrop-modal-close:hover {
+  background: #e2e8f0;
+}
+
+.hopedrop-dashboard .hopedrop-modal-body {
+  padding: 1.5rem;
+}
+
+.hopedrop-dashboard .hopedrop-form-group {
+  margin-bottom: 1.25rem;
+}
+
+.hopedrop-dashboard .hopedrop-form-group label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 0.5rem;
+}
+
+.hopedrop-dashboard .hopedrop-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.hopedrop-dashboard .hopedrop-input:focus {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+.hopedrop-dashboard .hopedrop-modal-footer {
+  padding: 1.5rem;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  position: sticky;
+  bottom: 0;
+  background: white;
+}
+
+/* ===== DISASTER MODE ===== */
+.hopedrop-dashboard .hopedrop-disaster-mode-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1rem;
+  border: 2px solid #fca5a5;
+  background: white;
+  color: #dc2626;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 600;
+  font-size: 0.875rem;
+  white-space: nowrap;
+}
+
+.hopedrop-dashboard .hopedrop-disaster-mode-btn:hover {
+  background: #fef2f2;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(220, 38, 38, 0.2);
+}
+
+.hopedrop-dashboard .hopedrop-disaster-active {
+  background: #dc2626;
+  color: white;
+  border-color: #dc2626;
+  animation: hopedrop-pulse-disaster 2s infinite;
+}
+
+.hopedrop-dashboard .hopedrop-disaster-active:hover {
+  background: #b91c1c;
+}
+
+@keyframes hopedrop-pulse-disaster {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(220, 38, 38, 0);
+  }
+}
+
+.hopedrop-dashboard .hopedrop-disaster-banner {
+  position: fixed;
+  top: 90px; /* Navbar (20px top + ~56px height = ~76px) + small gap */
+  left: 0;
+  right: 0;
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  color: white;
+  z-index: 300;
+  box-shadow: 0 4px 20px rgba(220, 38, 38, 0.4);
+  animation: hopedrop-slide-down 0.4s ease-out;
+}
+
+@keyframes hopedrop-slide-down {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.hopedrop-dashboard .hopedrop-disaster-banner-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 1rem 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.hopedrop-dashboard .hopedrop-disaster-icon-pulse {
+  animation: hopedrop-pulse-icon 1.5s infinite;
+  flex-shrink: 0;
+}
+
+@keyframes hopedrop-pulse-icon {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.8;
+  }
+}
+
+.hopedrop-dashboard .hopedrop-disaster-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.hopedrop-dashboard .hopedrop-disaster-text strong {
+  font-size: 1.125rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.hopedrop-dashboard .hopedrop-disaster-text span {
+  font-size: 0.875rem;
+  opacity: 0.95;
+}
+
+.hopedrop-dashboard .hopedrop-disaster-deactivate {
+  padding: 0.625rem 1.5rem;
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid white;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 0.875rem;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.hopedrop-dashboard .hopedrop-disaster-deactivate:hover {
+  background: white;
+  color: #dc2626;
+}
+
+.hopedrop-dashboard.hopedrop-disaster-mode .hopedrop-main {
+  margin-top: 0;
+}
+
+.hopedrop-dashboard.hopedrop-disaster-mode .hopedrop-sidebar {
+  margin-top: 64px;
+  height: calc(100vh - 144px);
+}
+
+.hopedrop-dashboard.hopedrop-disaster-mode {
+  padding-top: 64px;
+}
+
+.hopedrop-dashboard.hopedrop-disaster-mode .hopedrop-alert {
+  background: linear-gradient(135deg, #fef2f2, #fee2e2);
+  border-left: 5px solid #dc2626;
+  animation: hopedrop-alert-pulse 2s infinite;
+}
+
+@keyframes hopedrop-alert-pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.01);
+  }
+}
+
+.hopedrop-dashboard.hopedrop-disaster-mode .hopedrop-blood-card.hopedrop-status-critical,
+.hopedrop-dashboard.hopedrop-disaster-mode .hopedrop-blood-card.hopedrop-status-low {
+  border: 3px solid #dc2626;
+  animation: hopedrop-critical-blink 1.5s infinite;
+}
+
+@keyframes hopedrop-critical-blink {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(220, 38, 38, 0);
+  }
+}
+
+.hopedrop-dashboard.hopedrop-disaster-mode .hopedrop-stat-icon-red {
+  animation: hopedrop-shake 0.5s infinite;
+}
+
+@keyframes hopedrop-shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-3px);
+  }
+  75% {
+    transform: translateX(3px);
+  }
+}
+
+.hopedrop-dashboard .hopedrop-disaster-mode-text {
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+  .hopedrop-dashboard .hopedrop-blood-stock-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+  
+  .hopedrop-dashboard .hopedrop-stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .hopedrop-dashboard .hopedrop-sidebar-open {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 200;
+  }
+  
+  .hopedrop-dashboard .hopedrop-sidebar-closed {
+    transform: translateX(-100%);
+  }
+  
+  .hopedrop-dashboard .hopedrop-header {
+    padding: 1rem;
+  }
+  
+  .hopedrop-dashboard .hopedrop-page-title {
+    font-size: 1.25rem;
+  }
+  
+  .hopedrop-dashboard .hopedrop-search-box {
+    display: none;
+  }
+  
+  .hopedrop-dashboard .hopedrop-content {
+    padding: 1rem;
+  }
+  
+  .hopedrop-dashboard .hopedrop-blood-stock-grid {
     grid-template-columns: repeat(4, 1fr);
-    gap: var(--spacing-3);
+  }
+  
+  .hopedrop-dashboard .hopedrop-stats-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .hopedrop-dashboard .hopedrop-expiring-grid,
+  .hopedrop-dashboard .hopedrop-hospitals-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .hopedrop-dashboard .hopedrop-table-container {
+    overflow-x: auto;
+  }
 }
 
-.btn-blood-type {
-    padding: var(--spacing-4);
-    font-size: var(--font-size-lg);
-    font-weight: 700;
-    background-color: var(--color-surface);
-    border: 2px solid var(--color-border);
-    border-radius: var(--radius-md);
-    color: var(--color-text-main);
-    transition: all var(--transition-fast);
-    cursor: pointer;
-}
-
-.btn-blood-type:hover {
-    border-color: var(--color-text-muted);
-}
-
-.btn-blood-type.selected {
-    background-color: var(--color-critical);
-    color: white;
-    border-color: var(--color-critical);
-    transform: scale(1.05);
-    box-shadow: var(--shadow-md);
-}
-
-.btn-block {
-    display: flex;
-    width: 100%;
-    justify-content: center;
-}
-
-.hospital-list {
-    display: flex;
+@media (max-width: 480px) {
+  .hopedrop-dashboard .hopedrop-blood-stock-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .hopedrop-dashboard .hopedrop-section {
+    padding: 1rem;
+  }
+  
+  .hopedrop-dashboard .hopedrop-section-header {
     flex-direction: column;
-    gap: var(--spacing-4);
+    gap: 1rem;
+    align-items: stretch;
+  }
+  
+  .hopedrop-dashboard .hopedrop-modal {
+    margin: 0;
+    border-radius: 0;
+    max-height: 100vh;
+  }
 }
 
-.hospital-item {
-    padding-bottom: var(--spacing-4);
-    border-bottom: 1px solid var(--color-border);
+/* ═══════════════════════════════════════════
+   COMPREHENSIVE DARK MODE THEME OVERRIDES
+   ═══════════════════════════════════════════ */
+
+[data-theme="dark"] .hopedrop-dashboard .hopedrop-section {
+  background: var(--hopedrop-bg-secondary);
+  box-shadow: 0 1px 3px var(--hopedrop-shadow-sm);
 }
 
-.hospital-item:last-child {
-    border-bottom: none;
-    padding-bottom: 0;
+[data-theme="dark"] .hopedrop-dashboard .hopedrop-section-header h2,
+[data-theme="dark"] .hopedrop-dashboard .hopedrop-hospital-header h3 {
+  color: var(--hopedrop-text-primary);
 }
 
-.hospital-item h4 {
-    margin: 0 0 var(--spacing-2) 0;
-    color: var(--color-secondary);
+[data-theme="dark"] .hopedrop-dashboard .hopedrop-section-description {
+  color: var(--hopedrop-text-muted);
 }
 
-.stock-pill {
-    display: inline-block;
-    padding: var(--spacing-1) var(--spacing-3);
-    border-radius: var(--radius-md);
-    font-size: var(--font-size-xs);
-    font-weight: 700;
-    margin-bottom: var(--spacing-2);
+[data-theme="dark"] .hopedrop-dashboard .hopedrop-blood-card {
+  background: var(--hopedrop-bg-tertiary);
 }
 
-.stock-pill.safe {
-    background-color: var(--color-success-bg);
-    color: var(--color-success);
-    border: 1px solid var(--color-success);
+[data-theme="dark"] .hopedrop-dashboard .hopedrop-blood-type,
+[data-theme="dark"] .hopedrop-dashboard .hopedrop-expiring-info strong {
+  color: var(--hopedrop-text-primary);
 }
 
-.stock-pill.warning {
-    background-color: var(--color-warning-bg);
-    color: var(--color-warning);
-    border: 1px solid var(--color-warning);
+[data-theme="dark"] .hopedrop-dashboard .hopedrop-blood-units {
+  color: var(--hopedrop-text-secondary);
+}
+
+[data-theme="dark"] .hopedrop-dashboard .hopedrop-stat-card {
+  background: var(--hopedrop-bg-secondary);
+  box-shadow: 0 1px 3px var(--hopedrop-shadow-sm);
+}
+
+[data-theme="dark"] .hopedrop-dashboard .hopedrop-stat-label,
+[data-theme="dark"] .hopedrop-dashboard .hopedrop-stat-change {
+  color: var(--hopedrop-text-muted);
+}
+
+[data-theme="dark"] .hopedrop-dashboard .hopedrop-stat-value {
+  color: var(--hopedrop-text-primary);
+}
+
+[data-theme="dark"] .hopedrop-dashboard .hopedrop-table-container {
+  border-color: var(--hopedrop-border-color);
+}
+
+[data-theme="dark"] .hopedrop-dashboard .hopedrop-table thead {
+  background: var(--hopedrop-bg-tertiary);
+}
+
+[data-theme="dark"] .hopedrop-dashboard .hopedrop-table th {
+  color: var(--hopedrop-text-muted);
+  border-bottom-color: var(--hopedrop-border-color);
+}
+
+[data-theme="dark"] .hopedrop-dashboard .hopedrop-table td {
+  color: var(--hopedrop-text-secondary);
+  border-bottom-color: var(--hopedrop-border-light);
+}
+
+[data-theme="dark"] .hopedrop-dashboard .hopedrop-table tbody tr:hover {
+  background: var(--hopedrop-hover-bg);
+}
+
+[data-theme="dark"] .hopedrop-dashboard .hopedrop-hospital-card {
+  background: var(--hopedrop-bg-secondary);
+  border-color: var(--hopedrop-border-color);
+}
+
+[data-theme="dark"] .hopedrop-dashboard .hopedrop-hospital-header {
+  border-bottom-color: var(--hopedrop-border-light);
+}
+
+[data-theme="dark"] .hopedrop-dashboard .hopedrop-hospital-distance,
+[data-theme="dark"] .hopedrop-dashboard .hopedrop-hospital-inventory h4 {
+  color: var(--hopedrop-text-muted);
+}
+
+[data-theme="dark"] .hopedrop-dashboard .hopedrop-hospital-blood-item {
+  background: var(--hopedrop-bg-tertiary);
+}
+
+[data-theme="dark"] .hopedrop-dashboard .hopedrop-blood-units-small {
+  color: var(--hopedrop-text-secondary);
+}
+
+[data-theme="dark"] .hopedrop-dashboard .hopedrop-modal {
+  background: var(--hopedrop-bg-secondary);
+}
+
+[data-theme="dark"] .hopedrop-dashboard .hopedrop-modal-header {
+  border-bottom-color: var(--hopedrop-border-color);
+  background: var(--hopedrop-bg-secondary);
+}
+
+[data-theme="dark"] .hopedrop-dashboard .hopedrop-modal-header h2 {
+  color: var(--hopedrop-text-primary);
+}
+
+[data-theme="dark"] .hopedrop-dashboard .hopedrop-modal-close {
+  background: var(--hopedrop-bg-tertiary);
+  color: var(--hopedrop-text-muted);
+}
+
+[data-theme="dark"] .hopedrop-dashboard .hopedrop-modal-close:hover {
+  background: var(--hopedrop-border-color);
+}
+
+[data-theme="dark"] .hopedrop-dashboard .hopedrop-modal-footer {
+  border-top-color: var(--hopedrop-border-color);
+  background: var(--hopedrop-bg-secondary);
+}
+
+[data-theme="dark"] .hopedrop-dashboard .hopedrop-form-group label {
+  color: var(--hopedrop-text-primary);
+}
+
+[data-theme="dark"] .hopedrop-dashboard .hopedrop-input,
+[data-theme="dark"] .hopedrop-dashboard .hopedrop-search-box input {
+  background: var(--hopedrop-bg-primary);
+  border-color: var(--hopedrop-border-color);
+  color: var(--hopedrop-text-primary);
+}
+
+[data-theme="dark"] .hopedrop-dashboard .hopedrop-input::placeholder,
+[data-theme="dark"] .hopedrop-dashboard .hopedrop-search-box input::placeholder {
+  color: #6e7681;
+}
+
+[data-theme="dark"] .hopedrop-dashboard .hopedrop-btn-secondary {
+  background: var(--hopedrop-bg-tertiary);
+  color: var(--hopedrop-text-secondary);
+}
+
+[data-theme="dark"] .hopedrop-dashboard .hopedrop-btn-secondary:hover {
+  background: var(--hopedrop-border-color);
+}
+
+[data-theme="dark"] .hopedrop-dashboard .hopedrop-expiring-card {
+  background: var(--hopedrop-bg-secondary);
+}
+
+[data-theme="dark"] .hopedrop-dashboard .hopedrop-expiring-info {
+  border-bottom-color: var(--hopedrop-border-light);
+}
+
+[data-theme="dark"] .hopedrop-dashboard .hopedrop-expiring-info span {
+  color: var(--hopedrop-text-muted);
+}
+
+[data-theme="dark"] .hopedrop-dashboard .hopedrop-disaster-mode-btn {
+  background: var(--hopedrop-bg-secondary);
+  border-color: #fca5a5;
+}
+
+[data-theme="dark"] .hopedrop-dashboard .hopedrop-disaster-mode-btn:hover {
+  background: rgba(220, 38, 38, 0.1);
+}
+
+[data-theme="dark"] .hopedrop-dashboard .hopedrop-alert-critical {
+  background: rgba(220, 38, 38, 0.15);
+  color: #fca5a5;
+}
+
+[data-theme="dark"] .hopedrop-dashboard .hopedrop-alert-warning {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fcd34d;
 }

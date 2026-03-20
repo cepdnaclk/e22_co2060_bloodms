@@ -1,211 +1,520 @@
 import React, { useState } from 'react';
-import { AlertCircle, Activity, Search, ShieldAlert, Ambulance } from 'lucide-react';
-import Swal from 'sweetalert2';
+import { 
+  LayoutDashboard,
+  Droplet,
+  AlertTriangle,
+  FileText,
+  Clock,
+  Hospital,
+  Menu,
+  X,
+  Bell,
+  User,
+  ChevronRight,
+  Package,
+  Activity,
+  Calendar,
+  Search,
+  Filter,
+  AlertOctagon,
+  Zap
+} from 'lucide-react';
 import './DoctorDashboard.css';
 
 const DoctorDashboard = () => {
-    const [isDisasterMode, setIsDisasterMode] = useState(false);
+  const [activeTab, setActiveTab] = useState('dashboard');
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [showRequestForm, setShowRequestForm] = useState(false);
+  const [disasterMode, setDisasterMode] = useState(false);
 
-    const toggleDisasterMode = () => {
-        setIsDisasterMode(!isDisasterMode);
-        document.body.classList.toggle('disaster-mode', !isDisasterMode);
-    };
+  // Mock Data - Blood Stock
+  const bloodStock = [
+    { type: 'O+', units: 45, status: 'safe', percentage: 85 },
+    { type: 'A+', units: 32, status: 'safe', percentage: 70 },
+    { type: 'B+', units: 28, status: 'low', percentage: 55 },
+    { type: 'AB+', units: 15, status: 'safe', percentage: 60 },
+    { type: 'O-', units: 8, status: 'critical', percentage: 25 },
+    { type: 'A-', units: 12, status: 'low', percentage: 40 },
+    { type: 'B-', units: 10, status: 'low', percentage: 35 },
+    { type: 'AB-', units: 5, status: 'critical', percentage: 20 }
+  ];
 
-    return (
-        <div className={`dashboard doctor-dashboard ${isDisasterMode ? 'disaster-active' : ''}`}>
-            <div className="dashboard-header">
-                <div>
-                    <h1 className="welcome-text">Dr. Emily Chen</h1>
-                    <p className="text-muted">Central City Hospital • Medical Officer</p>
-                </div>
-                <button
-                    className={`btn ${isDisasterMode ? 'btn-primary' : 'btn-danger-pulse'}`}
-                    onClick={toggleDisasterMode}
-                    style={{ padding: '12px 24px', fontSize: '16px' }}
-                >
-                    <ShieldAlert size={20} style={{ marginRight: '8px' }} />
-                    {isDisasterMode ? 'Deactivate Disaster Mode' : 'Activate Disaster Mode'}
-                </button>
+  // Critical Alerts
+  const criticalAlerts = [
+    { id: 1, bloodType: 'O-', message: 'Critical Shortage', coverage: '24 hours', urgency: 'critical' },
+    { id: 2, bloodType: 'AB-', message: 'Low Stock Warning', coverage: '36 hours', urgency: 'warning' }
+  ];
+
+  // FIFO Blood Packets
+  const bloodPackets = [
+    { id: 'BP-001', bloodType: 'O+', storedDate: '2026-02-15', expiryDate: '2026-03-29', status: 'available', daysToExpiry: 9 },
+    { id: 'BP-002', bloodType: 'A+', storedDate: '2026-02-18', expiryDate: '2026-04-01', status: 'available', daysToExpiry: 12 },
+    { id: 'BP-003', bloodType: 'O-', storedDate: '2026-02-10', expiryDate: '2026-03-24', status: 'expiring', daysToExpiry: 4 },
+    { id: 'BP-004', bloodType: 'B+', storedDate: '2026-02-20', expiryDate: '2026-04-03', status: 'available', daysToExpiry: 14 },
+    { id: 'BP-005', bloodType: 'AB-', storedDate: '2026-02-12', expiryDate: '2026-03-26', status: 'expiring', daysToExpiry: 6 },
+    { id: 'BP-006', bloodType: 'A-', storedDate: '2026-02-14', expiryDate: '2026-03-28', status: 'available', daysToExpiry: 8 }
+  ];
+
+  // Expiring Packets (within 7 days)
+  const expiringPackets = bloodPackets.filter(packet => packet.daysToExpiry <= 7);
+
+  // Nearby Hospitals
+  const nearbyHospitals = [
+    { id: 1, name: 'Colombo General Hospital', distance: '2.5 km', units: { 'O+': 25, 'A+': 18, 'B+': 15, 'O-': 5 } },
+    { id: 2, name: 'Kandy Teaching Hospital', distance: '3.8 km', units: { 'O+': 30, 'A+': 22, 'B+': 12, 'O-': 8 } },
+    { id: 3, name: 'Negombo District Hospital', distance: '5.2 km', units: { 'O+': 20, 'A+': 15, 'B+': 10, 'O-': 3 } }
+  ];
+
+  // Recent Requests
+  const recentRequests = [
+    { id: 1, patientId: 'P-1234', bloodType: 'O-', units: 2, urgency: 'High', hospital: 'Colombo General', time: '10 mins ago', status: 'Pending' },
+    { id: 2, patientId: 'P-5678', bloodType: 'A+', units: 1, urgency: 'Medium', hospital: 'Kandy Teaching', time: '25 mins ago', status: 'Approved' },
+    { id: 3, patientId: 'P-9012', bloodType: 'B+', units: 3, urgency: 'High', hospital: 'Colombo General', time: '1 hour ago', status: 'Completed' }
+  ];
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
+
+  const toggleDisasterMode = () => {
+    setDisasterMode(!disasterMode);
+  };
+
+  const getStatusColor = (status) => {
+    switch(status) {
+      case 'safe': return 'hopedrop-status-safe';
+      case 'low': return 'hopedrop-status-low';
+      case 'critical': return 'hopedrop-status-critical';
+      default: return '';
+    }
+  };
+
+  return (
+    <div className={`hopedrop-dashboard ${disasterMode ? 'hopedrop-disaster-mode' : ''}`}>
+      {/* Disaster Mode Banner */}
+      {disasterMode && (
+        <div className="hopedrop-disaster-banner">
+          <div className="hopedrop-disaster-banner-content">
+            <AlertOctagon size={24} className="hopedrop-disaster-icon-pulse" />
+            <div className="hopedrop-disaster-text">
+              <strong>DISASTER MODE ACTIVE</strong>
+              <span>Emergency Protocol Initiated - All hands on deck</span>
             </div>
+            <button className="hopedrop-disaster-deactivate" onClick={toggleDisasterMode}>
+              Deactivate
+            </button>
+          </div>
+        </div>
+      )}
 
-            {isDisasterMode ? (
-                // DISASTER MODE UI - Minimized Cognitive Load
-                <div className="disaster-ui fade-in">
-                    <div className="emergency-banner">
-                        <AlertCircle size={32} />
-                        <h2>DISASTER MODE ACTIVE: Rerouting all non-critical units. Priority Request System online.</h2>
-                    </div>
+      {/* Left Sidebar */}
+      <aside className={`hopedrop-sidebar ${sidebarOpen ? 'hopedrop-sidebar-open' : 'hopedrop-sidebar-closed'}`}>
+        <nav className="hopedrop-sidebar-nav">
+          <button 
+            className={`hopedrop-nav-item ${activeTab === 'dashboard' ? 'hopedrop-nav-active' : ''}`}
+            onClick={() => setActiveTab('dashboard')}
+          >
+            <LayoutDashboard size={20} />
+            {sidebarOpen && <span>Dashboard</span>}
+          </button>
+          <button 
+            className={`hopedrop-nav-item ${activeTab === 'inventory' ? 'hopedrop-nav-active' : ''}`}
+            onClick={() => setActiveTab('inventory')}
+          >
+            <Package size={20} />
+            {sidebarOpen && <span>Blood Inventory</span>}
+          </button>
+          <button 
+            className={`hopedrop-nav-item ${activeTab === 'requests' ? 'hopedrop-nav-active' : ''}`}
+            onClick={() => setActiveTab('requests')}
+          >
+            <FileText size={20} />
+            {sidebarOpen && <span>Blood Requests</span>}
+          </button>
+          <button 
+            className={`hopedrop-nav-item ${activeTab === 'packets' ? 'hopedrop-nav-active' : ''}`}
+            onClick={() => setActiveTab('packets')}
+          >
+            <Activity size={20} />
+            {sidebarOpen && <span>FIFO Packets</span>}
+          </button>
+          <button 
+            className={`hopedrop-nav-item ${activeTab === 'expiring' ? 'hopedrop-nav-active' : ''}`}
+            onClick={() => setActiveTab('expiring')}
+          >
+            <Clock size={20} />
+            {sidebarOpen && <span>Expiring Soon</span>}
+          </button>
+          <button 
+            className={`hopedrop-nav-item ${activeTab === 'hospitals' ? 'hopedrop-nav-active' : ''}`}
+            onClick={() => setActiveTab('hospitals')}
+          >
+            <Hospital size={20} />
+            {sidebarOpen && <span>Nearby Hospitals</span>}
+          </button>
+        </nav>
 
-                    <div className="dashboard-grid">
-                        <div className="col-span-8">
-                            <div className="card disaster-card">
-                                <div className="card-header">
-                                    <h2>Emergency Bulk Request</h2>
-                                </div>
-                                <div className="card-body">
-                                    <div className="form-group-large">
-                                        <label>Blood Type Required (Critical Priority)</label>
-                                        <div className="blood-type-grid">
-                                            {['O-', 'O+', 'A-', 'A+', 'B-', 'B+', 'AB-', 'AB+'].map(type => (
-                                                <button key={type} className={`btn-blood-type ${type === 'O-' ? 'selected' : ''}`}>{type}</button>
-                                            ))}
-                                        </div>
-                                    </div>
-                                    <div className="form-group-large" style={{ marginTop: '24px' }}>
-                                        <label>Units Needed Immediately</label>
-                                        <input type="number" className="input-large" defaultValue="10" />
-                                    </div>
-                                    <button
-                                        className="btn btn-primary btn-block"
-                                        style={{ marginTop: '24px', fontSize: '20px', padding: '16px' }}
-                                        onClick={() => {
-                                            Swal.fire({
-                                                title: 'Broadcast Emergency Alert?',
-                                                text: "This will immediately notify all networked hospitals and available donors in a 50km radius.",
-                                                icon: 'warning',
-                                                showCancelButton: true,
-                                                confirmButtonColor: '#C62828',
-                                                cancelButtonColor: '#637381',
-                                                confirmButtonText: 'BROADCAST NOW'
-                                            }).then((result) => {
-                                                if (result.isConfirmed) {
-                                                    Swal.fire(
-                                                        'Broadcast Sent!',
-                                                        'Emergency request dispatched to National Grid.',
-                                                        'success'
-                                                    );
-                                                }
-                                            });
-                                        }}
-                                    >
-                                        <Ambulance size={24} style={{ marginRight: '8px' }} />
-                                        BROADCAST REQUEST TO NETWORK
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+        <div className="hopedrop-sidebar-footer">
+          <div className="hopedrop-user-profile">
+            <div className="hopedrop-user-avatar">
+              <User size={20} />
+            </div>
+            {sidebarOpen && (
+              <div className="hopedrop-user-info">
+                <span className="hopedrop-user-name">Dr. Sarah Williams</span>
+                <span className="hopedrop-user-role">Blood Bank Manager</span>
+              </div>
+            )}
+          </div>
+        </div>
+      </aside>
 
-                        <div className="col-span-4">
-                            <div className="card disaster-card">
-                                <div className="card-header">
-                                    <h2>Nearest Hospital Stock</h2>
-                                </div>
-                                <div className="card-body">
-                                    <div className="hospital-list">
-                                        <div className="hospital-item">
-                                            <h4>Mercy General</h4>
-                                            <div className="stock-pill safe">12 Units O-</div>
-                                            <button className="btn btn-outline text-xs mt-2">Request Transfer</button>
-                                        </div>
-                                        <div className="hospital-item">
-                                            <h4>Northside Clinic</h4>
-                                            <div className="stock-pill warning">4 Units O-</div>
-                                            <button className="btn btn-outline text-xs mt-2">Request Transfer</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+      {/* Main Content */}
+      <div className="hopedrop-main">
+        {/* Top Header */}
+        <header className="hopedrop-header">
+          <div className="hopedrop-header-left">
+            <button className="hopedrop-menu-btn" onClick={toggleSidebar}>
+              {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
+            <h1 className="hopedrop-page-title">Doctor Dashboard</h1>
+          </div>
+          <div className="hopedrop-header-right">
+            <div className="hopedrop-search-box">
+              <Search size={18} />
+              <input type="text" placeholder="Search patients, packets..." />
+            </div>
+            <button className="hopedrop-notification-btn">
+              <Bell size={20} />
+              <span className="hopedrop-notification-badge">3</span>
+            </button>
+            <button 
+              className={`hopedrop-disaster-mode-btn ${disasterMode ? 'hopedrop-disaster-active' : ''}`}
+              onClick={toggleDisasterMode}
+              title={disasterMode ? "Deactivate Disaster Mode" : "Activate Disaster Mode"}
+            >
+              {disasterMode ? <Zap size={20} /> : <AlertOctagon size={20} />}
+              {disasterMode && <span className="hopedrop-disaster-mode-text">DISASTER MODE</span>}
+            </button>
+          </div>
+        </header>
+
+        {/* Dashboard Content */}
+        <div className="hopedrop-content">
+          {/* Critical Alerts */}
+          {criticalAlerts.length > 0 && activeTab === 'dashboard' && (
+            <div className="hopedrop-alerts-section">
+              {criticalAlerts.map(alert => (
+                <div key={alert.id} className={`hopedrop-alert hopedrop-alert-${alert.urgency}`}>
+                  <AlertTriangle size={20} />
+                  <div className="hopedrop-alert-content">
+                    <strong>{alert.message} - {alert.bloodType}</strong>
+                    <span>Coverage Remaining: {alert.coverage}</span>
+                  </div>
                 </div>
-            ) : (
-                // NORMAL UI
-                <div className="dashboard-grid fade-in">
-                    {/* Predictive Alerts */}
-                    <div className="col-span-12 alert-box critical">
-                        <div className="alert-icon"><Activity size={24} /></div>
-                        <div className="alert-content">
-                            <h4>Predictive Alert: Potential O- Stock-out in 42 hours</h4>
-                            <p>Based on current consumption rates and scheduled surgeries, O- reserves will reach critical levels by Friday.</p>
-                        </div>
-                        <button className="btn btn-outline">Request Units</button>
-                    </div>
+              ))}
+            </div>
+          )}
 
-                    {/* Real-Time Stock Board */}
-                    <div className="col-span-8">
-                        <div className="card">
-                            <div className="card-header">
-                                <h2>Internal Blood Inventory</h2>
-                                <div className="search-bar">
-                                    <Search size={16} />
-                                    <input type="text" placeholder="Search blood group..." />
-                                </div>
-                            </div>
-                            <div className="card-body p-0">
-                                <table className="data-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Blood Group</th>
-                                            <th>Units Valid</th>
-                                            <th>Expiring &lt;7d</th>
-                                            <th>Coverage Estimate</th>
-                                            <th>Status</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td><strong>O Negative</strong></td>
-                                            <td>14 units</td>
-                                            <td className="text-expiring">2 units</td>
-                                            <td>~2.5 Days</td>
-                                            <td><span className="badge warning">Low</span></td>
-                                            <td><button className="btn btn-primary text-xs">Request</button></td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>A Positive</strong></td>
-                                            <td>42 units</td>
-                                            <td className="text-muted">0 units</td>
-                                            <td>~8.0 Days</td>
-                                            <td><span className="badge safe">Safe</span></td>
-                                            <td><button className="btn btn-outline text-xs">View</button></td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>B Positive</strong></td>
-                                            <td>5 units</td>
-                                            <td className="text-muted">1 unit</td>
-                                            <td>~1.2 Days</td>
-                                            <td><span className="badge critical">Critical</span></td>
-                                            <td><button className="btn btn-primary text-xs">Request</button></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* External Network */}
-                    <div className="col-span-4">
-                        <div className="card bg-gray">
-                            <div className="card-header">
-                                <h2>Inter-Hospital Network</h2>
-                            </div>
-                            <div className="card-body">
-                                <div className="network-status">
-                                    <div className="network-dot pulse-green"></div>
-                                    <span>National Grid: <strong>Online</strong></span>
-                                </div>
-
-                                <h3 className="section-label mt-4">Incoming Transfer Requests</h3>
-                                <div className="transfer-request">
-                                    <div className="transfer-header">
-                                        <strong>Westend Medical</strong>
-                                        <span className="text-xs text-muted">10 mins ago</span>
-                                    </div>
-                                    <p className="text-sm mt-1 mb-2">Needs 3 units of B+</p>
-                                    <div className="btn-group">
-                                        <button className="btn btn-outline text-xs">Decline</button>
-                                        <button className="btn btn-primary text-xs">Approve Transfer</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+          {/* Dashboard View */}
+          {activeTab === 'dashboard' && (
+            <>
+              {/* Blood Stock Overview */}
+              <div className="hopedrop-section">
+                <div className="hopedrop-section-header">
+                  <h2>Blood Stock Overview</h2>
+                  <button className="hopedrop-btn-primary" onClick={() => setShowRequestForm(true)}>
+                    <Droplet size={16} />
+                    Request Blood
+                  </button>
                 </div>
-            )
-            }
-        </div >
-    );
+                <div className="hopedrop-blood-stock-grid">
+                  {bloodStock.map(blood => (
+                    <div key={blood.type} className={`hopedrop-blood-card ${getStatusColor(blood.status)}`}>
+                      <div className="hopedrop-blood-type">{blood.type}</div>
+                      <div className="hopedrop-blood-units">{blood.units} Units</div>
+                      <div className="hopedrop-blood-status">{blood.status}</div>
+                      <div className="hopedrop-blood-progress">
+                        <div 
+                          className="hopedrop-blood-progress-bar" 
+                          style={{width: `${blood.percentage}%`}}
+                        ></div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Quick Stats */}
+              <div className="hopedrop-stats-grid">
+                <div className="hopedrop-stat-card">
+                  <div className="hopedrop-stat-icon hopedrop-stat-icon-blue">
+                    <Package size={24} />
+                  </div>
+                  <div className="hopedrop-stat-content">
+                    <span className="hopedrop-stat-label">Total Packets</span>
+                    <h3 className="hopedrop-stat-value">164</h3>
+                    <span className="hopedrop-stat-change">+12 this week</span>
+                  </div>
+                </div>
+                <div className="hopedrop-stat-card">
+                  <div className="hopedrop-stat-icon hopedrop-stat-icon-red">
+                    <AlertTriangle size={24} />
+                  </div>
+                  <div className="hopedrop-stat-content">
+                    <span className="hopedrop-stat-label">Expiring Soon</span>
+                    <h3 className="hopedrop-stat-value">{expiringPackets.length}</h3>
+                    <span className="hopedrop-stat-change">Within 7 days</span>
+                  </div>
+                </div>
+                <div className="hopedrop-stat-card">
+                  <div className="hopedrop-stat-icon hopedrop-stat-icon-green">
+                    <Activity size={24} />
+                  </div>
+                  <div className="hopedrop-stat-content">
+                    <span className="hopedrop-stat-label">Active Requests</span>
+                    <h3 className="hopedrop-stat-value">8</h3>
+                    <span className="hopedrop-stat-change">2 high priority</span>
+                  </div>
+                </div>
+                <div className="hopedrop-stat-card">
+                  <div className="hopedrop-stat-icon hopedrop-stat-icon-purple">
+                    <Hospital size={24} />
+                  </div>
+                  <div className="hopedrop-stat-content">
+                    <span className="hopedrop-stat-label">Connected Hospitals</span>
+                    <h3 className="hopedrop-stat-value">12</h3>
+                    <span className="hopedrop-stat-change">Network active</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Recent Requests */}
+              <div className="hopedrop-section">
+                <div className="hopedrop-section-header">
+                  <h2>Recent Blood Requests</h2>
+                  <button className="hopedrop-btn-secondary">View All</button>
+                </div>
+                <div className="hopedrop-table-container">
+                  <table className="hopedrop-table">
+                    <thead>
+                      <tr>
+                        <th>Patient ID</th>
+                        <th>Blood Type</th>
+                        <th>Units</th>
+                        <th>Urgency</th>
+                        <th>Hospital</th>
+                        <th>Time</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {recentRequests.map(req => (
+                        <tr key={req.id}>
+                          <td>{req.patientId}</td>
+                          <td><span className="hopedrop-blood-badge">{req.bloodType}</span></td>
+                          <td>{req.units}</td>
+                          <td><span className={`hopedrop-urgency-badge hopedrop-urgency-${req.urgency.toLowerCase()}`}>{req.urgency}</span></td>
+                          <td>{req.hospital}</td>
+                          <td>{req.time}</td>
+                          <td><span className={`hopedrop-status-badge hopedrop-status-${req.status.toLowerCase()}`}>{req.status}</span></td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* FIFO Packets View */}
+          {activeTab === 'packets' && (
+            <div className="hopedrop-section">
+              <div className="hopedrop-section-header">
+                <h2>FIFO Blood Packet System</h2>
+                <div className="hopedrop-header-actions">
+                  <button className="hopedrop-btn-secondary">
+                    <Filter size={16} />
+                    Filter
+                  </button>
+                </div>
+              </div>
+              <p className="hopedrop-section-description">
+                Packets are sorted by oldest stored date first to minimize wastage (FIFO policy)
+              </p>
+              <div className="hopedrop-table-container">
+                <table className="hopedrop-table">
+                  <thead>
+                    <tr>
+                      <th>Packet ID</th>
+                      <th>Blood Type</th>
+                      <th>Stored Date</th>
+                      <th>Expiry Date</th>
+                      <th>Days to Expiry</th>
+                      <th>Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {bloodPackets.map(packet => (
+                      <tr key={packet.id} className={packet.status === 'expiring' ? 'hopedrop-row-warning' : ''}>
+                        <td>{packet.id}</td>
+                        <td><span className="hopedrop-blood-badge">{packet.bloodType}</span></td>
+                        <td>{packet.storedDate}</td>
+                        <td>{packet.expiryDate}</td>
+                        <td>
+                          {packet.daysToExpiry <= 7 ? (
+                            <span className="hopedrop-expiry-warning">{packet.daysToExpiry} days</span>
+                          ) : (
+                            <span>{packet.daysToExpiry} days</span>
+                          )}
+                        </td>
+                        <td><span className={`hopedrop-status-badge hopedrop-status-${packet.status}`}>{packet.status}</span></td>
+                        <td>
+                          <button className="hopedrop-btn-text">Use</button>
+                          <button className="hopedrop-btn-text">Reserve</button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* Expiring Packets View */}
+          {activeTab === 'expiring' && (
+            <div className="hopedrop-section">
+              <div className="hopedrop-section-header">
+                <h2>Expiring Blood Packets (Within 7 Days)</h2>
+              </div>
+              <div className="hopedrop-expiring-grid">
+                {expiringPackets.map(packet => (
+                  <div key={packet.id} className="hopedrop-expiring-card">
+                    <div className="hopedrop-expiring-header">
+                      <span className="hopedrop-blood-badge-large">{packet.bloodType}</span>
+                      <span className="hopedrop-expiry-badge">{packet.daysToExpiry} days left</span>
+                    </div>
+                    <div className="hopedrop-expiring-body">
+                      <div className="hopedrop-expiring-info">
+                        <span>Packet ID:</span>
+                        <strong>{packet.id}</strong>
+                      </div>
+                      <div className="hopedrop-expiring-info">
+                        <span>Stored:</span>
+                        <strong>{packet.storedDate}</strong>
+                      </div>
+                      <div className="hopedrop-expiring-info">
+                        <span>Expires:</span>
+                        <strong>{packet.expiryDate}</strong>
+                      </div>
+                    </div>
+                    <div className="hopedrop-expiring-actions">
+                      <button className="hopedrop-btn-primary hopedrop-btn-sm">Use Immediately</button>
+                      <button className="hopedrop-btn-secondary hopedrop-btn-sm">Reserve</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Nearby Hospitals View */}
+          {activeTab === 'hospitals' && (
+            <div className="hopedrop-section">
+              <div className="hopedrop-section-header">
+                <h2>Inter-Hospital Blood Exchange</h2>
+              </div>
+              <p className="hopedrop-section-description">
+                View and request blood transfers from nearby hospitals during emergencies
+              </p>
+              <div className="hopedrop-hospitals-grid">
+                {nearbyHospitals.map(hospital => (
+                  <div key={hospital.id} className="hopedrop-hospital-card">
+                    <div className="hopedrop-hospital-header">
+                      <Hospital size={24} />
+                      <div>
+                        <h3>{hospital.name}</h3>
+                        <span className="hopedrop-hospital-distance">{hospital.distance}</span>
+                      </div>
+                    </div>
+                    <div className="hopedrop-hospital-inventory">
+                      <h4>Available Blood Units</h4>
+                      <div className="hopedrop-hospital-blood-grid">
+                        {Object.entries(hospital.units).map(([type, units]) => (
+                          <div key={type} className="hopedrop-hospital-blood-item">
+                            <span className="hopedrop-blood-type-small">{type}</span>
+                            <span className="hopedrop-blood-units-small">{units} units</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    <button className="hopedrop-btn-primary hopedrop-btn-block">Request Transfer</button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Blood Request Form Modal */}
+      {showRequestForm && (
+        <div className="hopedrop-modal-overlay" onClick={() => setShowRequestForm(false)}>
+          <div className="hopedrop-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="hopedrop-modal-header">
+              <h2>Blood Request Form</h2>
+              <button className="hopedrop-modal-close" onClick={() => setShowRequestForm(false)}>
+                <X size={20} />
+              </button>
+            </div>
+            <div className="hopedrop-modal-body">
+              <div className="hopedrop-form-group">
+                <label>Patient ID</label>
+                <input type="text" placeholder="Enter patient ID" className="hopedrop-input" />
+              </div>
+              <div className="hopedrop-form-group">
+                <label>Blood Type</label>
+                <select className="hopedrop-input">
+                  <option>Select blood type</option>
+                  <option>O+</option>
+                  <option>A+</option>
+                  <option>B+</option>
+                  <option>AB+</option>
+                  <option>O-</option>
+                  <option>A-</option>
+                  <option>B-</option>
+                  <option>AB-</option>
+                </select>
+              </div>
+              <div className="hopedrop-form-group">
+                <label>Units Required</label>
+                <input type="number" placeholder="Number of units" className="hopedrop-input" />
+              </div>
+              <div className="hopedrop-form-group">
+                <label>Urgency Level</label>
+                <select className="hopedrop-input">
+                  <option>Select urgency</option>
+                  <option>Low</option>
+                  <option>Medium</option>
+                  <option>High</option>
+                  <option>Critical</option>
+                </select>
+              </div>
+              <div className="hopedrop-form-group">
+                <label>Hospital</label>
+                <input type="text" placeholder="Hospital name" className="hopedrop-input" />
+              </div>
+            </div>
+            <div className="hopedrop-modal-footer">
+              <button className="hopedrop-btn-secondary" onClick={() => setShowRequestForm(false)}>Cancel</button>
+              <button className="hopedrop-btn-primary">Submit Request</button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default DoctorDashboard;

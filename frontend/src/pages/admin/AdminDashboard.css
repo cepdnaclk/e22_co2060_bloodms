@@ -1,114 +1,578 @@
-/* Admin Dashboard specific styles */
-.admin-actions {
-    display: flex;
-    gap: var(--spacing-4);
+/* Admin Dashboard - COMPLETE Scoped and Self-Contained Styles */
+/* All styles scoped under .admin-dashboard to prevent external interference */
+
+/* CSS Variables for Admin Dashboard */
+.admin-dashboard {
+  /* Spacing */
+  --spacing-1: 0.25rem;
+  --spacing-2: 0.5rem;
+  --spacing-3: 0.75rem;
+  --spacing-4: 1rem;
+  --spacing-5: 1.5rem;
+  --spacing-6: 2rem;
+  
+  /* Colors - Light Mode */
+  --color-primary: #1976d2;
+  --color-secondary: #637381;
+  --color-success: #2E7D32;
+  --color-warning: #F57C00;
+  --color-critical: #C62828;
+  --color-surface: #ffffff;
+  --color-background: #f5f5f5;
+  --color-border: #e0e0e0;
+  --color-text: #212121;
+  --color-text-muted: #757575;
+  
+  /* Radius */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-full: 9999px;
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+  
+  /* Font Sizes */
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  
+  box-sizing: border-box;
 }
 
+/* ===== DARK MODE VARIABLES ===== */
+[data-theme="dark"] .admin-dashboard {
+  --color-surface: #161b22;
+  --color-background: #0d1117;
+  --color-border: #30363d;
+  --color-text: #e6edf3;
+  --color-text-muted: #8b949e;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.25), 0 2px 4px rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.3), 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.admin-dashboard *,
+.admin-dashboard *::before,
+.admin-dashboard *::after {
+  box-sizing: border-box;
+}
+
+/* Dashboard Base */
+.admin-dashboard {
+  padding: var(--spacing-6);
+  background: #fafafa;
+  min-height: 100vh;
+}
+
+/* Dashboard Header */
+.admin-dashboard .dashboard-header {
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: var(--spacing-6);
+  flex-wrap: wrap;
+  gap: var(--spacing-4);
+}
+
+.admin-dashboard .welcome-text {
+  font-size: var(--font-size-2xl);
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0 0 var(--spacing-1) 0;
+}
+
+/* Dashboard Grid */
+.admin-dashboard .dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--spacing-4);
+}
+
+.admin-dashboard .col-span-4 {
+  grid-column: span 4;
+}
+
+.admin-dashboard .col-span-8 {
+  grid-column: span 8;
+}
+
+.admin-dashboard .col-span-12 {
+  grid-column: span 12;
+}
+
+/* Card */
+.admin-dashboard .card {
+  background: white;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.admin-dashboard .card-header {
+  padding: var(--spacing-4);
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.admin-dashboard .card-header h2 {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.admin-dashboard .card-body {
+  padding: var(--spacing-4);
+}
+
+/* Stats Grid */
 .admin-dashboard .stats-grid {
-    grid-template-columns: repeat(4, 1fr);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--spacing-4);
+  grid-column: span 12;
 }
 
-.map-placeholder {
-    width: 100%;
-    height: 400px;
-    background-color: var(--color-background);
-    border-radius: var(--radius-md);
-    border: 1px dashed var(--color-border);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: var(--color-text-muted);
-    position: relative;
+.admin-dashboard .stat-box {
+  background: white;
+  padding: var(--spacing-4);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
 }
 
-.map-legend {
-    position: absolute;
-    bottom: var(--spacing-4);
-    right: var(--spacing-4);
-    background: var(--color-surface);
-    padding: var(--spacing-2) var(--spacing-4);
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-sm);
-    display: flex;
-    gap: var(--spacing-4);
-    font-size: var(--font-size-xs);
-    font-weight: 600;
-    color: var(--color-secondary);
+.admin-dashboard .stat-content h3 {
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0 0 var(--spacing-1) 0;
 }
 
-.legend-item {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-1);
+.admin-dashboard .stat-content p {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  margin: 0;
 }
 
-.dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    display: inline-block;
+/* Buttons */
+.admin-dashboard .btn {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--spacing-2) var(--spacing-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: white;
+  color: var(--color-text);
 }
 
-.dot.safe {
-    background-color: var(--color-success);
+.admin-dashboard .btn:hover {
+  background: #f5f5f5;
+  border-color: var(--color-secondary);
 }
 
-.dot.warning {
-    background-color: var(--color-warning);
+.admin-dashboard .btn-outline {
+  background: white;
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
 }
 
-.dot.critical {
-    background-color: var(--color-critical);
+.admin-dashboard .btn-primary {
+  background: var(--color-primary);
+  color: white;
+  border-color: var(--color-primary);
 }
 
-.flex-between {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.admin-dashboard .btn-primary:hover {
+  background: #1565c0;
 }
 
-.p-4 {
-    padding: var(--spacing-4);
+.admin-dashboard .btn-danger-pulse {
+  background: var(--color-critical);
+  color: white;
+  border-color: var(--color-critical);
+  animation: pulse 2s infinite;
 }
 
-.progress-bar {
-    width: 100%;
-    height: 8px;
-    background-color: var(--color-background);
-    border-radius: var(--radius-full);
-    overflow: hidden;
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
 }
 
-.progress-fill {
-    height: 100%;
-    border-radius: var(--radius-full);
+.admin-dashboard .btn-group {
+  display: flex;
+  gap: var(--spacing-2);
 }
 
-.progress-fill.critical {
-    background-color: var(--color-critical);
+/* Form Controls */
+.admin-dashboard .form-control {
+  padding: var(--spacing-2) var(--spacing-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  background: white;
+  color: var(--color-text);
 }
 
-.progress-fill.warning {
-    background-color: var(--color-warning);
+/* Badges */
+.admin-dashboard .badge {
+  display: inline-block;
+  padding: var(--spacing-1) var(--spacing-2);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  white-space: nowrap;
 }
 
-.progress-fill.safe {
-    background-color: var(--color-success);
+.admin-dashboard .badge.safe {
+  background: #e8f5e9;
+  color: var(--color-success);
 }
 
-.bg-white {
-    background-color: white !important;
+.admin-dashboard .badge.warning {
+  background: #fff3e0;
+  color: var(--color-warning);
 }
 
+.admin-dashboard .badge.critical {
+  background: #ffebee;
+  color: var(--color-critical);
+}
+
+/* Table */
+.admin-dashboard .table-responsive {
+  overflow-x: auto;
+}
+
+.admin-dashboard .data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-dashboard .data-table th {
+  text-align: left;
+  padding: var(--spacing-3) var(--spacing-4);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text-muted);
+  border-bottom: 2px solid var(--color-border);
+  background: #fafafa;
+}
+
+.admin-dashboard .data-table td {
+  padding: var(--spacing-3) var(--spacing-4);
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.admin-dashboard .data-table tr:hover {
+  background: #fafafa;
+}
+
+.admin-dashboard .data-table strong {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+/* Admin Actions - Scoped */
+.admin-dashboard .admin-actions {
+  display: flex;
+  gap: var(--spacing-4);
+}
+
+/* Map Placeholder - Scoped */
+.admin-dashboard .map-placeholder {
+  width: 100%;
+  height: 400px;
+  background-color: var(--color-background);
+  border-radius: var(--radius-md);
+  border: 1px dashed var(--color-border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+  position: relative;
+}
+
+.admin-dashboard .map-placeholder p {
+  margin: var(--spacing-2) 0 0 0;
+  font-size: var(--font-size-sm);
+}
+
+/* Map Legend - Scoped */
+.admin-dashboard .map-legend {
+  position: absolute;
+  bottom: var(--spacing-4);
+  right: var(--spacing-4);
+  background: var(--color-surface);
+  padding: var(--spacing-2) var(--spacing-4);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  gap: var(--spacing-4);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--color-secondary);
+}
+
+/* Legend Item - Scoped */
+.admin-dashboard .legend-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-1);
+}
+
+/* Dot - Scoped */
+.admin-dashboard .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.admin-dashboard .dot.safe {
+  background-color: var(--color-success);
+}
+
+.admin-dashboard .dot.warning {
+  background-color: var(--color-warning);
+}
+
+.admin-dashboard .dot.critical {
+  background-color: var(--color-critical);
+}
+
+/* Flex Between - Scoped */
+.admin-dashboard .flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Padding Utilities - Scoped */
+.admin-dashboard .p-0 {
+  padding: 0;
+}
+
+.admin-dashboard .p-4 {
+  padding: var(--spacing-4);
+}
+
+/* Progress Bar - Scoped */
+.admin-dashboard .progress-bar {
+  width: 100%;
+  height: 8px;
+  background-color: var(--color-background);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+/* Progress Fill - Scoped */
+.admin-dashboard .progress-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 0.3s ease;
+}
+
+.admin-dashboard .progress-fill.critical {
+  background-color: var(--color-critical);
+}
+
+.admin-dashboard .progress-fill.warning {
+  background-color: var(--color-warning);
+}
+
+.admin-dashboard .progress-fill.safe {
+  background-color: var(--color-success);
+}
+
+/* Background White - Scoped */
+.admin-dashboard .bg-white {
+  background-color: white !important;
+}
+
+/* Hospital List - Scoped */
+.admin-dashboard .hospital-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+}
+
+.admin-dashboard .hospital-item {
+  padding-bottom: var(--spacing-3);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.admin-dashboard .hospital-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.admin-dashboard .hospital-item h4 {
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+}
+
+/* Text Utilities - Scoped */
+.admin-dashboard .text-muted {
+  color: var(--color-text-muted);
+}
+
+.admin-dashboard .text-xs {
+  font-size: var(--font-size-xs);
+}
+
+.admin-dashboard .text-sm {
+  font-size: var(--font-size-sm);
+}
+
+/* Margin Utilities - Scoped */
+.admin-dashboard .mb-2 {
+  margin-bottom: var(--spacing-2);
+}
+
+.admin-dashboard .mt-1 {
+  margin-top: var(--spacing-1);
+}
+
+/* Fade In Animation */
+.admin-dashboard.fade-in {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Critical State */
+.admin-dashboard.critical-state {
+  border: 2px solid var(--color-critical);
+  border-radius: var(--radius-lg);
+}
+
+/* Responsive Styles */
 @media (max-width: 1024px) {
-    .admin-dashboard .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
+  .admin-dashboard .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .admin-dashboard .col-span-8,
+  .admin-dashboard .col-span-4 {
+    grid-column: span 12;
+  }
 }
 
 @media (max-width: 768px) {
-    .admin-actions {
-        flex-direction: column;
-    }
+  .admin-dashboard {
+    padding: var(--spacing-4);
+  }
+  
+  .admin-dashboard .admin-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .admin-dashboard .admin-actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .admin-dashboard .stats-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .admin-dashboard .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* ═══════════════════════════════════════════
+   DARK MODE THEME OVERRIDES FOR ADMIN DASHBOARD
+   ═══════════════════════════════════════════ */
+
+[data-theme="dark"] .admin-dashboard {
+  background: var(--color-background);
+}
+
+[data-theme="dark"] .admin-dashboard .card,
+[data-theme="dark"] .admin-dashboard .stat-box {
+  background: var(--color-surface);
+}
+
+[data-theme="dark"] .admin-dashboard .form-control,
+[data-theme="dark"] .admin-dashboard .btn {
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+[data-theme="dark"] .admin-dashboard .btn-outline {
+  background: var(--color-surface);
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+
+[data-theme="dark"] .admin-dashboard .btn:hover {
+  background: #1c2128;
+  border-color: var(--color-secondary);
+}
+
+[data-theme="dark"] .admin-dashboard .data-table th {
+  background: #1c2128;
+  color: var(--color-text-muted);
+}
+
+[data-theme="dark"] .admin-dashboard .data-table tr:hover {
+  background: #1c2128;
+}
+
+[data-theme="dark"] .admin-dashboard .map-placeholder {
+  background-color: var(--color-surface);
+}
+
+[data-theme="dark"] .admin-dashboard .progress-bar {
+  background-color: #1c2128;
+}
+
+[data-theme="dark"] .admin-dashboard .bg-white {
+  background-color: var(--color-surface) !important;
+}
+
+[data-theme="dark"] .admin-dashboard .badge.safe {
+  background: rgba(46, 125, 50, 0.2);
+}
+
+[data-theme="dark"] .admin-dashboard .badge.warning {
+  background: rgba(245, 124, 0, 0.2);
+}
+
+[data-theme="dark"] .admin-dashboard .badge.critical {
+  background: rgba(198, 40, 40, 0.2);
 }
