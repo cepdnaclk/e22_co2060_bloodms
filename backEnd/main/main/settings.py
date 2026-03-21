@@ -77,7 +77,9 @@ PHONENUMBER_DEFAULT_REGION = 'LK'  # Example: US, GB, IN
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'corsheaders.middleware.CorsMiddleware',  # CORS must be before CommonMiddleware
+    'corsheaders.middleware.CorsMiddleware',
+    # CORS must be before CommonMiddleware
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
