@@ -8,6 +8,7 @@ class Country(models.Model):
 
     def __str__(self):
         return self.countryName
+
     class Meta:
         app_label = 'UserAuth'
 

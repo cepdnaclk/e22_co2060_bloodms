@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }) => {
     const [loading] = useState(false);
 
     const login = async (email, password) => {
-        const response = await axios.post('http://localhost:8000/api/token/', {
+        const response = await axios.post('http://localhost:8000/api/v1/auth/token/', {
             email,
             password,
         });
