@@ -2,7 +2,7 @@ name: Main Full CI
 
 on:
   push:
-    branches: ["main"]
+    branches: ["config"]
 
 jobs:
   backend:

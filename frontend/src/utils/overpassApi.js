@@ -19,7 +19,7 @@ const OVERPASS_URL = 'https://overpass-api.de/api/interpreter';
  * Example: searchHospitalsByName("emb", "Ratnapura")
  *   → Returns: [{ name: "Embilipitiya Base Hospital", lat: 6.33, lon: 80.85, ... }]
  *
- * @param {string} query     - What the user has typed (e.g. "emb", "ratnapura main")
+ * @param {string} query     - What the user has typed (e.g. "emb", "ratnapura config")
  * @param {string} district  - Selected district name to bias the search
  * @returns {Promise<Array<{id, name, lat, lon, address}>>}
  */

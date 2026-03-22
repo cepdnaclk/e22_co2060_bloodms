@@ -4,7 +4,7 @@ import sys
 print("Starting verification...")
 sys.stdout.flush()
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'main.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
 
 try:
     import django
@@ -24,7 +24,7 @@ try:
     print(f"✓ User Model: {User.__module__}.{User.__name__}")
     sys.stdout.flush()
 
-    from UserAuth.models import Profile
+    from apps.UserAuth.models import Profile
     print(f"✓ Profile Model loaded: {Profile}")
     sys.stdout.flush()
 
