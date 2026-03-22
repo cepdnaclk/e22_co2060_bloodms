@@ -5,10 +5,9 @@ Test script to verify AUTH_USER_MODEL configuration
 import os
 
 import django
+from apps.UserAuth.models import Profile
 from django.conf import settings
 from django.contrib.auth import get_user_model
-
-from apps.UserAuth.models import Profile
 
 
 def main():
