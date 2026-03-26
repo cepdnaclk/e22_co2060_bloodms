@@ -37,14 +37,15 @@
   --color-text-muted: #637381;
   --color-text-inverse: #FFFFFF;
 
-  /* Typography */
+  /* Typography (Fluid Responsive) */
   --font-family: 'Inter', sans-serif;
-  --font-size-base: 16px;
-  --font-size-sm: 14px;
-  --font-size-xs: 12px;
-  --font-size-lg: 18px;
-  --font-size-xl: 24px;
-  --font-size-2xl: 32px;
+  /* clamp(MIN, PREFERRED, MAX) allows text to scale down smoothly on mobile */
+  --font-size-base: clamp(0.9rem, 1.5vw + 0.5rem, 1rem);      /* 14.4px to 16px */
+  --font-size-sm: clamp(0.8rem, 1.2vw + 0.4rem, 0.875rem);    /* 12.8px to 14px */
+  --font-size-xs: clamp(0.7rem, 1vw + 0.4rem, 0.75rem);       /* 11.2px to 12px */
+  --font-size-lg: clamp(1.05rem, 1.8vw + 0.5rem, 1.125rem);   /* 16.8px to 18px */
+  --font-size-xl: clamp(1.25rem, 2.5vw + 0.5rem, 1.5rem);     /* 20px to 24px */
+  --font-size-2xl: clamp(1.5rem, 3.5vw + 0.5rem, 2rem);       /* 24px to 32px */
 
   /* Spacing */
   --spacing-1: 4px;
@@ -382,38 +383,4 @@ body.disaster-mode {
   }
 }
 
-/* ═══════════════════════════════════════════════════
-   Global Card Animations (from user request)
-   ═══════════════════════════════════════════════════ */
-@media (prefers-reduced-motion: no-preference) {
-  .card,
-  .service-card-wrapper,
-  .stock-card,
-  .testimonial-card,
-  .stat-box,
-  .fifo-item,
-  .hospital-item,
-  [class*="-card"],
-  [class*="card-"] {
-    --animation-duration: 1200ms;
-    animation: fade-in var(--animation-duration), multi-slide-right-1 var(--animation-duration) ease-in-out 25ms 1 normal none;
-  }
-}
-
-@keyframes fade-in {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
-@keyframes multi-slide-right-1 {
-  0% {
-    transform: translateX(-30px);
-  }
-  100% {
-    transform: translateX(0);
-  }
-}
+

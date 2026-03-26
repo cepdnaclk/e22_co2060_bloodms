@@ -36,25 +36,25 @@ const AdminLayout = () => {
         {
             group: 'MAIN',
             items: [
-                { path: '/admin-dashboard', icon: <LayoutDashboard size={20} />, label: 'Dashboard' },
-                { path: '/admin-dashboard/stock', icon: <Droplet size={20} />, label: 'Blood Stock' },
-                { path: '/admin-dashboard/requests', icon: <Activity size={20} />, label: 'Requests' },
+                { path: '/admin', icon: <LayoutDashboard size={20} />, label: 'Dashboard' },
+                { path: '/admin/stock', icon: <Droplet size={20} />, label: 'Blood Stock' },
+                { path: '/admin/requests', icon: <Activity size={20} />, label: 'Requests' },
             ]
         },
         {
             group: 'MANAGEMENT',
             items: [
-                { path: '/admin-dashboard/users', icon: <Users size={20} />, label: 'Users' },
-                { path: '/admin-dashboard/donors', icon: <UserSquare2 size={20} />, label: 'Donors' },
-                { path: '/admin-dashboard/hospitals', icon: <MapPin size={20} />, label: 'Hospitals' },
+                { path: '/admin/users', icon: <Users size={20} />, label: 'Users' },
+                { path: '/admin/donors', icon: <UserSquare2 size={20} />, label: 'Donors' },
+                { path: '/admin/hospitals', icon: <MapPin size={20} />, label: 'Hospitals' },
             ]
         },
         {
             group: 'SYSTEM',
             items: [
-                { path: '/admin-dashboard/analytics', icon: <TrendingUp size={20} />, label: 'Analytics' },
-                { path: '/admin-dashboard/logs', icon: <ScrollText size={20} />, label: 'Logs' },
-                { path: '/admin-dashboard/settings', icon: <Settings size={20} />, label: 'Settings' },
+                { path: '/admin/analytics', icon: <TrendingUp size={20} />, label: 'Analytics' },
+                { path: '/admin/logs', icon: <ScrollText size={20} />, label: 'Logs' },
+                { path: '/admin/settings', icon: <Settings size={20} />, label: 'Settings' },
             ]
         }
     ];
@@ -99,7 +99,7 @@ const AdminLayout = () => {
                                 <NavLink 
                                     to={link.path} 
                                     key={link.path}
-                                    end={link.path === '/admin-dashboard'}
+                                    end={link.path === '/admin'}
                                     className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}
                                     title={isCollapsed ? link.label : ''}
                                 >
