@@ -86,15 +86,15 @@ function App() {
                 <AdminLayout />
               </RoleRoute>
             }>
-              <Route path="/admin-dashboard" element={<AdminDashboard />} />
-              <Route path="/admin-dashboard/stock" element={<DummyAdminPage title="Blood Stock" />} />
-              <Route path="/admin-dashboard/requests" element={<DummyAdminPage title="Requests" />} />
-              <Route path="/admin-dashboard/users" element={<DummyAdminPage title="Users" />} />
-              <Route path="/admin-dashboard/donors" element={<DummyAdminPage title="Donors" />} />
-              <Route path="/admin-dashboard/hospitals" element={<DummyAdminPage title="Hospitals" />} />
-              <Route path="/admin-dashboard/analytics" element={<DummyAdminPage title="Analytics" />} />
-              <Route path="/admin-dashboard/logs" element={<DummyAdminPage title="Logs" />} />
-              <Route path="/admin-dashboard/settings" element={<DummyAdminPage title="Settings" />} />
+              <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="/admin/stock" element={<DummyAdminPage title="Blood Stock" />} />
+              <Route path="/admin/requests" element={<DummyAdminPage title="Requests" />} />
+              <Route path="/admin/users" element={<DummyAdminPage title="Users" />} />
+              <Route path="/admin/donors" element={<DummyAdminPage title="Donors" />} />
+              <Route path="/admin/hospitals" element={<DummyAdminPage title="Hospitals" />} />
+              <Route path="/admin/analytics" element={<DummyAdminPage title="Analytics" />} />
+              <Route path="/admin/logs" element={<DummyAdminPage title="Logs" />} />
+              <Route path="/admin/settings" element={<DummyAdminPage title="Settings" />} />
             </Route>
 
             {/* Catch all redirect */}

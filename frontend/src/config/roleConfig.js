@@ -31,10 +31,9 @@ export const ICON_MAP = {
 const ROLE_CONFIG = {
     admin: {
         label: 'System Administrator',
-        dashboard: '/admin-dashboard',
-        allowedRoutes: ['/admin-dashboard', '/staff', '/doctor', '/donor', '/patient', '/events'],
+        dashboard: '/admin',
+        allowedRoutes: ['/admin', '/staff', '/doctor', '/donor', '/patient', '/events'],
         navItems: [
-            { path: '/admin-dashboard',   label: 'Admin',   icon: 'ShieldAlert' },
             { path: '/doctor',  label: 'Medical',  icon: 'Activity' },
             { path: '/staff',   label: 'Lab',      icon: 'ClipboardList' },
             { path: '/donor',   label: 'Donor',    icon: 'User' },
