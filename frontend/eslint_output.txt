@@ -1,0 +1,9 @@
+
+Oops! Something went wrong! :(
+
+ESLint: 9.39.3
+
+Error: 'patterns' must be a non-empty string or an array of non-empty strings
+    at ESLint.lintFiles (d:\trainee\frontend trainee\e22-co2060-Blood-Bank-management-System-web-app\frontend\node_modules\eslint\lib\eslint\eslint.js:983:11)
+    at Object.execute (d:\trainee\frontend trainee\e22-co2060-Blood-Bank-management-System-web-app\frontend\node_modules\eslint\lib\cli.js:428:27)
+    at async main (d:\trainee\frontend trainee\e22-co2060-Blood-Bank-management-System-web-app\frontend\node_modules\eslint\bin\eslint.js:175:19)

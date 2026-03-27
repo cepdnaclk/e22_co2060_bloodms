@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Heart, Activity, MapPin, Search, PhoneCall, ArrowRight, Shield, Clock } from 'lucide-react';
+import { Heart, Activity, MapPin, Search, PhoneCall, ArrowRight, Shield, Clock, ChevronDown } from 'lucide-react';
 import './LandingPage.css';
 import { LANDING } from '../../config/imageAssets';
 import { PHOTOS } from '../../config/imageAssets';
@@ -80,10 +80,18 @@ const LandingPage = () => {
 
                         {/* This is the part that centers the button */}
                         <div className="hero-actions-new">
-                            <Link to="/donor" className="btn-donate-now">
-                                DONATE NOW
+                            <Link to="/donor" className="scroll-donate-btn btn-donate-large">
+                                DONATE NOW <Heart size={18} style={{ marginLeft: '8px' }} />
                             </Link>
                         </div>
+                    </div>
+                </div>
+
+                {/* Scroll Down Signal */}
+                <div className="hero-scroll-signal">
+                    <div className="scroll-indicator" onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}>
+                        <span className="scroll-text">Scroll Down</span>
+                        <ChevronDown size={24} className="bounce-arrow" />
                     </div>
                 </div>
             </section>

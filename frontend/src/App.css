@@ -2,15 +2,54 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  /* Modern subtle background gradient */
+  background: linear-gradient(135deg, var(--color-background) 0%, #e2e8f0 100%);
+  transition: background 0.3s ease;
+}
+
+[data-theme="dark"] .app-container {
+  background: linear-gradient(135deg, var(--color-background) 0%, #0d1117 100%);
 }
 
 .main-content {
   flex: 1;
-  padding: var(--spacing-6);
-  padding-top: 100px;          /* Space for the fixed floating navbar */
+  padding: var(--spacing-8) var(--spacing-6);
+  padding-top: 110px;          /* Slightly more breathing room for the fixed navbar */
   max-width: 1400px;
   margin: 0 auto;
   width: 100%;
+  
+  /* Modern entrance animation */
+  animation: fadeUpEntrance 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+@keyframes fadeUpEntrance {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Glassmorphism modern container utility */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+  border-radius: var(--radius-xl);
+}
+
+[data-theme="dark"] .glass-panel {
+  background: rgba(22, 27, 34, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
 }
 
 /* Card utilities layout */
@@ -49,8 +88,8 @@
 
 @media (max-width: 768px) {
   .main-content {
-    padding: var(--spacing-4);
-    padding-top: 80px;          /* Less space needed on mobile */
+    padding: var(--spacing-4) var(--spacing-3);
+    padding-top: 90px;          /* Less space needed on mobile */
   }
 
   .dashboard-grid {
