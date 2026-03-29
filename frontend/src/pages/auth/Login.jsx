@@ -1,21 +1,8 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import Swal from 'sweetalert2';
+import { showSuccessToast, showErrorToast, showWarningToast } from '../../utils/swalUtils';
 import { useAuth } from '../../context/auth/useAuth';
 import './Login.css';
-
-/* ── Shared SweetAlert2 theme ─────────────────────────────── */
-const swalBase = {
-    customClass: {
-        popup:          'swal-hopedrop-popup',
-        title:          'swal-hopedrop-title',
-        htmlContainer:  'swal-hopedrop-html',
-        confirmButton:  'swal-hopedrop-confirm',
-        icon:           'swal-hopedrop-icon',
-    },
-    width: 'clamp(260px, 90vw, 380px)',
-    padding: 'clamp(1.2rem, 4vw, 2rem)',
-};
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -35,17 +22,7 @@ const Login = () => {
         // ✅ Fixed: validation with Swal INSIDE the if block
         if (!email || !password) {
             setError('Please fill in all fields');
-            Swal.fire({
-                ...swalBase,
-                position: 'top-end',
-                icon: 'warning',
-                title: 'Missing Fields',
-                text: 'Please fill in all required fields.',
-                showConfirmButton: false,
-                timer: 2000,
-                timerProgressBar: true,
-                toast: true,
-            });
+            showWarningToast('Missing Fields', 'Please fill in all required fields.');
             return;  // ← stops here if fields are empty
         }
 
@@ -56,17 +33,7 @@ const Login = () => {
             const userData = await login(email, password);
 
             // Success toast
-            Swal.fire({
-                ...swalBase,
-                position: 'top-end',
-                icon: 'success',
-                title: 'Login Successful!',
-                text: `Welcome back, ${userData.username || email.split('@')[0]}.`,
-                showConfirmButton: false,
-                timer: 1800,
-                timerProgressBar: true,
-                toast: true,
-            }).then(() => {
+            showSuccessToast('Login Successful!', `Welcome back, ${userData.username || email.split('@')[0]}.`).then(() => {
                 navigate(`/${userData.role || 'donor'}`, { replace: true });
             });
 
@@ -74,17 +41,7 @@ const Login = () => {
             // ❌ Django returned 401 or other error
             const message = error.response?.data?.detail || 'Invalid credentials';
             setError(message);
-            Swal.fire({
-                ...swalBase,
-                position: 'top-end',
-                icon: 'error',
-                title: 'Login Failed',
-                text: message,
-                showConfirmButton: false,
-                timer: 2500,
-                timerProgressBar: true,
-                toast: true,
-            });
+            showErrorToast('Login Failed', message);
         } finally {
             setLoading(false);
         }

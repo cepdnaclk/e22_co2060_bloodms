@@ -1,26 +1,9 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import Swal from 'sweetalert2';
-import { ROLE_OPTIONS } from '../../config/roleConfig';
-import { getCountries, getDistricts } from '../../config/locationData';
-import { searchHospitalsByName } from '../../utils/overpassApi';
-import { Search, MapPin, Loader, X } from 'lucide-react';
-import './Login.css';
-import './SignUp.css';
-
-/* ── Shared SweetAlert2 theme ─────────────────────────────── */
-const swalBase = {
-    customClass: {
-        popup:          'swal-hopedrop-popup',
-        title:          'swal-hopedrop-title',
-        htmlContainer:  'swal-hopedrop-html',
-        confirmButton:  'swal-hopedrop-confirm',
-        icon:           'swal-hopedrop-icon',
-    },
-    width: 'clamp(260px, 90vw, 380px)',
-    padding: 'clamp(1.2rem, 4vw, 2rem)',
-};
+import { registerUser, resolveHospital } from '../../api/authService';
+import { useForm } from '../../hooks/useForm';
+import { showSuccessToast, showErrorToast, showWarningToast } from '../../utils/swalUtils';
+import { flattenApiErrors, mapApiKeyToFormField } from '../../utils/errorParser';
 
 /* ── Validation helpers ── */
 const VALIDATORS = {
@@ -61,7 +44,16 @@ const VALIDATORS = {
 };
 
 const SignUp = () => {
-    const [formData, setFormData] = useState({
+    const {
+        formData,
+        setFormData,
+        fieldErrors,
+        setFieldErrors,
+        handleChange,
+        handleBlur,
+        validateAll,
+        inputClass
+    } = useForm({
         role: '',
         username: '',
         nic: '',
@@ -72,11 +64,10 @@ const SignUp = () => {
         district: '',
         password: '',
         confirmPassword: '',
-    });
+    }, VALIDATORS);
 
     const [selectedHospital, setSelectedHospital] = useState(null);
     const [resolvedHospitalId, setResolvedHospitalId] = useState(null);
-    const [fieldErrors, setFieldErrors] = useState({});
     const [passwordStrength, setPasswordStrength] = useState(0);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -120,37 +111,7 @@ const SignUp = () => {
         setPasswordStrength(strength);
     }, [formData.password]);
 
-    /* ── Field change handler ── */
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
-        // Clear error on change
-        if (fieldErrors[name]) {
-            setFieldErrors((prev) => ({ ...prev, [name]: '' }));
-        }
-    };
 
-    /* ── Blur validation ── */
-    const handleBlur = (e) => {
-        const { name, value } = e.target;
-        const validator = VALIDATORS[name];
-        if (validator) {
-            const errMsg = validator(value, formData);
-            setFieldErrors((prev) => ({ ...prev, [name]: errMsg }));
-        }
-    };
-
-    /* ── Full form validation ── */
-    const validateAll = () => {
-        const errors = {};
-        Object.keys(VALIDATORS).forEach((key) => {
-            const val = formData[key] || '';
-            const errMsg = VALIDATORS[key](val, formData);
-            if (errMsg) errors[key] = errMsg;
-        });
-        setFieldErrors(errors);
-        return Object.keys(errors).length === 0;
-    };
 
     /* ── Hospital autocomplete: debounced Nominatim search ── */
     useEffect(() => {
@@ -198,7 +159,7 @@ const SignUp = () => {
         setShowHospitalDropdown(false);
 
         try {
-            const response = await axios.post('http://localhost:8000/api/vi/auth/hospitals/resolve/', {
+            const response = await resolveHospital({
                 place_id: hospital.id,
                 name: hospital.name,
                 lat: hospital.lat,
@@ -211,17 +172,7 @@ const SignUp = () => {
         } catch {
             setSelectedHospital(null);
             setResolvedHospitalId(null);
-            Swal.fire({
-                ...swalBase,
-                position: 'top-end',
-                icon: 'error',
-                title: 'Hospital Selection Failed',
-                text: 'Could not resolve selected hospital. Please try another one.',
-                showConfirmButton: false,
-                timer: 2500,
-                timerProgressBar: true,
-                toast: true,
-            });
+            showErrorToast('Hospital Selection Failed', 'Could not resolve selected hospital. Please try another one.', 2500);
         }
     }, []);
 
@@ -234,44 +185,7 @@ const SignUp = () => {
         setShowHospitalDropdown(false);
     };
 
-    const flattenApiErrors = (value, parentKey = '') => {
-        if (Array.isArray(value)) {
-            return value.flatMap((item) => {
-                if (item && typeof item === 'object') {
-                    return flattenApiErrors(item, parentKey);
-                }
-                return [{ key: parentKey, message: String(item) }];
-            });
-        }
 
-        if (value && typeof value === 'object') {
-            return Object.entries(value).flatMap(([key, nested]) => {
-                const fullKey = parentKey ? `${parentKey}.${key}` : key;
-                return flattenApiErrors(nested, fullKey);
-            });
-        }
-
-        return [{ key: parentKey, message: String(value) }];
-    };
-
-    const mapApiKeyToFormField = (apiKey) => {
-        const key = apiKey.replace(/^profile\./, '');
-        const fieldMap = {
-            username: 'username',
-            email: 'email',
-            role: 'role',
-            password: 'password',
-            password2: 'confirmPassword',
-            fullName: 'username',
-            nic_number: 'nic',
-            phoneNumber: 'phone',
-            blood_group: 'bloodGroup',
-            country: 'country',
-            district: 'district',
-            hospital: 'hospital',
-        };
-        return fieldMap[key] || null;
-    };
 
     /* ── Submit ── */
     const handleSubmit = async (e) => {
@@ -281,17 +195,7 @@ const SignUp = () => {
         if (!validateAll()) {
             const msg = 'Please fix the errors below.';
             setError(msg);
-            Swal.fire({
-                ...swalBase,
-                position: 'top-end',
-                icon: 'warning',
-                title: 'Validation Errors',
-                text: msg,
-                showConfirmButton: false,
-                timer: 2000,
-                timerProgressBar: true,
-                toast: true,
-            });
+            showWarningToast('Validation Errors', msg, 2000);
             return;
         }
 
@@ -302,7 +206,7 @@ const SignUp = () => {
             let hospitalId = resolvedHospitalId;
 
             if (selectedHospital && !hospitalId) {
-                const response = await axios.post('http://localhost:8000/api/v1/auth/hospitals/resolve/', {
+                const response = await resolveHospital({
                     place_id: selectedHospital.id,
                     name: selectedHospital.name,
                     lat: selectedHospital.lat,
@@ -330,20 +234,10 @@ const SignUp = () => {
                 },
             };
 
-            await axios.post('http://localhost:8000/api/v1/auth/register/', payload);
+            await registerUser(payload);
 
             setSuccess(true);
-            Swal.fire({
-                ...swalBase,
-                position: 'top-end',
-                icon: 'success',
-                title: 'Account Created!',
-                text: `Welcome to HOPEDROP, ${formData.username}. Redirecting to login…`,
-                showConfirmButton: false,
-                timer: 2200,
-                timerProgressBar: true,
-                toast: true,
-            }).then(() => {
+            showSuccessToast('Account Created!', `Welcome to HOPEDROP, ${formData.username}. Redirecting to login…`, 2200).then(() => {
                 navigate('/login');
             });
 
@@ -381,24 +275,13 @@ const SignUp = () => {
             }
 
             setError(message);
-            Swal.fire({
-                ...swalBase,
-                position: 'top-end',
-                icon: 'error',
-                title: popupTitle,
-                text: message,
-                showConfirmButton: false,
-                timer: 3000,
-                timerProgressBar: true,
-                toast: true,
-            });
+            showErrorToast(popupTitle, message, 3000);
         } finally {
             setLoading(false);
         }
     };
 
-    /* ── Helper to add error class ── */
-    const inputClass = (name) => (fieldErrors[name] ? 'input-error' : '');
+
 
     return (
         <div className="signup-container new-design">
