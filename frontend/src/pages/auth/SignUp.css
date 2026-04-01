@@ -860,6 +860,191 @@
     text-decoration: underline;
 }
 
+/* ════════════════════════════════
+   WIZARD UI
+   ════════════════════════════════ */
+.wizard-indicators {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    position: relative;
+    padding: 0 10px;
+}
+.wizard-indicators::before {
+    content: '';
+    position: absolute;
+    top: 14px;
+    left: 20px;
+    right: 20px;
+    height: 2px;
+    background: #e0e0e0;
+    z-index: 0;
+}
+[data-theme="dark"] .wizard-indicators::before {
+    background: #30363d;
+}
+.wizard-step {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    color: #999;
+    transition: all 0.3s ease;
+}
+.wizard-step span {
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+.step-circle {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    font-weight: 700;
+    transition: all 0.3s ease;
+}
+[data-theme="dark"] .step-circle {
+    background: #161b22;
+    border-color: #30363d;
+}
+
+/* Active Step */
+.wizard-step.active {
+    color: #C62828;
+}
+[data-theme="dark"] .wizard-step.active {
+    color: #FF6B6B;
+}
+.wizard-step.active .step-circle {
+    border-color: #C62828;
+    background: #C62828;
+    color: #fff;
+    box-shadow: 0 0 0 4px rgba(198, 40, 40, 0.15);
+}
+[data-theme="dark"] .wizard-step.active .step-circle {
+    border-color: #FF6B6B;
+    background: #FF6B6B;
+    box-shadow: 0 0 0 4px rgba(255, 107, 107, 0.2);
+}
+
+/* Completed Step */
+.wizard-step.completed {
+    color: #2E7D32;
+}
+[data-theme="dark"] .wizard-step.completed {
+    color: #4CAF50;
+}
+.wizard-step.completed .step-circle {
+    border-color: #2E7D32;
+    background: #2E7D32;
+    color: #fff;
+}
+[data-theme="dark"] .wizard-step.completed .step-circle {
+    border-color: #4CAF50;
+    background: #4CAF50;
+}
+
+/* Step Content Container */
+.wizard-form-container {
+    position: relative;
+    overflow: hidden;
+    min-height: 280px;
+}
+.wizard-step-content {
+    display: none;
+    animation: fadeInStep 0.4s ease-out forwards;
+}
+.wizard-step-content.active {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+@keyframes fadeInStep {
+    from { opacity: 0; transform: translateX(10px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+/* Wizard Buttons */
+.form-actions-wizard {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #eee;
+}
+[data-theme="dark"] .form-actions-wizard {
+    border-top-color: #30363d;
+}
+.btn-wizard-back {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: transparent;
+    border: none;
+    color: #888;
+    font-weight: 700;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+.btn-wizard-back:hover {
+    color: #333;
+}
+[data-theme="dark"] .btn-wizard-back:hover {
+    color: #c9d1d9;
+}
+.btn-wizard-next, .btn-wizard-submit {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #C62828;
+    color: #fff;
+    border: none;
+    padding: 0.7rem 1.8rem;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 0.82rem;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 12px rgba(198, 40, 40, 0.3);
+}
+.btn-wizard-submit {
+    background: linear-gradient(135deg, #2E7D32 0%, #1B5E20 100%);
+    box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+}
+.btn-wizard-next:hover {
+    background: #B71C1C;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(198, 40, 40, 0.4);
+}
+.btn-wizard-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(46, 125, 50, 0.4);
+}
+[data-theme="dark"] .btn-wizard-next {
+    background: #FF6B6B;
+    box-shadow: 0 4px 16px rgba(255, 107, 107, 0.3);
+}
+[data-theme="dark"] .btn-wizard-next:hover {
+    background: #ff5252;
+}
+[data-theme="dark"] .btn-wizard-submit {
+    background: #4CAF50;
+    box-shadow: 0 4px 16px rgba(76, 175, 80, 0.3);
+}
+
 /* ── Responsive ── */
 @media (max-width: 900px) {
     .signup-split-card-new {

@@ -1,9 +1,13 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { Search, Loader, X, MapPin, ChevronRight, ChevronLeft, Check } from 'lucide-react';
 import { registerUser, resolveHospital } from '../../api/authService';
 import { useForm } from '../../hooks/useForm';
 import { showSuccessToast, showErrorToast, showWarningToast } from '../../utils/swalUtils';
 import { flattenApiErrors, mapApiKeyToFormField } from '../../utils/errorParser';
+import { getCountries, getDistricts } from '../../config/locationData';
+import { ROLE_OPTIONS } from '../../config/roleConfig';
+import { searchHospitalsByName } from '../../utils/overpassApi';
 
 /* ── Validation helpers ── */
 const VALIDATORS = {
@@ -11,7 +15,6 @@ const VALIDATORS = {
     username:   (v) => (!v ? 'Username is required.' : v.length < 3 ? 'Username must be at least 3 characters.' : ''),
     nic:        (v) => {
         if (!v) return 'NIC is required.';
-        // Old format: 9 digits + V/X   |   New format: 12 digits
         if (!/^([0-9]{9}[vVxX]|[0-9]{12})$/.test(v)) return 'Enter a valid NIC (e.g. 200012345V or 200012345678).';
         return '';
     },
@@ -44,6 +47,7 @@ const VALIDATORS = {
 };
 
 const SignUp = () => {
+    // ---- [Existing UseForm & States] ----
     const {
         formData,
         setFormData,
@@ -66,6 +70,7 @@ const SignUp = () => {
         confirmPassword: '',
     }, VALIDATORS);
 
+    const [step, setStep] = useState(1);
     const [selectedHospital, setSelectedHospital] = useState(null);
     const [resolvedHospitalId, setResolvedHospitalId] = useState(null);
     const [passwordStrength, setPasswordStrength] = useState(0);
@@ -88,7 +93,7 @@ const SignUp = () => {
     /* ── Countries list ── */
     const countries = getCountries();
 
-    /* ── Update districts when country changes ── */
+    // ---- [Existing Effects] ----
     useEffect(() => {
         if (formData.country) {
             setDistricts(getDistricts(formData.country));
@@ -100,7 +105,6 @@ const SignUp = () => {
         }
     }, [formData.country]);
 
-    /* ── Password strength meter ── */
     useEffect(() => {
         let strength = 0;
         const { password } = formData;
@@ -111,9 +115,6 @@ const SignUp = () => {
         setPasswordStrength(strength);
     }, [formData.password]);
 
-
-
-    /* ── Hospital autocomplete: debounced Nominatim search ── */
     useEffect(() => {
         if (hospitalDebounceRef.current) clearTimeout(hospitalDebounceRef.current);
 
@@ -128,9 +129,10 @@ const SignUp = () => {
             try {
                 const results = await searchHospitalsByName(hospitalSearch, formData.district || '');
                 setHospitalSuggestions(results);
-                setShowHospitalDropdown(results.length > 0);
+                setShowHospitalDropdown(true);
             } catch {
                 setHospitalSuggestions([]);
+                setShowHospitalDropdown(true);
             } finally {
                 setHospitalSearching(false);
             }
@@ -139,7 +141,6 @@ const SignUp = () => {
         return () => clearTimeout(hospitalDebounceRef.current);
     }, [hospitalSearch, formData.district]);
 
-    /* ── Close hospital dropdown on outside click ── */
     useEffect(() => {
         const handleClickOutside = (e) => {
             if (
@@ -153,7 +154,7 @@ const SignUp = () => {
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
-    /* ── Select a hospital from suggestions ── */
+    // ---- [Existing Handlers] ----
     const handleSelectHospital = useCallback(async (hospital) => {
         setHospitalSearch(hospital.name);
         setShowHospitalDropdown(false);
@@ -176,7 +177,6 @@ const SignUp = () => {
         }
     }, []);
 
-    /* ── Clear selected hospital ── */
     const handleClearHospital = () => {
         setSelectedHospital(null);
         setResolvedHospitalId(null);
@@ -185,24 +185,63 @@ const SignUp = () => {
         setShowHospitalDropdown(false);
     };
 
+    // ---- [Step Logic & Proceed handlers] ----
+    const handleNextStep = () => {
+        let isValid = true;
+        let stepErrors = {};
 
+        const fieldsToValidate = {
+            1: ['role', 'username', 'nic', 'bloodGroup', 'email', 'phone'],
+            2: ['country', 'district'] // hospital is optional
+        };
 
-    /* ── Submit ── */
+        (fieldsToValidate[step] || []).forEach(field => {
+            const errorMsg = VALIDATORS[field](formData[field], formData);
+            if (errorMsg) {
+                isValid = false;
+                stepErrors[field] = errorMsg;
+            }
+        });
+
+        if (!isValid) {
+            setFieldErrors(prev => ({ ...prev, ...stepErrors }));
+            showWarningToast('Validation Required', 'Please complete all required fields for this step.', 2000);
+            return;
+        }
+
+        setStep(prev => prev + 1);
+    };
+
+    const handlePrevStep = () => {
+        setStep(prev => prev - 1);
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
 
-        if (!validateAll()) {
-            const msg = 'Please fix the errors below.';
-            setError(msg);
-            showWarningToast('Validation Errors', msg, 2000);
+        if (step !== 3) return; // Only submit on final step
+
+        // Validation for the 3rd step
+        let isValid = true;
+        let stepErrors = {};
+        ['password', 'confirmPassword'].forEach(field => {
+            const errorMsg = VALIDATORS[field](formData[field], formData);
+            if (errorMsg) {
+                isValid = false;
+                stepErrors[field] = errorMsg;
+            }
+        });
+
+        if (!isValid) {
+            setFieldErrors(prev => ({ ...prev, ...stepErrors }));
+            showWarningToast('Validation Errors', 'Please fix the errors below.', 2000);
             return;
         }
 
         setLoading(true);
 
         try {
-            // Build the payload matching Django's RegisterSerializer
             let hospitalId = resolvedHospitalId;
 
             if (selectedHospital && !hospitalId) {
@@ -228,21 +267,19 @@ const SignUp = () => {
                     nic_number: formData.nic,
                     phoneNumber: formData.phone,
                     blood_group: formData.bloodGroup,
-                    country: null,    // ForeignKey — needs ID, wire up later
-                    district: null,   // ForeignKey — needs ID, wire up later
+                    country: null,
+                    district: null,
                     hospital: hospitalId || null,
                 },
             };
 
             await registerUser(payload);
-
             setSuccess(true);
             showSuccessToast('Account Created!', `Welcome to HOPEDROP, ${formData.username}. Redirecting to login…`, 2200).then(() => {
                 navigate('/login');
             });
 
         } catch (err) {
-            // Extract error messages from Django's response
             const data = err.response?.data;
             let message = 'Registration failed. Please try again.';
             let popupTitle = 'Registration Failed';
@@ -273,7 +310,6 @@ const SignUp = () => {
                     popupTitle = 'Existing Data Found';
                 }
             }
-
             setError(message);
             showErrorToast(popupTitle, message, 3000);
         } finally {
@@ -281,12 +317,24 @@ const SignUp = () => {
         }
     };
 
-
+    // UI Renders for Steps
+    const renderStepIndicators = () => (
+        <div className="wizard-indicators">
+            {[1, 2, 3].map(num => (
+                <div key={num} className={`wizard-step ${step >= num ? 'active' : ''} ${step > num ? 'completed' : ''}`}>
+                    <div className="step-circle">
+                        {step > num ? <Check size={16} /> : num}
+                    </div>
+                    <span>{num === 1 ? 'Personal' : num === 2 ? 'Location' : 'Security'}</span>
+                </div>
+            ))}
+        </div>
+    );
 
     return (
-        <div className="signup-container new-design">
+        <div className="signup-container new-design wizard-mode">
             <div className="signup-split-card-new">
-
+                
                 {/* ── Left Visual Panel ── */}
                 <div className="signup-visual-section-new">
                     <div className="visual-orbs">
@@ -321,15 +369,17 @@ const SignUp = () => {
                     </div>
                 </div>
 
-                {/* ── Right Form Panel ── */}
+                {/* ── Right Form Panel (Wizard) ── */}
                 <div className="signup-form-section-new">
-                    <div className="auth-header-new">
-                        <h2>Hello! Tell us a little<br />about yourself.</h2>
-                        <p>Fields marked with <strong>*</strong> are required.</p>
+                    
+                    {renderStepIndicators()}
+
+                    <div className="auth-header-new" style={{ marginTop: '1.5rem', marginBottom: '1.2rem'}}>
+                        <h2>{step === 1 ? "Let's Get Started!" : step === 2 ? "Where are you located?" : "Secure your account"}</h2>
+                        <p>{step === 1 ? "Tell us a little about yourself" : step === 2 ? "Help us customize your nearby requests" : "Create a strong password to protect your data"}</p>
                     </div>
 
                     {error && <div className="auth-error-message">⚠️ {error}</div>}
-
                     {success && (
                         <div className="auth-success-message">
                             <div className="success-icon-check">✓</div>
@@ -337,284 +387,177 @@ const SignUp = () => {
                         </div>
                     )}
 
-                    <form className="auth-form-new" onSubmit={handleSubmit}>
-
-                        {/* ── Role ── */}
-                        <div className="form-group-new">
-                            <label>I am registering as *</label>
-                            <select
-                                name="role"
-                                value={formData.role}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                disabled={loading || success}
-                                className={`auth-select-new ${inputClass('role')}`}
-                            >
-                                <option value="" disabled>Select your role…</option>
-                                {ROLE_OPTIONS.map(opt => (
-                                    <option key={opt.value} value={opt.value}>{opt.label}</option>
-                                ))}
-                            </select>
-                            {fieldErrors.role && <span className="field-error">{fieldErrors.role}</span>}
-                        </div>
-
-                        {/* ── Username + NIC ── */}
-                        <div className="form-row-new">
-                            <div className="form-group-new half-width">
-                                <label>Username *</label>
-                                <input
-                                    type="text"
-                                    name="username"
-                                    placeholder="John Doe"
-                                    value={formData.username}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    disabled={loading || success}
-                                    className={inputClass('username')}
-                                />
-                                {fieldErrors.username && <span className="field-error">{fieldErrors.username}</span>}
-                            </div>
-                            <div className="form-group-new half-width">
-                                <label>NIC (National ID) *</label>
-                                <input
-                                    type="text"
-                                    name="nic"
-                                    placeholder="200012345V or 200012345678"
-                                    value={formData.nic}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    disabled={loading || success}
-                                    className={inputClass('nic')}
-                                />
-                                {fieldErrors.nic && <span className="field-error">{fieldErrors.nic}</span>}
-                            </div>
-                        </div>
-
-                        {/* ── Blood Group + Email ── */}
-                        <div className="form-row-new">
-                            <div className="form-group-new half-width">
-                                <label>Blood Group *</label>
-                                <select
-                                    name="bloodGroup"
-                                    value={formData.bloodGroup}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    disabled={loading || success}
-                                    className={`auth-select-new ${inputClass('bloodGroup')}`}
-                                >
-                                    <option value="" disabled>Select…</option>
-                                    {['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'].map(bg => (
-                                        <option key={bg} value={bg}>{bg}</option>
-                                    ))}
+                    <form className="auth-form-new wizard-form-container" onSubmit={handleSubmit}>
+                        
+                        {/* ── STEP 1: Basic Info ── */}
+                        <div className={`wizard-step-content ${step === 1 ? 'active' : ''}`}>
+                            <div className="form-group-new">
+                                <label>I am registering as *</label>
+                                <select name="role" value={formData.role} onChange={handleChange} onBlur={handleBlur} className={`auth-select-new ${inputClass('role')}`}>
+                                    <option value="" disabled>Select your role…</option>
+                                    {ROLE_OPTIONS.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
                                 </select>
-                                {fieldErrors.bloodGroup && <span className="field-error">{fieldErrors.bloodGroup}</span>}
+                                {fieldErrors.role && <span className="field-error">{fieldErrors.role}</span>}
                             </div>
-                            <div className="form-group-new half-width">
-                                <label>Email Address *</label>
-                                <input
-                                    type="email"
-                                    name="email"
-                                    placeholder="john@example.com"
-                                    value={formData.email}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    disabled={loading || success}
-                                    className={inputClass('email')}
-                                />
-                                {fieldErrors.email && <span className="field-error">{fieldErrors.email}</span>}
+                            <div className="form-row-new">
+                                <div className="form-group-new half-width">
+                                    <label>Username *</label>
+                                    <input type="text" name="username" autoComplete="off" value={formData.username} onChange={handleChange} onBlur={handleBlur} className={inputClass('username')} />
+                                    {fieldErrors.username && <span className="field-error">{fieldErrors.username}</span>}
+                                </div>
+                                <div className="form-group-new half-width">
+                                    <label>NIC *</label>
+                                    <input type="text" name="nic" autoComplete="off" value={formData.nic} onChange={handleChange} onBlur={handleBlur} className={inputClass('nic')} />
+                                    {fieldErrors.nic && <span className="field-error">{fieldErrors.nic}</span>}
+                                </div>
                             </div>
-                        </div>
-
-                        {/* ── Phone ── */}
-                        <div className="form-group-new">
-                            <label>Phone Number *</label>
-                            <input
-                                type="tel"
-                                name="phone"
-                                placeholder="+94 77 123 4567"
-                                value={formData.phone}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                disabled={loading || success}
-                                className={`w-50 ${inputClass('phone')}`}
-                            />
-                            {fieldErrors.phone && <span className="field-error">{fieldErrors.phone}</span>}
-                        </div>
-
-                        {/* ── Country + District ── */}
-                        <div className="form-row-new">
-                            <div className="form-group-new half-width">
-                                <label>Country *</label>
-                                <select
-                                    name="country"
-                                    value={formData.country}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    disabled={loading || success}
-                                    className={`auth-select-new ${inputClass('country')}`}
-                                >
-                                    <option value="" disabled>Select country…</option>
-                                    {countries.map(c => (
-                                        <option key={c} value={c}>{c}</option>
-                                    ))}
-                                </select>
-                                {fieldErrors.country && <span className="field-error">{fieldErrors.country}</span>}
+                            <div className="form-row-new">
+                                <div className="form-group-new half-width">
+                                    <label>Blood Group *</label>
+                                    <select name="bloodGroup" value={formData.bloodGroup} onChange={handleChange} onBlur={handleBlur} className={`auth-select-new ${inputClass('bloodGroup')}`}>
+                                        <option value="" disabled>Select…</option>
+                                        {['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'].map(bg => <option key={bg} value={bg}>{bg}</option>)}
+                                    </select>
+                                    {fieldErrors.bloodGroup && <span className="field-error">{fieldErrors.bloodGroup}</span>}
+                                </div>
+                                <div className="form-group-new half-width">
+                                    <label>Email *</label>
+                                    <input type="email" name="email" autoComplete="none" value={formData.email} onChange={handleChange} onBlur={handleBlur} className={inputClass('email')} />
+                                    {fieldErrors.email && <span className="field-error">{fieldErrors.email}</span>}
+                                </div>
                             </div>
-                            <div className="form-group-new half-width">
-                                <label>District *</label>
-                                <select
-                                    name="district"
-                                    value={formData.district}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    disabled={loading || success || !formData.country}
-                                    className={`auth-select-new ${inputClass('district')}`}
-                                >
-                                    <option value="" disabled>
-                                        {formData.country ? 'Select district…' : 'Select country first'}
-                                    </option>
-                                    {districts.map(d => (
-                                        <option key={d.name} value={d.name}>{d.name}</option>
-                                    ))}
-                                </select>
-                                {fieldErrors.district && <span className="field-error">{fieldErrors.district}</span>}
+                            <div className="form-group-new">
+                                <label>Phone *</label>
+                                <input type="tel" name="phone" value={formData.phone} onChange={handleChange} onBlur={handleBlur} className={`w-50 ${inputClass('phone')}`} />
+                                {fieldErrors.phone && <span className="field-error">{fieldErrors.phone}</span>}
                             </div>
                         </div>
 
-                        {/* ── Nearest Hospital (Autocomplete) ── */}
-                        <div className="form-group-new">
-                            <label>Nearest Hospital</label>
-                            <div className="hospital-autocomplete-wrap">
-                                <div className="hospital-search-input-wrap">
-                                    <Search size={16} className="hospital-search-icon" />
-                                    <input
-                                        ref={hospitalInputRef}
-                                        type="text"
-                                        placeholder="Type hospital name… (e.g. Colombo General)"
-                                        value={hospitalSearch}
-                                        onChange={(e) => {
-                                            setHospitalSearch(e.target.value);
-                                            if (!e.target.value) handleClearHospital();
-                                        }}
-                                        onFocus={() => {
-                                            if (hospitalSuggestions.length > 0) setShowHospitalDropdown(true);
-                                        }}
-                                        disabled={loading || success}
-                                        className="hospital-search-input"
-                                        autoComplete="off"
-                                    />
-                                    {hospitalSearching && <Loader size={16} className="hospital-input-spinner" />}
-                                    {selectedHospital && (
-                                        <button
-                                            type="button"
-                                            className="hospital-clear-btn"
-                                            onClick={handleClearHospital}
-                                            title="Clear selection"
-                                        >
-                                            <X size={14} />
-                                        </button>
+                        {/* ── STEP 2: Location ── */}
+                        <div className={`wizard-step-content ${step === 2 ? 'active' : ''}`}>
+                            <div className="form-row-new">
+                                <div className="form-group-new half-width">
+                                    <label>Country *</label>
+                                    <select name="country" value={formData.country} onChange={handleChange} onBlur={handleBlur} className={`auth-select-new ${inputClass('country')}`}>
+                                        <option value="" disabled>Select country…</option>
+                                        {countries.map(c => <option key={c} value={c}>{c}</option>)}
+                                    </select>
+                                    {fieldErrors.country && <span className="field-error">{fieldErrors.country}</span>}
+                                </div>
+                                <div className="form-group-new half-width">
+                                    <label>District *</label>
+                                    <select name="district" value={formData.district} onChange={handleChange} onBlur={handleBlur} disabled={!formData.country} className={`auth-select-new ${inputClass('district')}`}>
+                                        <option value="" disabled>{formData.country ? 'Select district…' : 'Select country first'}</option>
+                                        {districts.map(d => <option key={d.name} value={d.name}>{d.name}</option>)}
+                                    </select>
+                                    {fieldErrors.district && <span className="field-error">{fieldErrors.district}</span>}
+                                </div>
+                            </div>
+
+                            <div className="form-group-new">
+                                <label>Nearest Hospital</label>
+                                <div className="hospital-autocomplete-wrap">
+                                    <div className="hospital-search-input-wrap">
+                                        <Search size={16} className="hospital-search-icon" />
+                                        <input
+                                            ref={hospitalInputRef}
+                                            type="text"
+                                            placeholder={formData.district ? "Type hospital name… (e.g. Colombo General)" : "Select a district first"}
+                                            value={hospitalSearch}
+                                            onChange={(e) => {
+                                                setHospitalSearch(e.target.value);
+                                                if (!e.target.value) handleClearHospital();
+                                            }}
+                                            onFocus={() => { if (hospitalSearch.length >= 2) setShowHospitalDropdown(true); }}
+                                            className="hospital-search-input"
+                                            autoComplete="off"
+                                            disabled={!formData.district}
+                                        />
+                                        {hospitalSearching && <Loader size={16} className="hospital-input-spinner" />}
+                                        {selectedHospital && (
+                                            <button type="button" className="hospital-clear-btn" onClick={handleClearHospital} title="Clear selection"><X size={14} /></button>
+                                        )}
+                                    </div>
+                                    {showHospitalDropdown && hospitalSearch.length >= 2 && (
+                                        <ul className="hospital-suggestions" ref={hospitalDropdownRef}>
+                                            <li className="hospital-suggestions-header">
+                                                {hospitalSuggestions.length} result{hospitalSuggestions.length !== 1 ? 's' : ''} for "{hospitalSearch}"
+                                            </li>
+                                            {hospitalSuggestions.length === 0 && !hospitalSearching && (
+                                                <li className="hospital-suggestion-item" style={{ color: '#888', cursor: 'default', justifyContent: 'center', padding: '1rem' }}>
+                                                    No hospitals found. Please try another name.
+                                                </li>
+                                            )}
+                                            {hospitalSuggestions.map((h) => (
+                                                <li key={h.id} className={`hospital-suggestion-item ${selectedHospital?.id === h.id ? 'selected' : ''}`} onClick={() => handleSelectHospital(h)}>
+                                                    <MapPin size={14} className="hospital-item-icon" />
+                                                    <div className="hospital-item-info">
+                                                        <span className="hospital-item-name">{h.name}</span>
+                                                        {h.shortAddress && <span className="hospital-item-address">{h.shortAddress}</span>}
+                                                    </div>
+                                                </li>
+                                            ))}
+                                        </ul>
                                     )}
                                 </div>
-
-                                {/* Suggestions Dropdown */}
-                                {showHospitalDropdown && (
-                                    <ul className="hospital-suggestions" ref={hospitalDropdownRef}>
-                                        <li className="hospital-suggestions-header">
-                                            {hospitalSuggestions.length} result{hospitalSuggestions.length !== 1 ? 's' : ''} for "{hospitalSearch}"
-                                        </li>
-                                        {hospitalSuggestions.map((h) => (
-                                            <li
-                                                key={h.id}
-                                                className={`hospital-suggestion-item ${selectedHospital?.id === h.id ? 'selected' : ''}`}
-                                                onClick={() => handleSelectHospital(h)}
-                                            >
-                                                <MapPin size={14} className="hospital-item-icon" />
-                                                <div className="hospital-item-info">
-                                                    <span className="hospital-item-name">{h.name}</span>
-                                                    {h.shortAddress && <span className="hospital-item-address">{h.shortAddress}</span>}
-                                                </div>
-                                            </li>
-                                        ))}
-                                    </ul>
+                                {selectedHospital && (
+                                    <div className="hospital-selected-badge">
+                                        <MapPin size={14} />
+                                        <span>Selected: <strong>{selectedHospital.name}</strong></span>
+                                    </div>
                                 )}
                             </div>
+                        </div>
 
-                            {/* Selected Hospital Badge */}
-                            {selectedHospital && (
-                                <div className="hospital-selected-badge">
-                                    <MapPin size={14} />
-                                    <span>Selected: <strong>{selectedHospital.name}</strong></span>
+                        {/* ── STEP 3: Security ── */}
+                        <div className={`wizard-step-content ${step === 3 ? 'active' : ''}`}>
+                            <div className="form-row-new">
+                                <div className="form-group-new half-width">
+                                    <label>Password *</label>
+                                    <input type={showPassword ? 'text' : 'password'} name="password" autoComplete="new-password" value={formData.password} onChange={handleChange} onBlur={handleBlur} className={inputClass('password')} />
+                                    {formData.password && (
+                                        <div className="password-strength-meter">
+                                            <div className={`strength-bar level-${passwordStrength}`}></div>
+                                        </div>
+                                    )}
+                                    {fieldErrors.password && <span className="field-error">{fieldErrors.password}</span>}
                                 </div>
+                                <div className="form-group-new half-width">
+                                    <label>Confirm Password *</label>
+                                    <input type={showPassword ? 'text' : 'password'} name="confirmPassword" autoComplete="new-password" value={formData.confirmPassword} onChange={handleChange} onBlur={handleBlur} className={inputClass('confirmPassword')} />
+                                    {fieldErrors.confirmPassword && <span className="field-error">{fieldErrors.confirmPassword}</span>}
+                                </div>
+                            </div>
+                            <label style={{ fontSize: '0.82rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--color-text-muted)'}}>
+                                <input type="checkbox" style={{ accentColor: '#C62828' }} checked={showPassword} onChange={() => setShowPassword(!showPassword)} /> Show passwords
+                            </label>
+                        </div>
+                        
+                        {/* ── Action Buttons ── */}
+                        <div className="form-actions-wizard">
+                            {step > 1 ? (
+                                <button type="button" className="btn-wizard-back" onClick={handlePrevStep} disabled={loading || success}>
+                                    <ChevronLeft size={16} /> BACK
+                                </button>
+                            ) : (
+                                <Link to="/login" className="btn-wizard-back">
+                                    <ChevronLeft size={16} /> LOGIN
+                                </Link>
+                            )}
+
+                            {step < 3 ? (
+                                <button type="button" className="btn-wizard-next" onClick={handleNextStep}>
+                                    NEXT <ChevronRight size={16} />
+                                </button>
+                            ) : (
+                                <button type="submit" className={`btn-wizard-submit ${loading ? 'loading' : ''}`} disabled={loading || success}>
+                                    {loading ? <span className="spinner-small"></span> : 'CREATE ACCOUNT'}
+                                </button>
                             )}
                         </div>
 
-                        {/* ── Passwords ── */}
-                        <div className="form-row-new">
-                            <div className="form-group-new half-width">
-                                <label>Password *</label>
-                                <input
-                                    type={showPassword ? 'text' : 'password'}
-                                    name="password"
-                                    placeholder="••••••••"
-                                    value={formData.password}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    disabled={loading || success}
-                                    className={inputClass('password')}
-                                />
-                                {formData.password && (
-                                    <div className="password-strength-meter">
-                                        <div className={`strength-bar level-${passwordStrength}`}></div>
-                                    </div>
-                                )}
-                                {fieldErrors.password && <span className="field-error">{fieldErrors.password}</span>}
-                            </div>
-                            <div className="form-group-new half-width">
-                                <label>Confirm Password *</label>
-                                <input
-                                    type={showPassword ? 'text' : 'password'}
-                                    name="confirmPassword"
-                                    placeholder="••••••••"
-                                    value={formData.confirmPassword}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    disabled={loading || success}
-                                    className={inputClass('confirmPassword')}
-                                />
-                                {fieldErrors.confirmPassword && <span className="field-error">{fieldErrors.confirmPassword}</span>}
-                            </div>
-                        </div>
-
-                        {/* Show/hide toggle */}
-                        <label style={{
-                            fontSize: '0.82rem', cursor: 'pointer', userSelect: 'none',
-                            display: 'flex', alignItems: 'center', gap: '0.4rem',
-                            color: 'var(--color-text-muted)'
-                        }}>
-                            <input
-                                type="checkbox"
-                                style={{ accentColor: '#C62828' }}
-                                checked={showPassword}
-                                onChange={() => setShowPassword(!showPassword)}
-                            />
-                            Show passwords
-                        </label>
-
-                        <div className="form-actions-new">
-                            <Link to="/login" className="btn-back-new">BACK</Link>
-                            <button
-                                type="submit"
-                                className={`btn-next-new ${loading ? 'loading' : ''}`}
-                                disabled={loading || success}
-                            >
-                                {loading ? <span className="spinner-small"></span> : 'CREATE ACCOUNT'}
-                            </button>
-                        </div>
                     </form>
-
-                    <p className="signup-login-link">
-                        Already have an account? <Link to="/login">Sign In</Link>
-                    </p>
+                    
                 </div>
             </div>
         </div>

@@ -59,7 +59,6 @@ const Login = () => {
 
                 <div className="auth-header">
                     <h2>Welcome Back</h2>
-                    <p>Login to access your HOPEDROP dashboard</p>
                 </div>
 
                 {error && <div className="auth-error-message">⚠️ {error}</div>}
@@ -70,7 +69,7 @@ const Login = () => {
                         <input
                             type="text"
                             id="email"
-                            placeholder="Enter your email"
+                            autoComplete="username"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             disabled={loading}
@@ -84,7 +83,7 @@ const Login = () => {
                             <input
                                 type={showPassword ? 'text' : 'password'}
                                 id="password"
-                                placeholder="Enter your password"
+                                autoComplete="current-password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 disabled={loading}

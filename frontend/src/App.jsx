@@ -20,6 +20,7 @@ import Events from "./pages/events/Events";
 import AboutUs from "./pages/public/AboutUs";
 import Services from "./pages/public/Services";
 import Unauthorized from "./pages/public/Unauthorized";
+import NotFound from "./pages/public/NotFound";
 import './App.css';
 
 
@@ -97,8 +98,8 @@ function App() {
               <Route path="/admin/settings" element={<DummyAdminPage title="Settings" />} />
             </Route>
 
-            {/* Catch all redirect */}
-            <Route path="*" element={<Navigate to="/" replace />} />
+            {/* 404 Not Found Page */}
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
       </AuthProvider>
