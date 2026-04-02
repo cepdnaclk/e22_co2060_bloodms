@@ -9,11 +9,11 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-from backEnd.main.apps.UserAuth.models.hospital import Hospital
-from backEnd.main.apps.UserAuth.models.models import Profile
-from backEnd.main.apps.UserAuth.serializer.payload.payload import MyTokenObtainPairSerializer
-from backEnd.main.apps.UserAuth.serializer.request.register import RegisterSerializer
-from backEnd.main.apps.UserAuth.serializer.response.serializer import ProfileSerializer, UserSerializer
+from ..models.hospital import Hospital
+from ..models import Profile
+from ..serializer.payload.payload import MyTokenObtainPairSerializer
+from ..serializer.request.register import RegisterSerializer
+from ..serializer.response.serializer import ProfileSerializer, UserSerializer
 
 User = get_user_model()
 
