@@ -62,16 +62,7 @@ class MyTokenObtainPairView(TokenObtainPairView):
 
 
 class RegisterView(generics.CreateAPIView):
-    """
-    User registration endpoint
-    POST /api/auth/register/
-    Body: {
-        "email": "user@example.com",
-        "username": "username",
-        "password": "strongpassword",
-        "password2": "strongpassword"
-    }
-    """
+
     queryset = User.objects.all()
     permission_classes = [AllowAny]
     serializer_class = RegisterSerializer
