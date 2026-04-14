@@ -1,13 +1,20 @@
+
 from django.db import models
-from bloodBank import BloodBank
+from .bloodBank import BloodBank
+
+
 
 class BloodInventory(models.Model):
 
     BLOOD_TYPES = [
-        ('A+', 'A+'), ('A-', 'A-'),
-        ('B+', 'B+'), ('B-', 'B-'),
-        ('O+', 'O+'), ('O-', 'O-'),
-        ('AB+', 'AB+'), ('AB-', 'AB-'),
+        ("A+", "A+"),
+        ("A-", "A-"),
+        ("B+", "B+"),
+        ("B-", "B-"),
+        ("O+", "O+"),
+        ("O-", "O-"),
+        ("AB+", "AB+"),
+        ("AB-", "AB-"),
     ]
 
     blood_type = models.CharField(max_length=3, choices=BLOOD_TYPES)

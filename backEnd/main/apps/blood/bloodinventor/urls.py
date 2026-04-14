@@ -1,4 +1,7 @@
-from django.urls import path,include
+from django.urls import path
 
-urlpatterns=[]
+from .services.inventorService import liveStock
 
+urlpatterns = [
+    path("live-stock/", liveStock, name="live_stock"),
+]

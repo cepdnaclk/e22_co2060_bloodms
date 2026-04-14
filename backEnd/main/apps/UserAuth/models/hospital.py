@@ -1,7 +1,8 @@
 from django.db import models
+
 from .location import Country, District
 
-__all__ = ['Hospital']
+__all__ = ["Hospital"]
 
 
 class Hospital(models.Model):

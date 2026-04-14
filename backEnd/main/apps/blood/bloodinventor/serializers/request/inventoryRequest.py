@@ -1,9 +1,9 @@
-from datetime import date
-from ...models.bloodinventor import BloodInventory
 from rest_framework import serializers
 
-class BloodInventoryRequestSerializer(serializers.ModelSerializer):
+from ...models.bloodinventor import BloodInventory
 
+
+class BloodInventoryRequestSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BloodInventory
@@ -13,7 +13,7 @@ class BloodInventoryRequestSerializer(serializers.ModelSerializer):
             "blood_bank",
             "collected_date",
             "expiry_date",
-            "status"
+            "status",
         ]
 
     def validate(self, data):
@@ -21,11 +21,8 @@ class BloodInventoryRequestSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 "Expiry date must be after collected date"
             )
-        if data['quantity']<=0:
-            raise serializers.ValidationError(
-                "store is low"
-            )
-        if data ['status']=="BAD":
+        if data["quantity"] <= 0:
+            raise serializers.ValidationError("store is low")
+        if data["status"] == "BAD":
             raise serializers.ValidationError("danger rechecked blood details")
         return data
-

@@ -2,6 +2,7 @@
 """
 Test script to verify AUTH_USER_MODEL configuration
 """
+
 import os
 
 import django
@@ -12,7 +13,7 @@ from django.contrib.auth import get_user_model
 
 def main():
     # Set up Django
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
     django.setup()
 
     print("=" * 60)
@@ -24,9 +25,7 @@ def main():
 
     print(f"\n✓ AUTH_USER_MODEL setting: {settings.AUTH_USER_MODEL}")
     print(f"✓ Loaded User model: {user_model}")
-    print(
-        f"✓ User model location: {user_model.__module__}.{user_model.__name__}"
-    )
+    print(f"✓ User model location: {user_model.__module__}.{user_model.__name__}")
 
     # Check User model fields
     print("\n✓ User model fields:")

@@ -69,7 +69,6 @@ class Profile(models.Model):
     phoneNumber = PhoneNumberField(blank=True, null=True, unique=True)
     country = models.ForeignKey(
         Country,
-
         on_delete=models.SET_NULL,
         null=True,
         related_name="users",

@@ -7,7 +7,7 @@ from ...models.hospital import Hospital
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'role']
+        fields = ["id", "username", "email", "role"]
 
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -23,9 +23,9 @@ class ProfileSerializer(serializers.ModelSerializer):
             "hospital",
         ]
         extra_kwargs = {
-            'country': {'required': False, 'allow_null': True},
-            'district': {'required': False, 'allow_null': True},
-            'hospital': {'required': False, 'allow_null': True},
+            "country": {"required": False, "allow_null": True},
+            "district": {"required": False, "allow_null": True},
+            "hospital": {"required": False, "allow_null": True},
         }
 
 

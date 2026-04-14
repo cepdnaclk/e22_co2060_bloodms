@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
+
 from datetime import timedelta
 from pathlib import Path
 
@@ -16,14 +17,14 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Custom User Model - MUST be defined before INSTALLED_APPS
-AUTH_USER_MODEL = 'UserAuth.User'
+AUTH_USER_MODEL = "UserAuth.User"
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-)t-yh@f0)nru3%wo$s2dh9l2t_+npo8dq8rxn14a^d!hu-@$$8'
+SECRET_KEY = "django-insecure-)t-yh@f0)nru3%wo$s2dh9l2t_+npo8dq8rxn14a^d!hu-@$$8"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -35,37 +36,28 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     "jazzmin",
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-
-
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
     # Third party apps
-    'rest_framework',
-    'corsheaders',
-
+    "rest_framework",
+    "corsheaders",
     # apps
-    'apps.UserAuth',
-    'apps.blood.bloodinventor',
-
-    'rest_framework_simplejwt.token_blacklist',
-    'phonenumber_field',
-'django_rest_passwordreset',
-
-
-
-
-
+    "apps.UserAuth",
+    "apps.blood.bloodinventor",
+    "rest_framework_simplejwt.token_blacklist",
+    "phonenumber_field",
+    "django_rest_passwordreset",
 ]
-PHONENUMBER_DEFAULT_REGION = 'LK'  # Example: US, GB, IN
+PHONENUMBER_DEFAULT_REGION = "LK"  # Example: US, GB, IN
 
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "corsheaders.middleware.CorsMiddleware",   # keep before CommonMiddleware
+    "corsheaders.middleware.CorsMiddleware",  # keep before CommonMiddleware
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -75,33 +67,33 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = 'config.urls'
+ROOT_URLCONF = "config.urls"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [BASE_DIR / "templates"],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'config.wsgi.application'
+WSGI_APPLICATION = "config.wsgi.application"
 
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
 }
 
@@ -111,18 +103,18 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': (
-            'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'
+        "NAME": (
+            "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"
         ),
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
 
@@ -130,9 +122,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = "UTC"
 
 USE_I18N = True
 
@@ -142,27 +134,27 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [
-    BASE_DIR / 'static',
+    BASE_DIR / "static",
 ]
 
 # Media files (user uploads)
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
 
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # CORS Settings (allow React to communicate with Django)
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
-"http://localhost:5174",
+    "http://localhost:5174",
     "http://127.0.0.1:5174",
 ]
 
@@ -170,8 +162,8 @@ CORS_ALLOW_CREDENTIALS = True  # It tells browser that sending cookies is safe.
 
 # REST Framework Settings
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
 }
 
@@ -184,32 +176,26 @@ CSRF_COOKIE_SECURE = False  # Set to True in production
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
-"http://localhost:5174",
+    "http://localhost:5174",
     "http://127.0.0.1:5174",
 ]
 
 
 SIMPLE_JWT = {
     # How long the access token is valid (default is 5 minutes)
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
-
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
     # How long the refresh token is valid (default is 1 day)
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     # If True, every time a refresh token is used, a NEW refresh token is issued
-    'ROTATE_REFRESH_TOKENS': True,
-
+    "ROTATE_REFRESH_TOKENS": True,
     # If True, the old refresh token is blacklisted after being used.
     # (requires Blacklist app)
-    'BLACKLIST_AFTER_ROTATION': True,
-
+    "BLACKLIST_AFTER_ROTATION": True,
     # The prefix required in the header, e.g., "Authorization: Bearer <token>"
-    'AUTH_HEADER_TYPES': ('Bearer',),
-
+    "AUTH_HEADER_TYPES": ("Bearer",),
     # Use a different key for signing if you don't want to use Django's SECRET_KEY
-    'SIGNING_KEY': 'your-secret-signing-key',
-
+    "SIGNING_KEY": "your-secret-signing-key",
     # Which user field to include in the token (usually 'id')
-    'USER_ID_FIELD': 'id',
-    'USER_ID_CLAIM': 'user_id',
+    "USER_ID_FIELD": "id",
+    "USER_ID_CLAIM": "user_id",
 }

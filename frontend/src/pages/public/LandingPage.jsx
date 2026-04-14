@@ -6,10 +6,57 @@ import { LANDING } from '../../config/imageAssets';
 import { PHOTOS } from '../../config/imageAssets';
 
 const LandingPage = () => {
-    const [bloodStock] = useState({
-        "O+": "Normal", "A+": "Low", "B+": "Critical", "AB+": "Normal",
-        "O-": "Normal", "A-": "Normal", "B-": "Low", "AB-": "Normal"
-    });
+const DEFAULT_STOCK = {
+    "A+": "Normal",
+    "A-": "Normal",
+    "B+": "Normal",
+    "B-": "Normal",
+    "AB+": "Normal",
+    "AB-": "Normal",
+    "O+": "Normal",
+    "O-": "Normal",
+};
+
+const [bloodStock, setBloodStock] = useState(DEFAULT_STOCK);
+const [lastUpdated, setLastUpdated] = useState(null);
+const [stockLoading, setStockLoading] = useState(true);
+const [stockError, setStockError] = useState("");
+
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/api/v1";
+
+const fetchLiveStock = async () => {
+    try {
+        setStockError("");
+        const response = await fetch(`${API_BASE}/blood/live-stock/`);
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        const statusByType = { ...DEFAULT_STOCK };
+        (data.stocks || []).forEach((item) => {
+            if (item?.bloodType && item?.status) {
+                statusByType[item.bloodType] = item.status;
+            }
+        });
+
+        setBloodStock(statusByType);
+        setLastUpdated(data.updatedAt || null);
+    } catch (error) {
+        setStockError("Unable to load live blood stock right now.");
+        console.error("Live stock fetch failed:", error);
+    } finally {
+        setStockLoading(false);
+    }
+};
+
+useEffect(() => {
+    fetchLiveStock();
+    const intervalId = setInterval(fetchLiveStock, 60000); // refresh every 60s
+    return () => clearInterval(intervalId);
+}, []);
+
 
     // Intersection Observer for scroll animations
     useEffect(() => {
@@ -51,15 +98,6 @@ const LandingPage = () => {
     }, []);
     return (
         <div className="landing-page-new">
-            {/* Emergency Banner */}
-            <div className="emergency-banner-new">
-                <div className="banner-content">
-                    <span className="pulse-dot"></span>
-                    <strong>URGENT:</strong> B+ Blood urgently required at General Hospital Colombo.
-                    <a href="tel:0110000000" className="banner-phone"><PhoneCall size={14} /> 011 000 0000</a>
-                </div>
-            </div>
-
             {/* Hero Section */}
             <section 
                 className="hero-section-new"
@@ -171,7 +209,17 @@ const LandingPage = () => {
                             ))}
                         </div>
                         <div className="stock-footer">
-                            <span><Clock size={12} /> Updated just now</span>
+                            <span>
+                                <Clock size={12} />
+                                {" "}
+                                {stockLoading
+                                    ? "Loading..."
+                                    : lastUpdated
+                                        ? `Updated ${new Date(lastUpdated).toLocaleTimeString()}`
+                                        : "Update time unavailable"}
+                            </span>
+                            {stockError && <p className="stock-error">{stockError}</p>}
+
                             <Link to="/donor">View Details</Link>
                         </div>
                     </div>
