@@ -89,7 +89,7 @@ export const PUBLIC_ROUTES = ['/', '/login', '/signup', '/contact', '/events', '
 /* ── Role options for the signup form ── */
 export const ROLE_OPTIONS = [
     { value: 'patient', label: 'Patient' },
-    { value: 'doctor',  label: 'Doctor' },
+
 ];
 
 /**

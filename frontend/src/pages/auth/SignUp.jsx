@@ -112,7 +112,7 @@ const SignUp = () => {
         if (/[0-9]/.test(password)) strength++;
         if (/[^A-Za-z0-9]/.test(password)) strength++;
         setPasswordStrength(strength);
-    }, [formData.password]);
+    }, [formData, formData.password]);
 
     useEffect(() => {
         if (hospitalDebounceRef.current) clearTimeout(hospitalDebounceRef.current);

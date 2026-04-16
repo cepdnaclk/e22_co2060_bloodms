@@ -1,6 +1,5 @@
 from django.db import IntegrityError, transaction
 from rest_framework import serializers
-
 from ...models import Profile, User
 from ..response.serializer import ProfileSerializer
 
@@ -18,6 +17,12 @@ class RegisterSerializer(serializers.ModelSerializer):
     def validate(self, data):
         if data["password"] != data["password2"]:
             raise serializers.ValidationError("Passwords do not match.")
+
+        # Public signup must never create admin accounts.
+        if data.get("role") == User.ADMIN:
+            raise serializers.ValidationError(
+                {"role": "Admin accounts can only be created by system administrators."}
+            )
 
         if User.objects.filter(username=data["username"]).exists():
             raise serializers.ValidationError(

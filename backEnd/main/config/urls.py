@@ -9,6 +9,8 @@ urlpatterns = [
 ]
 
 urlpatterns += static("static/", document_root="static")
+
+#where media goes to
 urlpatterns += static("media/", document_root="media")
 urlpatterns += [
     re_path(r"^media/(?P<path>.*)$", serve, {"document_root": "media"}),

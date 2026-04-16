@@ -13,6 +13,11 @@ import DonorRegistration from './pages/donor/DonorRegistration';
 import DoctorDashboard from './pages/doctor/DoctorDashboard';
 import LabDashboard from './pages/staff/LabDashboard';
 import AdminDashboard from './pages/admin/AdminDashboard';
+import AdminUsers from './pages/admin/AdminUsers';
+import AdminInventory from './pages/admin/AdminInventory';
+import AdminHospitals from './pages/admin/AdminHospitals';
+import AdminRequests from './pages/admin/AdminRequests';
+import AdminEmergency from './pages/admin/AdminEmergency';
 import DummyAdminPage from './pages/admin/DummyAdminPage';
 import PatientDashboard from './pages/patient/PatientDashboard';
 import ContactPage from './pages/public/ContactPage';
@@ -88,11 +93,12 @@ function App() {
               </RoleRoute>
             }>
               <Route path="/admin" element={<AdminDashboard />} />
-              <Route path="/admin/stock" element={<DummyAdminPage title="Blood Stock" />} />
-              <Route path="/admin/requests" element={<DummyAdminPage title="Requests" />} />
-              <Route path="/admin/users" element={<DummyAdminPage title="Users" />} />
-              <Route path="/admin/donors" element={<DummyAdminPage title="Donors" />} />
-              <Route path="/admin/hospitals" element={<DummyAdminPage title="Hospitals" />} />
+              <Route path="/admin/emergency" element={<AdminEmergency />} />
+              <Route path="/admin/stock" element={<AdminInventory />} />
+              <Route path="/admin/requests" element={<AdminRequests />} />
+              <Route path="/admin/users" element={<AdminUsers />} />
+              <Route path="/admin/donors" element={<AdminUsers />} />
+              <Route path="/admin/hospitals" element={<AdminHospitals />} />
               <Route path="/admin/analytics" element={<DummyAdminPage title="Analytics" />} />
               <Route path="/admin/logs" element={<DummyAdminPage title="Logs" />} />
               <Route path="/admin/settings" element={<DummyAdminPage title="Settings" />} />

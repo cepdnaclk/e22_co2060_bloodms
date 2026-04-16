@@ -75,6 +75,13 @@ class RegisterView(generics.CreateAPIView):
         # Generate tokens for the newly registered user
         refresh = RefreshToken.for_user(user)
 
+        if user.role !="patient":
+            return Response(
+                {
+                    "error":"invalid "
+                },status=status.HTTP_400_BAD_REQUEST
+            )
+
         return Response(
             {
                 "user": {

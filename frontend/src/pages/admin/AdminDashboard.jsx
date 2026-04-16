@@ -68,8 +68,7 @@ const AdminDashboard = () => {
     };
 
     return (
-        <div className="admin-command-center fade-in">
-
+        <div className="admin-command-center fade-in" style={{ padding: '20px' }}>
 
             {/* ── CRITICAL ALERTS (TOP PRIORITY) ── */}
             <section className="acc-section acc-alerts">

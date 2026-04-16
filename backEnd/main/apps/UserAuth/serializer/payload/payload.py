@@ -1,12 +1,30 @@
 import logging
 
+from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
+from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 logger = logging.getLogger(__name__)  # For logging errors
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    def validate(self, attrs):
+        identifier = attrs.get(self.username_field)
+
+        if identifier and "@" not in identifier:
+            user = (
+                get_user_model()
+                .objects.filter(username__iexact=identifier)
+                .values("email")
+                .first()
+            )
+            if not user:
+                raise AuthenticationFailed("No active account found with the given credentials")
+            attrs[self.username_field] = user["email"]
+
+        return super().validate(attrs)
+
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)

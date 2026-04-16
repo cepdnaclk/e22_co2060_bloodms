@@ -3,7 +3,7 @@ import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { 
     Activity, Users, Database, Settings, LayoutDashboard, 
     Droplet, MapPin, Search, Bell, Moon, Sun, Menu, 
-    ChevronLeft, LogOut, ShieldCheck, Calculator, TrendingUp, ScrollText, UserSquare2
+    ChevronLeft, LogOut, ShieldCheck, Calculator, TrendingUp, ScrollText, UserSquare2, AlertTriangle
 } from 'lucide-react';
 import { useAuth } from '../../context/auth/useAuth';
 import { useTheme } from '../../context/theme/ThemeContext';
@@ -37,6 +37,7 @@ const AdminLayout = () => {
             group: 'MAIN',
             items: [
                 { path: '/admin', icon: <LayoutDashboard size={20} />, label: 'Dashboard' },
+                { path: '/admin/emergency', icon: <AlertTriangle size={20} />, label: 'Emergency Hub' },
                 { path: '/admin/stock', icon: <Droplet size={20} />, label: 'Blood Stock' },
                 { path: '/admin/requests', icon: <Activity size={20} />, label: 'Requests' },
             ]
