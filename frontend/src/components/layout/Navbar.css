@@ -1,189 +1,331 @@
-.navbar {
-    background-color: var(--color-surface);
-    border-bottom: 1px solid var(--color-border);
-    padding: var(--spacing-4) var(--spacing-6);
-    box-shadow: var(--shadow-sm);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-}
+/* ═══════════════════════════════════════════════════════════
+   HOPEDROP — DriveX-Style Glassmorphism Navigation
+   ═══════════════════════════════════════════════════════════ */
 
-.navbar-container {
+/* ─── 1. MAIN NAV BAR (Floating Glassmorphism Pill) ─────── */
+.nav {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 40px);
+    max-width: 1400px;
+    padding: 10px 24px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    max-width: 1400px;
-    margin: 0 auto;
+    z-index: 1000;
+
+    /* Glass Effect */
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(26, 26, 46, 0.08);
+    border-radius: 100px;
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.08),
+        0 2px 8px rgba(0, 0, 0, 0.04);
+
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.navbar-brand {
+/* Scrolled State */
+.nav.scrolled {
+    top: 10px;
+    padding: 8px 20px;
+    background: rgba(255, 255, 255, 0.98);
+    box-shadow:
+        0 12px 40px rgba(0, 0, 0, 0.1),
+        0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* Liquid Shine Animation */
+.nav::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 100px;
+    background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(198, 40, 40, 0.08) 50%,
+        transparent 100%);
+    animation: liquidShine 4s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes liquidShine {
+    0%   { transform: translateX(-100%); opacity: 0; }
+    50%  { opacity: 1; }
+    100% { transform: translateX(100%); opacity: 0; }
+}
+
+/* ─── Dark Mode Nav ─── */
+[data-theme="dark"] .nav {
+    background: rgba(22, 27, 34, 0.88);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="dark"] .nav.scrolled {
+    background: rgba(22, 27, 34, 0.96);
+    box-shadow:
+        0 12px 40px rgba(0, 0, 0, 0.4),
+        0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .nav::before {
+    background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(198, 40, 40, 0.12) 50%,
+        transparent 100%);
+}
+
+
+/* ─── 2. LOGO ───────────────────────────────────────────── */
+.nav-logo {
     display: flex;
     align-items: center;
-    gap: var(--spacing-2);
-    font-weight: 700;
-    font-size: var(--font-size-xl);
-    color: var(--color-primary-dark);
+    gap: 8px;
+    text-decoration: none;
+    color: inherit;
+    flex-shrink: 0;
 }
 
-.navbar-logo-img {
-    height: 50px; 
+.nav-logo-img {
+    height: 36px;
     width: auto;
     display: block;
 }
 
-/* Matches your 32px / 900 weight requirement */
-.navbar-brand-text {
-    font-size: 32px;
-    font-weight: 900;
-    color: #B71C1C;
-    font-family: 'Inter', sans-serif;
-    letter-spacing: -0.5px;
-    text-transform: uppercase;
-    line-height: 1; /* Prevents text from pushing the bar taller */
+.logo-text {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--color-primary-dark, #9B1A1A);
+    letter-spacing: 0.5px;
 }
 
-.navbar-links {
+[data-theme="dark"] .logo-text {
+    color: #e6edf3;
+}
+
+.logo-dot {
+    color: var(--color-primary, #C62828);
+    font-size: 1.8rem;
+    font-weight: 700;
+    line-height: 0;
+    margin-left: -4px;
+}
+
+
+/* ─── 3. DESKTOP NAV LINKS ─────────────────────────────── */
+.nav-links {
     display: flex;
     align-items: center;
-    gap: var(--spacing-6);
+    gap: 0.5rem;
+    flex-shrink: 1;
+    min-width: 0;
+    overflow-x: auto;
+    scrollbar-width: none; /* Firefox */
+}
+.nav-links::-webkit-scrollbar {
+    display: none; /* Safari/Chrome */
 }
 
 .nav-link {
+    position: relative;
     display: flex;
     align-items: center;
-    gap: var(--spacing-2);
+    gap: 6px;
+    font-size: 0.8rem;
     font-weight: 500;
-    color: var(--color-text-muted);
-    transition: color var(--transition-fast);
-    padding: var(--spacing-2) var(--spacing-3);
-    border-radius: var(--radius-md);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-text-muted, #637381);
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 50px;
+    transition: color 0.3s, background-color 0.3s;
 }
 
-.nav-link:hover,
+.nav-link:hover {
+    color: var(--color-primary, #C62828);
+    background-color: rgba(198, 40, 40, 0.06);
+}
+
 .nav-link.active {
-    color: var(--color-primary);
-    background-color: var(--color-primary-light);
+    color: var(--color-primary, #C62828);
+    background-color: rgba(198, 40, 40, 0.1);
 }
 
-.navbar-actions {
+/* Underline Animation */
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 12px;
+    right: 12px;
+    height: 2px;
+    background: var(--color-primary, #C62828);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    border-radius: 1px;
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+[data-theme="dark"] .nav-link:hover {
+    color: #f87171;
+    background-color: rgba(198, 40, 40, 0.12);
+}
+
+[data-theme="dark"] .nav-link.active {
+    color: #f87171;
+    background-color: rgba(198, 40, 40, 0.15);
+}
+
+[data-theme="dark"] .nav-link::after {
+    background: #f87171;
+}
+
+
+/* ─── 4. NAV ACTIONS (Right Side) ──────────────────────── */
+.nav-actions {
     display: flex;
     align-items: center;
-    gap: var(--spacing-3);
-    margin-left: var(--spacing-4);
-    padding-left: var(--spacing-4);
-    border-left: 1px solid var(--color-border);
+    gap: 10px;
+    flex-shrink: 0;
 }
 
-.mobile-menu-btn {
-    display: none;
-    background: none;
-    color: var(--color-text-main);
-    border: none;
-    cursor: pointer;
-}
-
-/* Button UI component styles */
-.btn {
-    padding: var(--spacing-2) var(--spacing-4);
-    border-radius: var(--radius-md);
-    font-weight: 600;
-    font-size: var(--font-size-sm);
-    transition: all var(--transition-fast);
-    display: inline-flex;
+/* CTA / Auth Button */
+.nav-cta {
+    display: flex;
     align-items: center;
-    justify-content: center;
-    cursor: pointer;
-}
-
-.btn-outline {
-    border: 1px solid var(--color-border);
-    background: transparent;
-    color: var(--color-text-main);
-}
-
-.btn-outline:hover {
-    border-color: var(--color-primary);
-    color: var(--color-primary);
-    background-color: var(--color-primary-light);
-}
-
-.btn-danger-pulse {
-    background-color: var(--color-critical);
+    gap: 6px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 8px 18px;
+    position: relative;
+    overflow: hidden;
     color: white;
-    animation: pulse-shadow 2s infinite;
-    border: transparent;
+    font-family: inherit;
+    cursor: pointer;
+    text-decoration: none;
+
+    background: linear-gradient(135deg,
+        var(--color-primary, #C62828) 0%,
+        var(--color-primary-dark, #9B1A1A) 100%);
+    border: none;
+    border-radius: 50px;
+    box-shadow:
+        0 4px 15px rgba(198, 40, 40, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@keyframes pulse-shadow {
-    0% {
-        box-shadow: 0 0 0 0 rgba(211, 47, 47, 0.4);
-    }
-
-    70% {
-        box-shadow: 0 0 0 10px rgba(211, 47, 47, 0);
-    }
-
-    100% {
-        box-shadow: 0 0 0 0 rgba(211, 47, 47, 0);
-    }
+/* Shine Sweep on Hover */
+.nav-cta::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg,
+        transparent,
+        rgba(255, 255, 255, 0.25),
+        transparent);
+    transition: left 0.6s ease;
 }
 
-@media (max-width: 768px) {
-    .navbar-links {
-        display: none;
-    }
-
-    .mobile-menu-btn {
-        display: block;
-    }
+.nav-cta:hover::before {
+    left: 100%;
 }
 
-/* ─── Dark Mode Toggle Button ─────────────────────────────────── */
+.nav-cta:hover {
+    box-shadow:
+        0 8px 25px rgba(198, 40, 40, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+/* SOS Button */
+.nav-sos {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 8px 14px;
+    color: white;
+    background: var(--color-critical, #B71C1C);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    animation: pulse-sos 2s infinite;
+    transition: all 0.3s ease;
+}
+
+.nav-sos:hover {
+    transform: scale(1.05);
+}
+
+@keyframes pulse-sos {
+    0%   { box-shadow: 0 0 0 0 rgba(183, 28, 28, 0.5); }
+    70%  { box-shadow: 0 0 0 8px rgba(183, 28, 28, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(183, 28, 28, 0); }
+}
+
+
+/* ─── 5. DARK MODE TOGGLE ──────────────────────────────── */
 .theme-toggle-btn {
     display: flex;
     align-items: center;
-    gap: 8px;
     background: none;
     border: none;
     cursor: pointer;
-    padding: 4px 6px;
-    border-radius: var(--radius-full);
+    padding: 4px;
     color: var(--color-text-muted);
-    transition: color var(--transition-fast);
+    transition: color 0.3s;
 }
 
 .theme-toggle-btn:hover {
     color: var(--color-primary);
 }
 
-.theme-toggle-label {
-    display: flex;
-    align-items: center;
-    transition: transform var(--transition-normal);
-}
-
 .theme-toggle-track {
     position: relative;
-    width: 44px;
-    height: 24px;
+    width: 40px;
+    height: 22px;
     background: #e0e0e0;
-    border-radius: var(--radius-full);
+    border-radius: 9999px;
     display: flex;
     align-items: center;
     padding: 2px;
-    transition: background var(--transition-normal);
+    transition: background 0.3s;
     flex-shrink: 0;
 }
 
 .theme-toggle-track.dark {
-    background: var(--color-primary);
+    background: var(--color-primary, #C62828);
 }
 
 .theme-toggle-thumb {
     position: absolute;
     left: 3px;
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
     background: white;
     border-radius: 50%;
     display: flex;
@@ -191,10 +333,243 @@
     justify-content: center;
     color: #f57f17;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
-    transition: left var(--transition-normal), color var(--transition-normal);
+    transition: left 0.3s, color 0.3s;
 }
 
 .theme-toggle-track.dark .theme-toggle-thumb {
-    left: calc(100% - 21px);
+    left: calc(100% - 19px);
     color: var(--color-primary-dark);
+}
+
+
+/* ─── 6. HAMBURGER TOGGLE ──────────────────────────────── */
+.nav-menu-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 6px;
+    padding: 8px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    z-index: 1001;
+}
+
+.menu-line {
+    width: 24px;
+    height: 2px;
+    background: var(--color-text-main, #1C2025);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    border-radius: 2px;
+}
+
+[data-theme="dark"] .menu-line {
+    background: #e6edf3;
+}
+
+/* X Animation */
+.nav-menu-toggle.active .menu-line:first-child {
+    transform: rotate(45deg) translateY(4px);
+}
+
+.nav-menu-toggle.active .menu-line:last-child {
+    transform: rotate(-45deg) translateY(-4px);
+}
+
+
+/* ─── 7. MOBILE FULLSCREEN MENU ────────────────────────── */
+.mobile-menu {
+    position: fixed;
+    inset: 0;
+    background: var(--color-background, #F4F6F8);
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mobile-menu.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+[data-theme="dark"] .mobile-menu {
+    background: var(--color-background, #0d1117);
+}
+
+.mobile-menu-inner {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.mobile-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(1.6rem, 6vw, 2.8rem);
+    font-weight: 500;
+    color: var(--color-text-main, #1C2025);
+    text-decoration: none;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    padding: 8px 24px;
+    border-radius: 16px;
+}
+
+.mobile-link:hover {
+    color: var(--color-primary, #C62828);
+    background: rgba(198, 40, 40, 0.06);
+}
+
+.mobile-link.active {
+    color: var(--color-primary, #C62828);
+}
+
+[data-theme="dark"] .mobile-link {
+    color: #e6edf3;
+}
+
+[data-theme="dark"] .mobile-link:hover {
+    color: #f87171;
+    background: rgba(198, 40, 40, 0.1);
+}
+
+[data-theme="dark"] .mobile-link.active {
+    color: #f87171;
+}
+
+.mobile-menu.active .mobile-link {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Staggered Delay */
+.mobile-menu.active .mobile-link:nth-child(1) { transition-delay: 0.08s; }
+.mobile-menu.active .mobile-link:nth-child(2) { transition-delay: 0.14s; }
+.mobile-menu.active .mobile-link:nth-child(3) { transition-delay: 0.20s; }
+.mobile-menu.active .mobile-link:nth-child(4) { transition-delay: 0.26s; }
+.mobile-menu.active .mobile-link:nth-child(5) { transition-delay: 0.32s; }
+.mobile-menu.active .mobile-link:nth-child(6) { transition-delay: 0.38s; }
+
+/* Mobile Menu Bottom Actions */
+.mobile-menu-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 32px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: 0.45s;
+}
+
+.mobile-menu.active .mobile-menu-actions {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.mobile-theme-toggle,
+.mobile-auth-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 12px 24px;
+    border-radius: 50px;
+    border: 1px solid var(--color-border, #E0E0E0);
+    background: transparent;
+    color: var(--color-text-main, #1C2025);
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.mobile-theme-toggle:hover,
+.mobile-auth-btn:hover {
+    background: rgba(198, 40, 40, 0.06);
+    border-color: var(--color-primary, #C62828);
+    color: var(--color-primary, #C62828);
+}
+
+[data-theme="dark"] .mobile-theme-toggle,
+[data-theme="dark"] .mobile-auth-btn {
+    color: #e6edf3;
+    border-color: #30363d;
+}
+
+[data-theme="dark"] .mobile-theme-toggle:hover,
+[data-theme="dark"] .mobile-auth-btn:hover {
+    color: #f87171;
+    border-color: #f87171;
+    background: rgba(198, 40, 40, 0.1);
+}
+
+
+/* ─── 8. RESPONSIVE BREAKPOINTS ────────────────────────── */
+
+/* 1024px — Desktop → Mobile switch */
+@media (max-width: 1024px) {
+    .nav-links {
+        display: none;
+    }
+    .nav-menu-toggle {
+        display: flex;
+    }
+    .nav-sos {
+        display: none;
+    }
+    .nav-cta .cta-text {
+        display: none;
+    }
+    .nav-cta {
+        padding: 8px 12px;
+    }
+}
+
+/* 768px — Tablet Portrait */
+@media (max-width: 768px) {
+    .nav {
+        top: 14px !important;
+    }
+    .nav.scrolled {
+        top: 8px !important;
+    }
+    .nav-actions {
+        display: none;
+    }
+}
+
+/* 576px — Mobile */
+@media (max-width: 576px) {
+    .nav {
+        padding: 10px 16px;
+        top: 10px !important;
+        width: calc(100% - 24px);
+    }
+    .nav.scrolled {
+        top: 6px !important;
+        padding: 8px 14px;
+    }
+    .nav-logo-img {
+        height: 28px;
+    }
+    .logo-text {
+        font-size: 1.15rem;
+    }
+    .logo-dot {
+        font-size: 1.5rem;
+    }
+}
+
+/* ─── 9. BODY LOCK WHEN MENU OPEN ──────────────────────── */
+body.menu-open {
+    overflow: hidden;
 }

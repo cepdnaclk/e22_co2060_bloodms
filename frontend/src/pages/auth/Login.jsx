@@ -1,96 +1,77 @@
 import { useState } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
+import { Link, useNavigate } from 'react-router-dom';
+import { showSuccessToast, showErrorToast, showWarningToast } from '../../utils/swalUtils';
+import { useAuth } from '../../context/auth/useAuth';
 import './Login.css';
 
 const Login = () => {
-    const [email, setEmail] = useState('');
+    const [identifier, setIdentifier] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
-    const { login } = useAuth();
+    const { login: loginUser } = useAuth();
     const navigate = useNavigate();
-    const location = useLocation();
 
-    // Redirect to where they were trying to go, or default to landing/donor dashboard
-    const from = location.state?.from?.pathname || '/donor';
-
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
 
-        if (!email || !password) {
+        if (!identifier || !password) {
             setError('Please fill in all fields');
+            showWarningToast('Missing Fields', 'Please fill in all required fields.');
             return;
         }
 
         setLoading(true);
 
-        // Simulate API call
-        setTimeout(() => {
+        try {
+            const userData = await loginUser(identifier, password);
+
+            showSuccessToast(
+                'Login Successful!',
+                `Welcome back, ${userData.username || identifier.split('@')[0]}.`,
+            ).then(() => {
+                navigate(`/${userData.role || 'donor'}`, { replace: true });
+            });
+        } catch (error) {
+            const message = error.response?.data?.detail || 'Invalid credentials';
+            setError(message);
+            showErrorToast('Login Failed', message);
+        } finally {
             setLoading(false);
-
-            // Extract role from the email we mocked in the dropdown (or default to donor)
-            let selectedRole = 'donor';
-            if (email.includes('@frontend.lk')) {
-                selectedRole = email.split('@')[0];
-            }
-
-            // Mock login success
-            login({ email, name: email.split('@')[0], role: selectedRole });
-
-            // Redirect intentionally to the role dashboard instead of generic 'from'
-            navigate(`/${selectedRole}`, { replace: true });
-        }, 1500);
+        }
     };
 
     return (
         <div className="auth-container">
-            <div className="auth-card glass-panel">
-                <div className="auth-header">
-                    <h2>Welcome Back</h2>
-                    <p>Login to access your HOPEDROP dashboard</p>
+            <div className="auth-card">
+
+                {/* Logo mark */}
+                <div className="auth-logo-mark">
+                    <div className="logo-icon">🩸</div>
+                    <span className="logo-text">HOPEDROP</span>
                 </div>
 
-                {error && <div className="auth-error-message">{error}</div>}
+                <div className="auth-header">
+                    <h2>Welcome Back</h2>
+                </div>
+
+                {error && <div className="auth-error-message">⚠️ {error}</div>}
 
                 <form className="auth-form" onSubmit={handleSubmit}>
                     <div className="form-group">
-                        <label htmlFor="email">Email or Username</label>
+                        <label htmlFor="login">Email or Username</label>
                         <input
                             type="text"
-                            id="email"
-                            placeholder="Enter your email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            id="login"
+                            value={identifier}
+                            onChange={(e) => setIdentifier(e.target.value)}
                             disabled={loading}
-                            className={error && !email ? 'error-input' : ''}
+                            className={error && !identifier ? 'error-input' : ''}
+                            placeholder="Enter email or username"
                         />
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="role">Login As</label>
-                        <select
-                            id="role"
-                            onChange={(e) => {
-                                // Default to a specific demo state we can use in handleSubmit
-                                setEmail(e.target.value + '@frontend.lk');
-                            }}
-                            disabled={loading}
-                            className="auth-select"
-                            style={{
-                                width: '100%', padding: '0.8rem 1rem', border: '1px solid #E0E0E0',
-                                borderRadius: '4px', marginBottom: '1rem', backgroundColor: 'white'
-                            }}
-                        >
-                            <option value="donor">Donor</option>
-                            <option value="patient">Patient</option>
-                            <option value="doctor">Medical Officer</option>
-                            <option value="staff">Hospital Staff</option>
-                            <option value="admin">System Admin</option>
-                        </select>
                     </div>
 
                     <div className="form-group">
@@ -99,7 +80,7 @@ const Login = () => {
                             <input
                                 type={showPassword ? 'text' : 'password'}
                                 id="password"
-                                placeholder="Enter your password"
+                                autoComplete="current-password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 disabled={loading}
@@ -126,16 +107,14 @@ const Login = () => {
 
                     <button
                         type="submit"
-                        className={`btn-primary auth-submit-btn ${loading ? 'loading' : ''}`}
+                        className={`auth-submit-btn ${loading ? 'loading' : ''}`}
                         disabled={loading}
                     >
                         {loading ? <span className="spinner"></span> : 'Login'}
                     </button>
                 </form>
 
-                <div className="auth-divider">
-                    <span>OR</span>
-                </div>
+                <div className="auth-divider"><span>OR</span></div>
 
                 <div className="social-login">
                     <button className="btn-social btn-google" type="button">

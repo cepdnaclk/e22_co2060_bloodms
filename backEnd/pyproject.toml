@@ -9,5 +9,11 @@ dependencies = [
 ]
 [tool.ruff]
 line-length = 88
-select = ["E", "F", "W", "I"]  # Errors, formatting, warnings, imports
-ignore = []               # optional rules to ignore
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+ignore = []
+
+[tool.ruff.lint.per-file-ignores]
+"apps/**/migrations/*.py" = ["E501"]
+"main/apps/**/migrations/*.py" = ["E501"]

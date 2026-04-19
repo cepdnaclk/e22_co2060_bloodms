@@ -6,8 +6,11 @@ lint:
 
 # Auto-fix errors
 fix:
-	ruff check . --fix
+	 python -m ruff check . --fix
 
+
+show:
+	python -m ruff check . --show-fixes
 
 run:
 	python manage.py runserver
@@ -17,5 +20,16 @@ run:
 
 app:
 	python manage.py startapp
+
+#make migrations
+
+mg:
+	python manage.py makemigrations
+
+
+#migrate to data base
+
+m:
+	python manage.py migrate
 
 

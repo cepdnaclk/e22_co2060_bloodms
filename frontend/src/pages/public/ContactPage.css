@@ -13,10 +13,9 @@
 .contact-hero {
     position: relative;
     padding: 7rem 2rem 5rem;
-    background:
-        linear-gradient(135deg, rgba(18, 25, 33, 0.92), rgba(183, 28, 28, 0.80)),
-        url('https://images.unsplash.com/photo-1579154204601-01588f351e67?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80')
-        center / cover no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     text-align: center;
     color: white;
     overflow: hidden;
@@ -108,7 +107,7 @@
     padding: 15px;
 }
 
-/* .service-card-wrapper, .service-img-box, .service-content-main-box,
+/* .service-card-wrapper, .service-img-box, .service-content-config-box,
    .service-icon-box.bg-dark, .service-read-more — all inherited from LandingPage.css */
 
 .contact-card-inner {

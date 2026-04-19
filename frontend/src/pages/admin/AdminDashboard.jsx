@@ -1,209 +1,302 @@
-import React, { useState } from 'react';
-import { Activity, Users, Map, ShieldAlert, Database, Bell } from 'lucide-react';
+import React from 'react';
+import { 
+    Activity, Users, AlertTriangle, Database, Bell, TrendingUp, 
+    CheckCircle, XCircle, Droplet, Clock, ShieldAlert, BarChart3,
+    ArrowRight, MapPin
+} from 'lucide-react';
 import Swal from 'sweetalert2';
 import './AdminDashboard.css';
 
 const AdminDashboard = () => {
-    const [disasterMode, setDisasterMode] = useState(false);
 
-    const handleDisasterMode = () => {
-        if (!disasterMode) {
-            Swal.fire({
-                title: 'Declare Emergency?',
-                text: "This will place the entire national network into Disaster Mode, prioritizing emergency routing and overriding standard FIFO protocols.",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#C62828',
-                cancelButtonColor: '#637381',
-                confirmButtonText: 'Yes, Declare Emergency'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    setDisasterMode(true);
-                    document.body.classList.add('disaster-mode');
-                    Swal.fire(
-                        'Emergency Declared!',
-                        'The national network is now in disaster mode.',
-                        'error'
-                    );
-                }
-            });
-        } else {
-            setDisasterMode(false);
-            document.body.classList.remove('disaster-mode');
-            Swal.fire({
-                title: 'Emergency Stood Down',
-                text: 'Network returned to standard operating procedures.',
-                icon: 'success',
-                confirmButtonColor: '#2E7D32',
-                timer: 2000
-            });
-        }
+
+    // Simulated Stock Data
+    const bloodStock = [
+        { type: 'A+', units: 45, status: 'safe' },
+        { type: 'A-', units: 12, status: 'low' },
+        { type: 'B+', units: 38, status: 'safe' },
+        { type: 'B-', units: 8, status: 'low' },
+        { type: 'O+', units: 65, status: 'safe' },
+        { type: 'O-', units: 2, status: 'critical' },
+        { type: 'AB+', units: 20, status: 'safe' },
+        { type: 'AB-', units: 4, status: 'critical' },
+    ];
+
+    // Priority System Data
+    const pendingRequests = [
+        { id: 'REQ-809', hospital: 'General Hospital, Colombo', type: 'O-', units: 3, priority: 'Emergency', time: '1 hour' },
+        { id: 'REQ-810', hospital: 'Kandy Teaching Hospital', type: 'AB-', units: 2, priority: 'Emergency', time: '2 hours' },
+        { id: 'REQ-811', hospital: 'Lanka Hospitals', type: 'A-', units: 5, priority: 'Normal', time: 'Today' },
+        { id: 'REQ-812', hospital: 'Nawaloka Hospital', type: 'B+', units: 10, priority: 'Low', time: 'Tomorrow' },
+    ];
+
+    // Recent Activity Feed
+    const activityFeed = [
+        { id: 1, text: 'Admin Sarah approved REQ-808 (O+)', time: '2 mins ago', type: 'system' },
+        { id: 2, text: 'New Emergency request from Kandy Hosp', time: '5 mins ago', type: 'alert' },
+        { id: 3, text: 'Donor John D. completed A+ donation', time: '12 mins ago', type: 'user' },
+        { id: 4, text: 'Stock alert: O- dropped to critical level', time: '18 mins ago', type: 'alert' },
+        { id: 5, text: 'Daily system backup completed', time: '1 hour ago', type: 'system' },
+    ];
+
+    const handleApprove = (id) => {
+        Swal.fire({
+            title: 'Approve Request?',
+            text: `Allocating units for ${id}. This will deduct from the live stock.`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#2E7D32',
+            cancelButtonColor: '#637381',
+            confirmButtonText: 'Yes, Approve'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire('Approved!', 'The units have been successfully allocated and dispatched.', 'success');
+            }
+        });
+    };
+
+    const handleReject = (id) => {
+        Swal.fire({
+            title: 'Reject Request?',
+            text: `Are you sure you want to reject ${id}?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#637381',
+            confirmButtonText: 'Yes, Reject'
+        });
     };
 
     return (
-        <div className={`dashboard admin-dashboard fade-in ${disasterMode ? 'critical-state' : ''}`}>
-            <div className="dashboard-header">
-                <div>
-                    <h1 className="welcome-text">National Authority Control Center</h1>
-                    <p className="text-muted">System Analytics and Regional Overviews</p>
-                </div>
-                <div className="admin-actions">
-                    <button className="btn btn-outline bg-white">
-                        <Bell size={18} style={{ marginRight: '8px' }} />
-                        System Alerts (3)
-                    </button>
-                    <button
-                        className={`btn ${disasterMode ? 'btn-outline' : 'btn-danger-pulse'}`}
-                        onClick={handleDisasterMode}
-                    >
-                        <ShieldAlert size={18} style={{ marginRight: '8px' }} />
-                        {disasterMode ? 'Stand Down Emergency' : 'Declare Regional Emergency'}
-                    </button>
-                </div>
-            </div>
+        <div className="admin-command-center fade-in" style={{ padding: '20px' }}>
 
-            <div className="dashboard-grid">
-                {/* KPI Row */}
-                <div className="col-span-12 stats-grid">
-                    <div className="stat-box">
-                        <Activity size={24} color="var(--color-primary)" />
-                        <div className="stat-content">
-                            <h3>24,892</h3>
-                            <p>Total Active Units</p>
-                        </div>
+            {/* ── CRITICAL ALERTS (TOP PRIORITY) ── */}
+            <section className="acc-section acc-alerts">
+                <div className="acc-alert-card critical">
+                    <AlertTriangle size={24} className="acc-alert-icon" />
+                    <div className="acc-alert-content">
+                        <h4>CRITICAL SHORTAGE</h4>
+                        <p>O- blood critically low (Only 2 units left in National Reserve)</p>
                     </div>
-                    <div className="stat-box">
-                        <Users size={24} color="var(--color-secondary)" />
-                        <div className="stat-content">
-                            <h3>1.2M</h3>
-                            <p>Registered Donors</p>
-                        </div>
+                    <button className="acc-btn-outline danger">Broadcast Appeal</button>
+                </div>
+                <div className="acc-alert-card warning">
+                    <ShieldAlert size={24} className="acc-alert-icon" />
+                    <div className="acc-alert-content">
+                        <h4>URGENT REQUESTS PENDING</h4>
+                        <p>2 Emergency hospital requests require immediate authorization.</p>
                     </div>
-                    <div className="stat-box">
-                        <ShieldAlert size={24} color="var(--color-warning)" />
-                        <div className="stat-content">
-                            <h3>1.4%</h3>
-                            <p>Wastage Rate (Last 30d)</p>
-                        </div>
+                    <button className="acc-btn-outline warning">Review Now</button>
+                </div>
+            </section>
+
+            {/* ── LIVE STATS ── */}
+            <section className="acc-section acc-stats-grid">
+                <div className="acc-stat-card">
+                    <div className="acc-stat-icon-wrap primary">
+                        <Users size={24} />
                     </div>
-                    <div className="stat-box">
-                        <Database size={24} color="var(--color-success)" />
-                        <div className="stat-content">
-                            <h3>99.98%</h3>
-                            <p>System Uptime</p>
-                        </div>
+                    <div className="acc-stat-details">
+                        <p className="acc-stat-label">Total Donors</p>
+                        <h3 className="acc-stat-value">1,240</h3>
+                        <span className="acc-stat-trend positive"><TrendingUp size={12}/> +12% this week</span>
                     </div>
                 </div>
+                <div className="acc-stat-card">
+                    <div className="acc-stat-icon-wrap success">
+                        <Activity size={24} />
+                    </div>
+                    <div className="acc-stat-details">
+                        <p className="acc-stat-label">Active Hospitals</p>
+                        <h3 className="acc-stat-value">32</h3>
+                        <span className="acc-stat-trend neutral">All nodes online</span>
+                    </div>
+                </div>
+                <div className="acc-stat-card">
+                    <div className="acc-stat-icon-wrap warning">
+                        <AlertTriangle size={24} />
+                    </div>
+                    <div className="acc-stat-details">
+                        <p className="acc-stat-label">Pending Requests</p>
+                        <h3 className="acc-stat-value">14</h3>
+                        <span className="acc-stat-trend negative">2 High Priority</span>
+                    </div>
+                </div>
+                <div className="acc-stat-card">
+                    <div className="acc-stat-icon-wrap danger">
+                        <Droplet size={24} />
+                    </div>
+                    <div className="acc-stat-details">
+                        <p className="acc-stat-label">Total Blood Units</p>
+                        <h3 className="acc-stat-value">540</h3>
+                        <span className="acc-stat-trend positive"><TrendingUp size={12}/> +45 units today</span>
+                    </div>
+                </div>
+            </section>
 
-                {/* Maps and Heatmaps placeholder */}
-                <div className="col-span-8">
-                    <div className="card">
-                        <div className="card-header">
-                            <h2>National Stock Heatmap</h2>
-                            <select className="form-control" style={{ width: 'auto', padding: 'var(--spacing-1) var(--spacing-2)' }}>
-                                <option>All Blood Types</option>
-                                <option>O Negative Only</option>
-                            </select>
+            {/* ── MAIN DASHBOARD GRID ── */}
+            <div className="acc-main-grid">
+                
+                {/* LEFT COLUMN */}
+                <div className="acc-col-main">
+                    {/* Live Blood Stock Chart */}
+                    <div className="acc-card">
+                        <div className="acc-card-header">
+                            <h2>Live Inventory Thresholds</h2>
+                            <button className="acc-btn-text">View Full Inventory <ArrowRight size={16}/></button>
                         </div>
-                        <div className="card-body">
-                            <div className="map-placeholder">
-                                <Map size={48} color="var(--color-text-muted)" />
-                                <p>Interactive Map Visualization rendered here via GeoJSON</p>
-                                <div className="map-legend">
-                                    <span className="legend-item"><span className="dot safe"></span> Safe (&gt;7 days)</span>
-                                    <span className="legend-item"><span className="dot warning"></span> Low (3-7 days)</span>
-                                    <span className="legend-item"><span className="dot critical"></span> Critical (&lt;2 days)</span>
-                                </div>
+                        <div className="acc-card-body">
+                            <div className="acc-stock-grid">
+                                {bloodStock.map((stock) => (
+                                    <div key={stock.type} className={`acc-stock-item ${stock.status}`}>
+                                        <div className="acc-stock-top">
+                                            <span className="acc-stock-type">{stock.type}</span>
+                                            <span className={`acc-stock-badge ${stock.status}`}>
+                                                {stock.status === 'safe' ? 'Safe' : stock.status === 'low' ? 'Low' : '⚠️ Critical'}
+                                            </span>
+                                        </div>
+                                        <h2 className="acc-stock-amount">{stock.units} <span>units</span></h2>
+                                        <div className="acc-progress-bar">
+                                            <div 
+                                                className={`acc-progress-fill ${stock.status}`} 
+                                                style={{ width: `${Math.min((stock.units / 50) * 100, 100)}%` }}
+                                            ></div>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     </div>
-                </div>
 
-                {/* Alert Network */}
-                <div className="col-span-4">
-                    <div className="card">
-                        <div className="card-header">
-                            <h2>Top Shortage Alerts</h2>
-                        </div>
-                        <div className="card-body p-0">
-                            <div className="hospital-list p-4">
-                                <div className="hospital-item">
-                                    <div className="flex-between">
-                                        <h4>Northern Regional Hosp.</h4>
-                                        <span className="badge critical">O- Critical</span>
-                                    </div>
-                                    <p className="text-xs text-muted mb-2 mt-1">Estimated stock-out: 12 hours</p>
-                                    <div className="progress-bar">
-                                        <div className="progress-fill critical" style={{ width: '15%' }}></div>
-                                    </div>
-                                </div>
-
-                                <div className="hospital-item">
-                                    <div className="flex-between">
-                                        <h4>East Coast Medical</h4>
-                                        <span className="badge warning">AB- Low</span>
-                                    </div>
-                                    <p className="text-xs text-muted mb-2 mt-1">Estimated stock-out: 3 days</p>
-                                    <div className="progress-bar">
-                                        <div className="progress-fill warning" style={{ width: '35%' }}></div>
-                                    </div>
-                                </div>
+                    {/* Pending Hospital Requests */}
+                    <div className="acc-card">
+                        <div className="acc-card-header">
+                            <h2>Hospital Requests Log</h2>
+                            <div className="acc-filter-group">
+                                <button className="acc-filter-btn active">All</button>
+                                <button className="acc-filter-btn emergency-filter">Emergencies</button>
                             </div>
                         </div>
-                    </div>
-                </div>
-
-                {/* User Management */}
-                <div className="col-span-12">
-                    <div className="card">
-                        <div className="card-header">
-                            <h2>Network Management Console</h2>
-                            <div className="btn-group">
-                                <button className="btn btn-outline text-sm">Hospitals</button>
-                                <button className="btn btn-primary text-sm">System Users</button>
-                            </div>
-                        </div>
-                        <div className="card-body p-0">
-                            <div className="table-responsive">
-                                <table className="data-table">
+                        <div className="acc-card-body no-pad">
+                            <div className="acc-table-container">
+                                <table className="acc-table">
                                     <thead>
                                         <tr>
-                                            <th>User Name</th>
-                                            <th>Role</th>
-                                            <th>Assigned Node</th>
-                                            <th>Last Active</th>
-                                            <th>Status</th>
+                                            <th>Request ID</th>
+                                            <th>Hospital</th>
+                                            <th>Required</th>
+                                            <th>Deadline</th>
+                                            <th>Priority</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td><strong>Dr. Emily Chen</strong></td>
-                                            <td>Medical Officer</td>
-                                            <td>Central City Hospital</td>
-                                            <td>2 mins ago</td>
-                                            <td><span className="badge safe">Active</span></td>
-                                            <td><button className="btn btn-outline text-xs">Manage</button></td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Tech. James Wong</strong></td>
-                                            <td>Lab Technician</td>
-                                            <td>Central City Hospital</td>
-                                            <td>1 hour ago</td>
-                                            <td><span className="badge safe">Active</span></td>
-                                            <td><button className="btn btn-outline text-xs">Manage</button></td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Sarah Williams</strong></td>
-                                            <td>Donor</td>
-                                            <td>- none -</td>
-                                            <td>Yesterday</td>
-                                            <td><span className="badge safe">Active</span></td>
-                                            <td><button className="btn btn-outline text-xs">Manage</button></td>
-                                        </tr>
+                                        {pendingRequests.map((req) => (
+                                            <tr key={req.id} className={req.priority === 'Emergency' ? 'acc-row-emergency' : ''}>
+                                                <td className="font-medium">{req.id}</td>
+                                                <td>
+                                                    <div className="acc-table-hospital">
+                                                        <MapPin size={14} className="text-muted"/>
+                                                        {req.hospital}
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div className="acc-blood-req">
+                                                        <span className="acc-blood-pill">{req.type}</span>
+                                                        <span>x {req.units}</span>
+                                                    </div>
+                                                </td>
+                                                <td className="text-muted">{req.time}</td>
+                                                <td>
+                                                    <span className={`acc-priority-badge ${req.priority.toLowerCase()}`}>
+                                                        {req.priority === 'Emergency' && <AlertTriangle size={12}/>}
+                                                        {req.priority}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <div className="acc-action-buttons">
+                                                        <button 
+                                                            className="acc-btn-action approve"
+                                                            title="Approve & Allocate"
+                                                            onClick={() => handleApprove(req.id)}
+                                                        >
+                                                            <CheckCircle size={18}/>
+                                                        </button>
+                                                        <button 
+                                                            className="acc-btn-action reject"
+                                                            title="Reject Request"
+                                                            onClick={() => handleReject(req.id)}
+                                                        >
+                                                            <XCircle size={18}/>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))}
                                     </tbody>
                                 </table>
                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* RIGHT COLUMN */}
+                <div className="acc-col-side">
+                    {/* Demand vs Supply Chart (CSS Visual) */}
+                    <div className="acc-card">
+                        <div className="acc-card-header">
+                            <h2>Demand vs Supply</h2>
+                            <BarChart3 size={20} className="text-muted" />
+                        </div>
+                        <div className="acc-card-body">
+                            <p className="text-sm text-muted mb-4">Past 7 days volume projection</p>
+                            
+                            <div className="acc-css-chart">
+                                <div className="acc-chart-legend">
+                                    <span><div className="legend-dot supply"></div> Supply</span>
+                                    <span><div className="legend-dot demand"></div> Demand</span>
+                                </div>
+                                <div className="acc-chart-bars">
+                                    {[
+                                        { s: 60, d: 40, day: 'Mon' },
+                                        { s: 80, d: 45, day: 'Tue' },
+                                        { s: 50, d: 70, day: 'Wed' },
+                                        { s: 90, d: 60, day: 'Thu' },
+                                        { s: 70, d: 95, day: 'Fri' },
+                                        { s: 40, d: 80, day: 'Sat' },
+                                    ].map((col, i) => (
+                                        <div className="acc-bar-group" key={i}>
+                                            <div className="acc-bar-wrapper">
+                                                <div className="acc-bar supply" style={{ height: `${col.s}%`}}></div>
+                                                <div className="acc-bar demand" style={{ height: `${col.d}%`}}></div>
+                                            </div>
+                                            <span className="acc-bar-label">{col.day}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Live Activity Feed */}
+                    <div className="acc-card acc-feed-card">
+                        <div className="acc-card-header">
+                            <h2>Live Audit Log</h2>
+                            <Activity size={20} className="text-muted" />
+                        </div>
+                        <div className="acc-card-body">
+                            <div className="acc-activity-feed">
+                                {activityFeed.map((item) => (
+                                    <div className="acc-feed-item" key={item.id}>
+                                        <div className={`acc-feed-dot ${item.type}`}></div>
+                                        <div className="acc-feed-content">
+                                            <p className="acc-feed-text">{item.text}</p>
+                                            <span className="acc-feed-time">{item.time}</span>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                            <button className="acc-btn-block mt-4">View Full Logs</button>
                         </div>
                     </div>
                 </div>

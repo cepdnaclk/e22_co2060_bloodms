@@ -1,13 +1,62 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Heart, Activity, MapPin, Search, PhoneCall, ArrowRight, Shield, Clock } from 'lucide-react';
+import { Heart, Activity, MapPin, Search, PhoneCall, ArrowRight, Shield, Clock, ChevronDown } from 'lucide-react';
 import './LandingPage.css';
+import { LANDING } from '../../config/imageAssets';
+import { PHOTOS } from '../../config/imageAssets';
 
 const LandingPage = () => {
-    const [bloodStock, setBloodStock] = useState({
-        "O+": "Normal", "A+": "Low", "B+": "Critical", "AB+": "Normal",
-        "O-": "Normal", "A-": "Normal", "B-": "Low", "AB-": "Normal"
-    });
+const DEFAULT_STOCK = {
+    "A+": "Normal",
+    "A-": "Normal",
+    "B+": "Normal",
+    "B-": "Normal",
+    "AB+": "Normal",
+    "AB-": "Normal",
+    "O+": "Normal",
+    "O-": "Normal",
+};
+
+const [bloodStock, setBloodStock] = useState(DEFAULT_STOCK);
+const [lastUpdated, setLastUpdated] = useState(null);
+const [stockLoading, setStockLoading] = useState(true);
+const [stockError, setStockError] = useState("");
+
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/api/v1";
+
+const fetchLiveStock = async () => {
+    try {
+        setStockError("");
+        const response = await fetch(`${API_BASE}/blood/live-stock/`);
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        const statusByType = { ...DEFAULT_STOCK };
+        (data.stocks || []).forEach((item) => {
+            if (item?.bloodType && item?.status) {
+                statusByType[item.bloodType] = item.status;
+            }
+        });
+
+        setBloodStock(statusByType);
+        setLastUpdated(data.updatedAt || null);
+    } catch (error) {
+        setStockError("Unable to load live blood stock right now.");
+        console.error("Live stock fetch failed:", error);
+    } finally {
+        setStockLoading(false);
+    }
+};
+
+useEffect(() => {
+    fetchLiveStock();
+    const intervalId = setInterval(fetchLiveStock, 60000); // refresh every 60s
+    return () => clearInterval(intervalId);
+}, []);
+
 
     // Intersection Observer for scroll animations
     useEffect(() => {
@@ -29,20 +78,34 @@ const LandingPage = () => {
 
         return () => observer.disconnect();
     }, []);
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    
+    const heroImages = [
+        PHOTOS.photo1,
+        PHOTOS.photo2,
+        PHOTOS.photo3,
+        PHOTOS.photo4,
+        PHOTOS.photo5,
+        PHOTOS.photo6,
+    ];
 
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
+        }, 10000);
+        
+        return () => clearInterval(interval);
+    }, []);
     return (
         <div className="landing-page-new">
-            {/* Emergency Banner */}
-            <div className="emergency-banner-new">
-                <div className="banner-content">
-                    <span className="pulse-dot"></span>
-                    <strong>URGENT:</strong> B+ Blood urgently required at General Hospital Colombo.
-                    <a href="tel:0110000000" className="banner-phone"><PhoneCall size={14} /> 011 000 0000</a>
-                </div>
-            </div>
-
             {/* Hero Section */}
-            <section className="hero-section-new">
+            <section 
+                className="hero-section-new"
+                style={{
+                    backgroundImage: `linear-gradient(rgba(18, 25, 33, 0.8), rgba(18, 25, 33, 0.8)), url(${heroImages[currentImageIndex]})`,
+                    transition: 'background-image 1s ease-in-out'
+                }}
+            >
                 <div className="hero-container">
                     <div className="hero-content animate-on-scroll">
                         <div className="hero-badge-new">
@@ -52,13 +115,21 @@ const LandingPage = () => {
                         <h1 className="hero-title">
                             Donate Your Blood & <br /> Inspires to Others
                         </h1>
-                        
+
                         {/* This is the part that centers the button */}
                         <div className="hero-actions-new">
-                            <Link to="/donor" className="btn-donate-now">
-                                DONATE NOW
+                            <Link to="/donor" className="scroll-donate-btn btn-donate-large">
+                                DONATE NOW <Heart size={18} style={{ marginLeft: '8px' }} />
                             </Link>
                         </div>
+                    </div>
+                </div>
+
+                {/* Scroll Down Signal */}
+                <div className="hero-scroll-signal">
+                    <div className="scroll-indicator" onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}>
+                        <span className="scroll-text">Scroll Down</span>
+                        <ChevronDown size={24} className="bounce-arrow" />
                     </div>
                 </div>
             </section>
@@ -71,7 +142,7 @@ const LandingPage = () => {
                             <div className="services-styles-box-inner animate-on-scroll" style={{ transitionDelay: '0.1s' }}>
                                 <div className="service-card-wrapper">
                                     <div className="service-img-box">
-                                        <img src="https://images.unsplash.com/photo-1615461066841-6116e61058f4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Blood Donation" />
+                                        <img src={LANDING.donorRegistration} alt="Blood Donation" />
                                     </div>
                                     <div className="service-content-main-box">
                                         <div className="service-icon-box bg-dark">
@@ -81,14 +152,14 @@ const LandingPage = () => {
                                         <p>Join our community of lifesavers. Register today to seamlessly book your donation appointments.</p>
                                     </div>
                                     <div className="service-read-more">
-                                        <Link to="/donor">Register Now</Link>
+                                        <Link to="/donor/register">Register Now</Link>
                                     </div>
                                 </div>
                             </div>
                             <div className="services-styles-box-inner animate-on-scroll" style={{ transitionDelay: '0.3s' }}>
                                 <div className="service-card-wrapper">
                                     <div className="service-img-box">
-                                        <img src="https://images.unsplash.com/photo-1579154204601-01588f351e67?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Blood Bank" />
+                                        <img src={LANDING.checkEligibility} alt="Blood Bank" />
                                     </div>
                                     <div className="service-content-main-box">
                                         <div className="service-icon-box bg-dark">
@@ -98,14 +169,14 @@ const LandingPage = () => {
                                         <p>Not sure if you can donate blood today? Take our quick, automated health questionnaire to instantly verify your eligibility.</p>
                                     </div>
                                     <div className="service-read-more">
-                                        <Link to="/donor">Take the Quiz</Link>
+                                        <Link to="/donor/eligibility">Take the Quiz</Link>
                                     </div>
                                 </div>
                             </div>
                             <div className="services-styles-box-inner animate-on-scroll" style={{ transitionDelay: '0.5s' }}>
                                 <div className="service-card-wrapper">
                                     <div className="service-img-box">
-                                        <img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Health Check" />
+                                        <img src={LANDING.bloodCampDetails} alt="Health Check" />
                                     </div>
                                     <div className="service-content-main-box">
                                         <div className="service-icon-box bg-dark">
@@ -138,7 +209,17 @@ const LandingPage = () => {
                             ))}
                         </div>
                         <div className="stock-footer">
-                            <span><Clock size={12} /> Updated just now</span>
+                            <span>
+                                <Clock size={12} />
+                                {" "}
+                                {stockLoading
+                                    ? "Loading..."
+                                    : lastUpdated
+                                        ? `Updated ${new Date(lastUpdated).toLocaleTimeString()}`
+                                        : "Update time unavailable"}
+                            </span>
+                            {stockError && <p className="stock-error">{stockError}</p>}
+
                             <Link to="/donor">View Details</Link>
                         </div>
                     </div>
@@ -191,7 +272,7 @@ const LandingPage = () => {
             <section className="why-donate-section">
                 <div className="container why-donate-container">
                     <div className="why-donate-image animate-on-scroll">
-                        <img src="https://plus.unsplash.com/premium_photo-1682309715509-f38baca7ec41?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Hold Blood Drop" />
+                        <img src={LANDING.whyDonate} alt="Hold Blood Drop" />
                     </div>
                     <div className="why-donate-content animate-on-scroll" style={{ transitionDelay: '0.2s' }}>
                         <h5 className="section-subtitle">Why Donate?</h5>

@@ -6,16 +6,7 @@
     min-height: 100vh;
 }
 
-/* Emergency Banner */
-.emergency-banner-new {
-    background-color: var(--color-critical);
-    color: white;
-    padding: 10px 0;
-    text-align: center;
-    font-size: 0.9rem;
-    position: relative;
-    z-index: 100;
-}
+
 
 .banner-content {
     display: flex;
@@ -55,6 +46,7 @@
 /* 1. The Main Hero Section (Slideshow Container) */
 .hero-section-new {
     padding: 8rem 0;
+    margin-top: 0;
     color: white;
     position: relative;
     overflow: hidden;
@@ -62,7 +54,7 @@
     background-position: center;
     background-repeat: no-repeat;
     /* This starts the 6-image cycle */
-    animation: heroSlideshow 60s infinite ease-in-out;
+    animation: heroSlideshow 50s infinite ease-in-out;
 }
 
 
@@ -71,54 +63,22 @@
     margin: 0 auto;
     padding: 0 2rem;
     display: flex;
-    flex-direction: column; /* Stacks text and button vertically */
+    flex-direction: column;
     justify-content: center;
+    align-items: center;        /* Center children horizontally */
     min-height: 60vh;
     position: relative;
     z-index: 2;
 }
 
 .hero-content {
-    /* Keeps the text block on the left side */
-    align-self: flex-start; 
-    text-align: left;
-    max-width: 600px;
-    margin-bottom: 3rem; /* Creates space so the button sits below */
+    text-align: center;         /* Center all text */
+    max-width: 700px;
+    margin-bottom: 3rem;
 }
 
 /* 3. The 6-Image Animation Logic */
-@keyframes heroSlideshow {
-    /* Image 1: Your URL */
-    0%, 12% { 
-        background-image: linear-gradient(rgba(18, 25, 33, 0.8), rgba(18, 25, 33, 0.8)), 
-        url('https://images.unsplash.com/photo-1615461066159-fea0960485d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80'); 
-    }
-    /* Image 2: Your Asset */
-    17%, 29% { 
-        background-image: linear-gradient(rgba(18, 25, 33, 0.8), rgba(18, 25, 33, 0.8)), 
-        url('../../assets/photo1.jpg'); 
-    }
-    /* Image 3: Your Asset */
-    34%, 46% { 
-        background-image: linear-gradient(rgba(18, 25, 33, 0.8), rgba(18, 25, 33, 0.8)), 
-        url('../../assets/photo2.jpg'); 
-    }
-    /* Image 4: Your Asset */
-    51%, 63% { 
-        background-image: linear-gradient(rgba(18, 25, 33, 0.8), rgba(18, 25, 33, 0.8)), 
-        url('../../assets/photo3.jpg'); 
-    }
-    /* Image 5: Your Asset */
-    68%, 80% { 
-        background-image: linear-gradient(rgba(18, 25, 33, 0.8), rgba(18, 25, 33, 0.8)), 
-        url('../../assets/photo4.jpg'); 
-    }
-    /* Image 6: Your Asset */
-    85%, 100% { 
-        background-image: linear-gradient(rgba(18, 25, 33, 0.8), rgba(18, 25, 33, 0.8)), 
-        url('../../assets/photo5.jpg'); 
-    }
-}
+
 
 
 .hero-badge-new {
@@ -215,28 +175,107 @@
     transform: translateY(-2px);
 }
 
-.btn-donate-now {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 1rem 2.5rem;
+.scroll-donate-btn {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: white;
+    padding: 8px 24px;
     border-radius: 50px;
-    font-weight: 700;
-    font-size: 1.1rem;
-    color: var(--color-primary);
-    background-color: white;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    font-size: 0.9rem;
+    font-weight: 600;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     transition: all 0.3s ease;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    margin: 0 auto;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.btn-donate-now:hover {
-    background-color: var(--color-primary);
-    color: white;
+.scroll-donate-btn:hover {
+    background: white;
+    color: var(--color-primary);
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(198, 40, 40, 0.4);
+    box-shadow: 0 8px 25px rgba(198, 40, 40, 0.3);
+}
+
+.btn-donate-large {
+    padding: 1rem 2.5rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+/* Scroll Signal at the bottom of Hero */
+.hero-scroll-signal {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    z-index: 10;
+}
+
+.scroll-donate-btn {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: white;
+    padding: 8px 24px;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.scroll-donate-btn:hover {
+    background: white;
+    color: var(--color-primary);
+    transform: translateY(-2px);
+}
+
+.scroll-indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.scroll-indicator:hover {
+    color: white;
+}
+
+.scroll-text {
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+}
+
+.bounce-arrow {
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(10px);
+    }
+    60% {
+        transform: translateY(5px);
+    }
 }
 
 /* Service Cards (Moved below Hero) */

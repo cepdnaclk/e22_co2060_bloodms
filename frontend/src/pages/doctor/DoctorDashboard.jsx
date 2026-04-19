@@ -1,210 +1,386 @@
 import React, { useState } from 'react';
-import { AlertCircle, Activity, Search, ShieldAlert, Ambulance } from 'lucide-react';
+import {
+    AlertCircle, Activity, Search, Ambulance,
+    LayoutDashboard, Droplet, ClipboardList, Bell, User, Clock, CheckCircle, XCircle,
+    UserCircle, Camera
+} from 'lucide-react';
 import Swal from 'sweetalert2';
 import './DoctorDashboard.css';
 
 const DoctorDashboard = () => {
-    const [isDisasterMode, setIsDisasterMode] = useState(false);
+    const [activeTab, setActiveTab] = useState('dashboard');
+    const [profileImage, setProfileImage] = useState(null);
 
-    const toggleDisasterMode = () => {
-        setIsDisasterMode(!isDisasterMode);
-        document.body.classList.toggle('disaster-mode', !isDisasterMode);
+    const handleImageUpload = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setProfileImage(URL.createObjectURL(file));
+            Swal.fire({
+                title: 'Photo Uploaded!',
+                text: 'Your profile photo has been updated.',
+                icon: 'success',
+                timer: 1500,
+                showConfirmButton: false
+            });
+        }
+    };
+
+    const handleEmergencyRequest = () => {
+        Swal.fire({
+            title: 'EMERGENCY BLOOD REQUEST',
+            html: `
+                <div style="text-align: left;">
+                    <p style="color: #d32f2f; font-weight: bold; margin-bottom: 10px;">Warning: This triggers an immediate high-priority alert to the blood bank.</p>
+                    <label>Blood Group Required:</label>
+                    <select id="em-blood" style="width: 100%; padding: 8px; margin-bottom: 10px; border-radius: 4px;">
+                        <option>O- (Universal Donor)</option>
+                        <option>O+</option>
+                        <option>A-</option>
+                        <option>A+</option>
+                        <option>B-</option>
+                        <option>B+</option>
+                        <option>AB-</option>
+                        <option>AB+</option>
+                    </select>
+                    <label>Units Needed:</label>
+                    <input id="em-units" type="number" value="2" style="width: 100%; padding: 8px; margin-top: 5px; margin-bottom: 10px; border-radius: 4px; border: 1px solid #ccc;" />
+                </div>
+            `,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d32f2f',
+            cancelButtonColor: '#637381',
+            confirmButtonText: 'SUBMIT EMERGENCY REQUEST'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire('Dispatched!', 'Emergency request sent to Blood Bank Admin and Logistics immediately.', 'success');
+            }
+        });
+    };
+
+    const renderContent = () => {
+        switch(activeTab) {
+            case 'request':
+                return (
+                    <div className="card fade-in">
+                        <div className="card-header">
+                            <h2>New Blood Request</h2>
+                        </div>
+                        <div className="card-body">
+                            <form style={{ display: 'grid', gap: '20px' }}>
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                                    <div>
+                                        <label>Patient Name</label>
+                                        <input type="text" className="input-large" placeholder="Enter patient name" style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #ccc' }} />
+                                    </div>
+                                    <div>
+                                        <label>Patient ID / MRN</label>
+                                        <input type="text" className="input-large" placeholder="E.g. PT-10293" style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #ccc' }} />
+                                    </div>
+                                    <div>
+                                        <label>Blood Group Required</label>
+                                        <select style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #ccc' }}>
+                                            <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
+                                            <option>O+</option><option>O-</option><option>AB+</option><option>AB-</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label>Units Needed</label>
+                                        <input type="number" min="1" defaultValue="1" style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #ccc' }} />
+                                    </div>
+                                    <div>
+                                        <label>Urgency Level</label>
+                                        <select style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #ccc' }}>
+                                            <option>Normal (Within 24h)</option>
+                                            <option>Urgent (Within 4h)</option>
+                                            <option>Critical (Immediate)</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label>Required Date/Time</label>
+                                        <input type="datetime-local" style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #ccc' }} />
+                                    </div>
+                                </div>
+                                <div>
+                                    <label>Reason for Transfusion</label>
+                                    <textarea rows="3" style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #ccc' }} placeholder="Surgery, Accident, Anemia, etc."></textarea>
+                                </div>
+                                <button type="button" className="btn btn-primary" style={{ padding: '12px', fontSize: '16px', maxWidth: '200px' }} onClick={() => Swal.fire('Success', 'Blood Request Submitted successfully', 'success')}>
+                                    Submit Request
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                );
+            case 'status':
+                return (
+                    <div className="card fade-in">
+                        <div className="card-header">
+                            <h2>My Request Status</h2>
+                            <div className="search-bar">
+                                <Search size={16} />
+                                <input type="text" placeholder="Search by patient ID or name..." />
+                            </div>
+                        </div>
+                        <div className="card-body p-0">
+                            <table className="data-table" style={{ width: '100%' }}>
+                                <thead>
+                                    <tr>
+                                        <th>Patient</th>
+                                        <th>Blood Group</th>
+                                        <th>Units</th>
+                                        <th>Urgency</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>John Doe</strong><br/><span style={{fontSize: '12px', color: '#666'}}>PT-84930</span></td>
+                                        <td>A+</td>
+                                        <td>2</td>
+                                        <td>Urgent</td>
+                                        <td><span className="badge warning"><Clock size={12} style={{marginRight: '4px', display: 'inline'}} /> Pending</span></td>
+                                        <td><button className="btn btn-outline text-xs">View/Edit</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Maria Garcia</strong><br/><span style={{fontSize: '12px', color: '#666'}}>PT-11293</span></td>
+                                        <td>O-</td>
+                                        <td>4</td>
+                                        <td>Critical</td>
+                                        <td><span className="badge safe"><CheckCircle size={12} style={{marginRight: '4px', display: 'inline'}} /> Approved</span></td>
+                                        <td><button className="btn btn-primary text-xs">Acknowledge</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Robert Smith</strong><br/><span style={{fontSize: '12px', color: '#666'}}>PT-33211</span></td>
+                                        <td>AB+</td>
+                                        <td>1</td>
+                                        <td>Normal</td>
+                                        <td><span className="badge critical"><XCircle size={12} style={{marginRight: '4px', display: 'inline'}} /> Rejected</span></td>
+                                        <td><button className="btn btn-outline text-xs">View Reason</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                );
+            case 'availability':
+                return (
+                    <div className="card fade-in">
+                        <div className="card-header">
+                            <h2>Check Blood Availability</h2>
+                        </div>
+                        <div className="card-body">
+                            <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-end', marginBottom: '30px' }}>
+                                <div style={{ flex: 1 }}>
+                                    <label>Select Blood Group</label>
+                                    <select style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #ccc' }}>
+                                        <option>O-</option><option>O+</option><option>A-</option><option>A+</option>
+                                    </select>
+                                </div>
+                                <button className="btn btn-primary" style={{ padding: '10px 24px' }}>Check Stock</button>
+                            </div>
+
+                            <h4>Nearby Blood Banks</h4>
+                            <div style={{ display: 'grid', gap: '15px', marginTop: '15px' }}>
+                                <div style={{ border: '1px solid #eee', padding: '15px', borderRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <div>
+                                        <strong>Hospital Blood Bank (Internal)</strong>
+                                        <p style={{ color: '#666', fontSize: '14px', margin: '4px 0 0 0' }}>Current Stock: <span style={{ color: '#2e7d32', fontWeight: 'bold' }}>High (14 Units)</span></p>
+                                    </div>
+                                    <button className="btn btn-outline" onClick={() => setActiveTab('request')}>Request Here</button>
+                                </div>
+                                <div style={{ border: '1px solid #eee', padding: '15px', borderRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <div>
+                                        <strong>Central City Regional Bank</strong>
+                                        <p style={{ color: '#666', fontSize: '14px', margin: '4px 0 0 0' }}>Distance: 5km | Stock: <span style={{ color: '#ed6c02', fontWeight: 'bold' }}>Medium (5 Units)</span></p>
+                                    </div>
+                                    <button className="btn btn-outline" onClick={() => setActiveTab('request')}>Request Here</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            case 'profile':
+                return (
+                    <div className="card fade-in">
+                        <div className="card-header">
+                            <h2>My Profile</h2>
+                        </div>
+                        <div className="card-body">
+                            <div style={{ display: 'flex', gap: '30px', alignItems: 'flex-start', flexWrap: 'wrap' }}>
+                                {/* Photo Upload Section */}
+                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '15px', width: '200px' }}>
+                                    <div style={{
+                                        width: '150px', height: '150px', borderRadius: '50%', backgroundColor: '#e0e0e0',
+                                        display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden',
+                                        border: '4px solid #fff', boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+                                    }}>
+                                        {profileImage ? (
+                                            <img src={profileImage} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                        ) : (
+                                            <User size={80} color="#999" />
+                                        )}
+                                    </div>
+                                    <label className="btn btn-outline" style={{ cursor: 'pointer', display: 'flex', gap: '8px', alignItems: 'center', fontSize: '14px' }}>
+                                        <Camera size={16} /> Upload Photo
+                                        <input type="file" accept="image/*" style={{ display: 'none' }} onChange={handleImageUpload} />
+                                    </label>
+                                </div>
+
+                                {/* Details Section */}
+                                <div style={{ flex: 1, minWidth: '300px' }}>
+                                    <form style={{ display: 'grid', gap: '20px' }}>
+                                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px' }}>
+                                            <div>
+                                                <label>Full Name</label>
+                                                <input type="text" defaultValue="Dr. Emily Chen" style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #ccc' }} />
+                                            </div>
+                                            <div>
+                                                <label>Email</label>
+                                                <input type="email" defaultValue="emily.chen@hospital.com" style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #ccc' }} />
+                                            </div>
+                                            <div>
+                                                <label>Hospital</label>
+                                                <input type="text" defaultValue="Central City Hospital" readOnly style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #eee', backgroundColor: '#f9f9f9', color: '#666' }} />
+                                            </div>
+                                            <div>
+                                                <label>Department</label>
+                                                <input type="text" defaultValue="Surgery" style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #ccc' }} />
+                                            </div>
+                                            <div>
+                                                <label>Phone Number</label>
+                                                <input type="tel" defaultValue="+1 (555) 019-2834" style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #ccc' }} />
+                                            </div>
+                                            <div>
+                                                <label>Medical License No.</label>
+                                                <input type="text" defaultValue="MD-884920" readOnly style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #eee', backgroundColor: '#f9f9f9', color: '#666' }} />
+                                            </div>
+                                        </div>
+                                        <button type="button" className="btn btn-primary" style={{ padding: '12px', fontSize: '16px', maxWidth: '200px', marginTop: '10px' }} onClick={() => Swal.fire('Saved', 'Profile updated successfully', 'success')}>
+                                            Save Changes
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            case 'dashboard':
+            default:
+                return (
+                    <div className="dashboard-grid fade-in">
+                        {/* Summary Widgets */}
+                        <div className="col-span-4 card" style={{ padding: '20px', textAlign: 'center' }}>
+                            <h3 style={{ color: '#666', fontSize: '14px', textTransform: 'uppercase' }}>My Pending Requests</h3>
+                            <h1 style={{ fontSize: '36px', color: '#1976d2', margin: '10px 0' }}>4</h1>
+                            <button className="btn btn-outline text-xs" onClick={() => setActiveTab('status')}>View All</button>
+                        </div>
+                        <div className="col-span-4 card" style={{ padding: '20px', textAlign: 'center' }}>
+                            <h3 style={{ color: '#666', fontSize: '14px', textTransform: 'uppercase' }}>Completed This Week</h3>
+                            <h1 style={{ fontSize: '36px', color: '#2e7d32', margin: '10px 0' }}>12</h1>
+                            <span style={{ fontSize: '12px', color: '#666' }}>Successful Transfusions</span>
+                        </div>
+                        <div className="col-span-4 card" style={{ padding: '20px', textAlign: 'center', backgroundColor: '#fff3e0' }}>
+                            <h3 style={{ color: '#e65100', fontSize: '14px', textTransform: 'uppercase' }}>Network Alerts</h3>
+                            <h1 style={{ fontSize: '36px', color: '#e65100', margin: '10px 0' }}>1</h1>
+                            <span style={{ fontSize: '12px', color: '#e65100' }}>O- Shortage in Region</span>
+                        </div>
+
+                        {/* Recent Activity */}
+                        <div className="col-span-12 card" style={{ marginTop: '20px' }}>
+                            <div className="card-header">
+                                <h2>Recent Updates</h2>
+                            </div>
+                            <div className="card-body">
+                                <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                                    <li style={{ padding: '15px 0', borderBottom: '1px solid #eee', display: 'flex', alignItems: 'center', gap: '15px' }}>
+                                        <div style={{ background: '#e8f5e9', padding: '10px', borderRadius: '50%', color: '#2e7d32' }}><CheckCircle size={20} /></div>
+                                        <div>
+                                            <strong style={{ display: 'block' }}>Request Approved: Patient Maria Garcia (PT-11293)</strong>
+                                            <span style={{ color: '#666', fontSize: '13px' }}>Blood Bank has dispatched 4 units of O-. Expected arrival in 15 mins.</span>
+                                        </div>
+                                        <span style={{ marginLeft: 'auto', fontSize: '12px', color: '#999' }}>10 mins ago</span>
+                                    </li>
+                                    <li style={{ padding: '15px 0', borderBottom: '1px solid #eee', display: 'flex', alignItems: 'center', gap: '15px' }}>
+                                        <div style={{ background: '#e3f2fd', padding: '10px', borderRadius: '50%', color: '#1976d2' }}><Activity size={20} /></div>
+                                        <div>
+                                            <strong style={{ display: 'block' }}>Transfusion Completed: Patient Susan Lee (PT-88331)</strong>
+                                            <span style={{ color: '#666', fontSize: '13px' }}>1 unit of A+ successfully transfused.</span>
+                                        </div>
+                                        <span style={{ marginLeft: 'auto', fontSize: '12px', color: '#999' }}>2 hours ago</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                );
+        }
     };
 
     return (
-        <div className={`dashboard doctor-dashboard ${isDisasterMode ? 'disaster-active' : ''}`}>
-            <div className="dashboard-header">
-                <div>
-                    <h1 className="welcome-text">Dr. Emily Chen</h1>
-                    <p className="text-muted">Central City Hospital • Medical Officer</p>
+        <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f4f6f8' }} className="doctor-dashboard">
+            {/* SIDEBAR */}
+            <div style={{ width: '260px', backgroundColor: '#ffffff', borderRight: '1px solid #e0e0e0', padding: '20px 0', display: 'flex', flexDirection: 'column' }}>
+                <div style={{ padding: '0 20px 20px', borderBottom: '1px solid #eee', marginBottom: '10px' }}>
+                    <h2 style={{ fontSize: '20px', color: '#d32f2f', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <Activity size={24} /> HopeDrop
+                    </h2>
+                    <span style={{ fontSize: '12px', color: '#666', textTransform: 'uppercase', letterSpacing: '1px' }}>Doctor Portal</span>
                 </div>
-                <button
-                    className={`btn ${isDisasterMode ? 'btn-primary' : 'btn-danger-pulse'}`}
-                    onClick={toggleDisasterMode}
-                    style={{ padding: '12px 24px', fontSize: '16px' }}
-                >
-                    <ShieldAlert size={20} style={{ marginRight: '8px' }} />
-                    {isDisasterMode ? 'Deactivate Disaster Mode' : 'Activate Disaster Mode'}
-                </button>
+
+                <nav style={{ display: 'flex', flexDirection: 'column', gap: '5px', padding: '0 10px' }}>
+                    {[
+                        { id: 'dashboard', icon: <LayoutDashboard size={20} />, label: 'Dashboard' },
+                        { id: 'request', icon: <Droplet size={20} />, label: 'Request Blood' },
+                        { id: 'status', icon: <ClipboardList size={20} />, label: 'Request Status' },
+                        { id: 'availability', icon: <Search size={20} />, label: 'Check Availability' },
+                        { id: 'patients', icon: <User size={20} />, label: 'Patient Records' },
+                        { id: 'notifications', icon: <Bell size={20} />, label: 'Notifications' },
+                        { id: 'profile', icon: <UserCircle size={20} />, label: 'My Profile' },
+                    ].map(item => (
+                        <button
+                            key={item.id}
+                            onClick={() => setActiveTab(item.id)}
+                            style={{
+                                display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px',
+                                border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '15px', fontWeight: '500',
+                                backgroundColor: activeTab === item.id ? '#e3f2fd' : 'transparent',
+                                color: activeTab === item.id ? '#1976d2' : '#555',
+                                textAlign: 'left', transition: 'all 0.2s'
+                            }}
+                        >
+                            {item.icon} {item.label}
+                        </button>
+                    ))}
+                </nav>
             </div>
 
-            {isDisasterMode ? (
-                // DISASTER MODE UI - Minimized Cognitive Load
-                <div className="disaster-ui fade-in">
-                    <div className="emergency-banner">
-                        <AlertCircle size={32} />
-                        <h2>DISASTER MODE ACTIVE: Rerouting all non-critical units. Priority Request System online.</h2>
+            {/* MAIN CONTENT AREA */}
+            <div style={{ flex: 1, padding: '30px', overflowY: 'auto' }}>
+                {/* Header */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '30px' }}>
+                    <div>
+                        <h1 style={{ margin: '0 0 5px 0', fontSize: '28px', color: '#333' }}>Dr. Emily Chen</h1>
+                        <p style={{ margin: 0, color: '#666', fontSize: '15px' }}>Central City Hospital • Dept of Surgery</p>
                     </div>
-
-                    <div className="dashboard-grid">
-                        <div className="col-span-8">
-                            <div className="card disaster-card">
-                                <div className="card-header">
-                                    <h2>Emergency Bulk Request</h2>
-                                </div>
-                                <div className="card-body">
-                                    <div className="form-group-large">
-                                        <label>Blood Type Required (Critical Priority)</label>
-                                        <div className="blood-type-grid">
-                                            {['O-', 'O+', 'A-', 'A+', 'B-', 'B+', 'AB-', 'AB+'].map(type => (
-                                                <button key={type} className={`btn-blood-type ${type === 'O-' ? 'selected' : ''}`}>{type}</button>
-                                            ))}
-                                        </div>
-                                    </div>
-                                    <div className="form-group-large" style={{ marginTop: '24px' }}>
-                                        <label>Units Needed Immediately</label>
-                                        <input type="number" className="input-large" defaultValue="10" />
-                                    </div>
-                                    <button
-                                        className="btn btn-primary btn-block"
-                                        style={{ marginTop: '24px', fontSize: '20px', padding: '16px' }}
-                                        onClick={() => {
-                                            Swal.fire({
-                                                title: 'Broadcast Emergency Alert?',
-                                                text: "This will immediately notify all networked hospitals and available donors in a 50km radius.",
-                                                icon: 'warning',
-                                                showCancelButton: true,
-                                                confirmButtonColor: '#C62828',
-                                                cancelButtonColor: '#637381',
-                                                confirmButtonText: 'BROADCAST NOW'
-                                            }).then((result) => {
-                                                if (result.isConfirmed) {
-                                                    Swal.fire(
-                                                        'Broadcast Sent!',
-                                                        'Emergency request dispatched to National Grid.',
-                                                        'success'
-                                                    );
-                                                }
-                                            });
-                                        }}
-                                    >
-                                        <Ambulance size={24} style={{ marginRight: '8px' }} />
-                                        BROADCAST REQUEST TO NETWORK
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="col-span-4">
-                            <div className="card disaster-card">
-                                <div className="card-header">
-                                    <h2>Nearest Hospital Stock</h2>
-                                </div>
-                                <div className="card-body">
-                                    <div className="hospital-list">
-                                        <div className="hospital-item">
-                                            <h4>Mercy General</h4>
-                                            <div className="stock-pill safe">12 Units O-</div>
-                                            <button className="btn btn-outline text-xs mt-2">Request Transfer</button>
-                                        </div>
-                                        <div className="hospital-item">
-                                            <h4>Northside Clinic</h4>
-                                            <div className="stock-pill warning">4 Units O-</div>
-                                            <button className="btn btn-outline text-xs mt-2">Request Transfer</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <button
+                        onClick={handleEmergencyRequest}
+                        style={{
+                            backgroundColor: '#d32f2f', color: 'white', border: 'none', padding: '12px 24px',
+                            borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '8px',
+                            fontSize: '16px', fontWeight: 'bold', cursor: 'pointer', boxShadow: '0 4px 12px rgba(211, 47, 47, 0.3)'
+                        }}
+                    >
+                        <Ambulance size={20} />
+                        EMERGENCY REQUEST
+                    </button>
                 </div>
-            ) : (
-                // NORMAL UI
-                <div className="dashboard-grid fade-in">
-                    {/* Predictive Alerts */}
-                    <div className="col-span-12 alert-box critical">
-                        <div className="alert-icon"><Activity size={24} /></div>
-                        <div className="alert-content">
-                            <h4>Predictive Alert: Potential O- Stock-out in 42 hours</h4>
-                            <p>Based on current consumption rates and scheduled surgeries, O- reserves will reach critical levels by Friday.</p>
-                        </div>
-                        <button className="btn btn-outline" style={{ backgroundColor: 'white' }}>Request Units</button>
-                    </div>
 
-                    {/* Real-Time Stock Board */}
-                    <div className="col-span-8">
-                        <div className="card">
-                            <div className="card-header">
-                                <h2>Internal Blood Inventory</h2>
-                                <div className="search-bar">
-                                    <Search size={16} />
-                                    <input type="text" placeholder="Search blood group..." />
-                                </div>
-                            </div>
-                            <div className="card-body p-0">
-                                <table className="data-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Blood Group</th>
-                                            <th>Units Valid</th>
-                                            <th>Expiring &lt;7d</th>
-                                            <th>Coverage Estimate</th>
-                                            <th>Status</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td><strong>O Negative</strong></td>
-                                            <td>14 units</td>
-                                            <td className="text-expiring">2 units</td>
-                                            <td>~2.5 Days</td>
-                                            <td><span className="badge warning">Low</span></td>
-                                            <td><button className="btn btn-primary text-xs">Request</button></td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>A Positive</strong></td>
-                                            <td>42 units</td>
-                                            <td className="text-muted">0 units</td>
-                                            <td>~8.0 Days</td>
-                                            <td><span className="badge safe">Safe</span></td>
-                                            <td><button className="btn btn-outline text-xs">View</button></td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>B Positive</strong></td>
-                                            <td>5 units</td>
-                                            <td className="text-muted">1 unit</td>
-                                            <td>~1.2 Days</td>
-                                            <td><span className="badge critical">Critical</span></td>
-                                            <td><button className="btn btn-primary text-xs">Request</button></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* External Network */}
-                    <div className="col-span-4">
-                        <div className="card bg-gray">
-                            <div className="card-header">
-                                <h2>Inter-Hospital Network</h2>
-                            </div>
-                            <div className="card-body">
-                                <div className="network-status">
-                                    <div className="network-dot pulse-green"></div>
-                                    <span>National Grid: <strong>Online</strong></span>
-                                </div>
-
-                                <h3 className="section-label mt-4">Incoming Transfer Requests</h3>
-                                <div className="transfer-request">
-                                    <div className="transfer-header">
-                                        <strong>Westend Medical</strong>
-                                        <span className="text-xs text-muted">10 mins ago</span>
-                                    </div>
-                                    <p className="text-sm mt-1 mb-2">Needs 3 units of B+</p>
-                                    <div className="btn-group">
-                                        <button className="btn btn-outline text-xs">Decline</button>
-                                        <button className="btn btn-primary text-xs">Approve Transfer</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )
-            }
-        </div >
+                {/* Render active tab content */}
+                {renderContent()}
+            </div>
+        </div>
     );
 };
 
