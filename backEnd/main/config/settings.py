@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     # apps
     "apps.UserAuth",
     "apps.blood.bloodinventor",
+"apps.medicalOfficers",
     "rest_framework_simplejwt.token_blacklist",
     "phonenumber_field",
     "django_rest_passwordreset",
