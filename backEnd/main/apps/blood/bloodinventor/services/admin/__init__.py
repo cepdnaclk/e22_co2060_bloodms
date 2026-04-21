@@ -1,0 +1,2 @@
+# Admin inventory service views.
+

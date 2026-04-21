@@ -71,7 +71,7 @@ const DonorRegistration = () => {
 
         /* Checkbox Validation */
         if (!confirmMedical) {
-            const msg = 'You must confirm that you have no major medical conditions.';
+            const msg = 'You must confirm that you have no major medicalOfficers conditions.';
             setError(msg);
             Swal.fire({
                 ...swalBase,

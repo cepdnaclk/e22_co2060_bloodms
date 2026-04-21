@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { useAuth } from '../../context/auth/useAuth';
 import {
     AlertCircle, Activity, Search, Ambulance,
     LayoutDashboard, Droplet, ClipboardList, Bell, User, Clock, CheckCircle, XCircle,
@@ -10,18 +12,59 @@ import './DoctorDashboard.css';
 const DoctorDashboard = () => {
     const [activeTab, setActiveTab] = useState('dashboard');
     const [profileImage, setProfileImage] = useState(null);
+    const { user, authTokens } = useAuth();
+    const [profileData, setProfileData] = useState(null);
 
-    const handleImageUpload = (e) => {
+    // Replace with your actual backend base URL if it's different
+    const API_BASE = "http://localhost:8000/api/v1/users"; 
+
+    useEffect(() => {
+        if (user && user.user_id) {
+            fetchDoctorProfile();
+        }
+    }, [user, authTokens]);
+
+    const fetchDoctorProfile = async () => {
+        try {
+            const res = await axios.get(`${API_BASE}/doctor/profile/${user.user_id}/`, {
+                headers: { Authorization: `Bearer ${authTokens?.access}` }
+            });
+            setProfileData(res.data);
+            if (res.data.profile_pic) {
+                setProfileImage(res.data.profile_pic);
+            }
+        } catch (error) {
+            console.error("Error fetching profile", error);
+        }
+    };
+
+    const handleImageUpload = async (e) => {
         const file = e.target.files[0];
         if (file) {
-            setProfileImage(URL.createObjectURL(file));
-            Swal.fire({
-                title: 'Photo Uploaded!',
-                text: 'Your profile photo has been updated.',
-                icon: 'success',
-                timer: 1500,
-                showConfirmButton: false
-            });
+            const formData = new FormData();
+            // Assuming your backend model expects 'profile_pic' or 'image'
+            formData.append('profile_pic', file);
+
+            try {
+                await axios.patch(`${API_BASE}/doctor/profile-pic/`, formData, {
+                    headers: {
+                        Authorization: `Bearer ${authTokens?.access}`,
+                        'Content-Type': 'multipart/form-data'
+                    }
+                });
+
+                setProfileImage(URL.createObjectURL(file));
+                Swal.fire({
+                    title: 'Photo Uploaded!',
+                    text: 'Your profile photo has been updated on the server.',
+                    icon: 'success',
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+            } catch (err) {
+                console.error("Upload error", err);
+                Swal.fire('Upload Failed', 'Could not save the image. Try again.', 'error');
+            }
         }
     };
 
@@ -234,30 +277,30 @@ const DoctorDashboard = () => {
                                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px' }}>
                                             <div>
                                                 <label>Full Name</label>
-                                                <input type="text" defaultValue="Dr. Emily Chen" style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #ccc' }} />
+                                                <input type="text" value={profileData?.full_name || profileData?.user?.first_name || "Doctor"} readOnly style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #ccc' }} />
                                             </div>
                                             <div>
                                                 <label>Email</label>
-                                                <input type="email" defaultValue="emily.chen@hospital.com" style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #ccc' }} />
+                                                <input type="email" value={profileData?.user?.email || "doctor@hospital.com"} readOnly style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #ccc' }} />
                                             </div>
                                             <div>
                                                 <label>Hospital</label>
-                                                <input type="text" defaultValue="Central City Hospital" readOnly style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #eee', backgroundColor: '#f9f9f9', color: '#666' }} />
+                                                <input type="text" value={profileData?.hospital_name || "Central City Hospital"} readOnly style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #eee', backgroundColor: '#f9f9f9', color: '#666' }} />
                                             </div>
                                             <div>
                                                 <label>Department</label>
-                                                <input type="text" defaultValue="Surgery" style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #ccc' }} />
+                                                <input type="text" value={profileData?.department || "Surgery"} readOnly style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #ccc' }} />
                                             </div>
                                             <div>
                                                 <label>Phone Number</label>
-                                                <input type="tel" defaultValue="+1 (555) 019-2834" style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #ccc' }} />
+                                                <input type="tel" value={profileData?.phone_number || "+1 (555) 019-2834"} readOnly style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #ccc' }} />
                                             </div>
                                             <div>
                                                 <label>Medical License No.</label>
-                                                <input type="text" defaultValue="MD-884920" readOnly style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #eee', backgroundColor: '#f9f9f9', color: '#666' }} />
+                                                <input type="text" value={profileData?.license_number || "MD-884920"} readOnly style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #eee', backgroundColor: '#f9f9f9', color: '#666' }} />
                                             </div>
                                         </div>
-                                        <button type="button" className="btn btn-primary" style={{ padding: '12px', fontSize: '16px', maxWidth: '200px', marginTop: '10px' }} onClick={() => Swal.fire('Saved', 'Profile updated successfully', 'success')}>
+                                        <button type="button" className="btn btn-primary" style={{ padding: '12px', fontSize: '16px', maxWidth: '200px', marginTop: '10px' }} onClick={() => Swal.fire('Saved', 'Other profile updates should be handled by Admin as per policy.', 'info')}>
                                             Save Changes
                                         </button>
                                     </form>
@@ -361,8 +404,8 @@ const DoctorDashboard = () => {
                 {/* Header */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '30px' }}>
                     <div>
-                        <h1 style={{ margin: '0 0 5px 0', fontSize: '28px', color: '#333' }}>Dr. Emily Chen</h1>
-                        <p style={{ margin: 0, color: '#666', fontSize: '15px' }}>Central City Hospital • Dept of Surgery</p>
+                        <h1 style={{ margin: '0 0 5px 0', fontSize: '28px', color: '#333' }}>{profileData?.full_name || profileData?.user?.first_name || "Doctor Dashboard"}</h1>
+                        <p style={{ margin: 0, color: '#666', fontSize: '15px' }}>{profileData?.hospital_name || "Central City Hospital"} • Dept of {profileData?.department || "Surgery"}</p>
                     </div>
                     <button
                         onClick={handleEmergencyRequest}

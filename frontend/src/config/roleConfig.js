@@ -31,11 +31,11 @@ export const ICON_MAP = {
 const ROLE_CONFIG = {
     admin: {
         label: 'System Administrator',
-        dashboard: '/admin',
-        allowedRoutes: ['/admin', '/staff', '/doctor', '/donor', '/patient', '/events'],
+        dashboard: '/adminDashboard',
+        allowedRoutes: ['/adminDashboard', '/staffViews', '/doctor', '/donor', '/patient', '/events'],
         navItems: [
             { path: '/doctor',  label: 'Medical',  icon: 'Activity' },
-            { path: '/staff',   label: 'Lab',      icon: 'ClipboardList' },
+            { path: '/staffViews',   label: 'Lab',      icon: 'ClipboardList' },
             { path: '/donor',   label: 'Donor',    icon: 'User' },
             { path: '/patient', label: 'Patient',  icon: 'User' },
             { path: '/events',  label: 'Events',   icon: 'Calendar' },
@@ -45,11 +45,11 @@ const ROLE_CONFIG = {
     medical_officer: {
         label: 'Medical Officer',
         dashboard: '/doctor',
-        allowedRoutes: ['/doctor', '/patient', '/events', '/staff'],
+        allowedRoutes: ['/doctor', '/patient', '/events', '/staffViews'],
         navItems: [
             { path: '/doctor',  label: 'Medical',  icon: 'Activity' },
             { path: '/patient', label: 'Patient',  icon: 'User' },
-            { path: '/staff',   label: 'Lab',      icon: 'ClipboardList' },
+            { path: '/staffViews',   label: 'Lab',      icon: 'ClipboardList' },
             { path: '/events',  label: 'Events',   icon: 'Calendar' },
         ],
     },
@@ -57,10 +57,9 @@ const ROLE_CONFIG = {
     doctor: {
         label: 'Doctor',
         dashboard: '/doctor',
-        allowedRoutes: ['/doctor', '/patient', '/events'],
+        allowedRoutes: ['/doctor',  '/events'],
         navItems: [
             { path: '/doctor',  label: 'Medical',  icon: 'Activity' },
-            { path: '/patient', label: 'Patient',  icon: 'User' },
             { path: '/events',  label: 'Events',   icon: 'Calendar' },
         ],
     },
