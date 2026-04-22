@@ -11,7 +11,7 @@ from ..services.admin.inventory_admin_service import (
 
 urlpatterns = [
     path("change-requests/pending/", AdminPendingInventoryChangeListView.as_view(), name="admin_inventory_change_pending"),
-    path("change-requests/<int:id>/admin-review/", admin_review_inventory_change, name="admin_inventory_change_review"),
+    path("change-requests/<int:id>/adminDashboard-review/", admin_review_inventory_change, name="admin_inventory_change_review"),
     path("change-requests/<int:id>/quality-check/", quality_check_inventory_change, name="admin_inventory_change_quality"),
     path("change-requests/<int:id>/final-approve/", final_approve_inventory_change, name="admin_inventory_change_final_approve"),
     path("change-requests/<int:id>/reject/", reject_inventory_change, name="admin_inventory_change_reject"),

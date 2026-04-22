@@ -18,7 +18,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         if data["password"] != data["password2"]:
             raise serializers.ValidationError("Passwords do not match.")
 
-        # Public signup must never create admin accounts.
+        # Public signup must never create adminDashboard accounts.
         if data.get("role") == User.ADMIN:
             raise serializers.ValidationError(
                 {"role": "Admin accounts can only be created by system administrators."}

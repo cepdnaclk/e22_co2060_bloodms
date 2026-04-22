@@ -1,8 +1,9 @@
 from django.db import models
 
 
-from apps.medicalOfficers.models.doctor import DoctorProfile
-from apps.medicalOfficers.models.hospitalStaff import StaffProfile
+from ....medicalOfficers.models.doctor import DoctorProfile
+from ....medicalOfficers.models.hospitalStaff import StaffProfile
+
 
 
 class BloodRequest(models.Model):

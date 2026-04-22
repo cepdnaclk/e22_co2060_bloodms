@@ -4,8 +4,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from backEnd.main.apps.medicalOfficers.models.hospitalStaff import StaffProfile
-from backEnd.main.apps.medicalOfficers.serializers.response.StaffResponseSerializer import StaffResponseSerializer
+from ...medicalOfficers.models.hospitalStaff import StaffProfile
+from ...medicalOfficers.serializers.response.StaffResponseSerializer import StaffResponseSerializer
 
 
 class StaffManageApiView(generics.RetrieveUpdateDestroyAPIView):

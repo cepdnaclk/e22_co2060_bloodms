@@ -21,17 +21,17 @@ class IsAdminRole(BasePermission):
         return bool(
             user
             and user.is_authenticated
-            and getattr(user, "role", None) == "admin"
+            and getattr(user, "role", None) == "adminDashboard"
         )
 
 
 class IsAdminOrInventoryOfficer(BasePermission):
-    """Allow inventory operations by admin or inventory officer."""
+    """Allow inventory operations by adminDashboard or inventory officer."""
 
     def has_permission(self, request, view):
         user = request.user
         if not user or not user.is_authenticated:
             return False
         role = getattr(user, "role", None)
-        return role in ["admin", "Inventor", "inventory_officer"]
+        return role in ["adminDashboard", "Inventor", "inventory_officer"]
 
