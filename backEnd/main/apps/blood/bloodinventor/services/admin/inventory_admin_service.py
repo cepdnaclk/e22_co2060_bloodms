@@ -42,7 +42,7 @@ def admin_review_inventory_change(request, id):
     obj = get_object_or_404(InventoryChangeRequest, id=id)
     if obj.status != InventoryChangeRequest.StatusType.PENDING_ADMIN_REVIEW:
         return Response(
-            {"status": "error", "message": "Request is not pending admin review."},
+            {"status": "error", "message": "Request is not pending adminDashboard review."},
             status=status.HTTP_400_BAD_REQUEST,
         )
 
@@ -100,7 +100,7 @@ def final_approve_inventory_change(request, id):
         return Response(
             {
                 "status": "error",
-                "message": "Request is not pending final admin approval.",
+                "message": "Request is not pending final adminDashboard approval.",
             },
             status=status.HTTP_400_BAD_REQUEST,
         )

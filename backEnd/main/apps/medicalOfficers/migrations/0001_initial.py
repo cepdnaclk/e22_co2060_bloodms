@@ -24,7 +24,7 @@ class Migration(migrations.Migration):
                 ('hospital_affiliation', models.CharField(max_length=255)),
                 ('department', models.CharField(help_text='e.g., ER, Surgery, ICU', max_length=100)),
                 ('work_phone', models.CharField(blank=True, max_length=20)),
-                ('is_verified', models.BooleanField(default=False, help_text='Checked by admin to allow blood requests')),
+                ('is_verified', models.BooleanField(default=False, help_text='Checked by adminDashboard to allow blood requests')),
                 ('profilePhoto', models.ImageField(upload_to='doctor_profiles/')),
                 ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='doctor_profile', to=settings.AUTH_USER_MODEL)),
             ],

@@ -1,5 +1,6 @@
-from django.urls import path
+from django.urls import path,include
 from rest_framework_simplejwt.views import TokenRefreshView
+
 
 from .services.views import (
     MyTokenObtainPairView,
@@ -22,4 +23,7 @@ urlpatterns = [
     path("profile/update/", update_user_profile, name="update_profile"),
     path("getuser/", get_user_info, name="user_info"),
     path("hospitals/resolve/", resolve_hospital, name="resolve_hospital"),
+
+    # Password Reset (REST API — works with React frontend)
+    path("password-reset/", include("django_rest_passwordreset.urls", namespace="password_reset")),
 ]

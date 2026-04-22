@@ -1,6 +1,5 @@
 from django.conf import settings
 from django.db import models
-
 from .bloodBank import BloodBank
 from .bloodinventor import BloodInventory
 
@@ -25,10 +24,10 @@ class InventoryChangeRequest(models.Model):
         REJECTED = "REJECTED", "Rejected"
         CANCELLED = "CANCELLED", "Cancelled"
 
-    action = models.CharField(max_length=32, choices=ActionType.choices)
+    action = models.CharField(max_length=32, choices=ActionType)
     status = models.CharField(
         max_length=40,
-        choices=StatusType.choices,
+        choices=StatusType,
         default=StatusType.PENDING_ADMIN_REVIEW,
     )
 
@@ -94,4 +93,3 @@ class InventoryChangeRequest(models.Model):
 
     def __str__(self):
         return f"{self.action} - {self.status}"
-

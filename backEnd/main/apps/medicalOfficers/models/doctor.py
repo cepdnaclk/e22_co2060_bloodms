@@ -17,7 +17,7 @@ class DoctorProfile(models.Model):
     work_phone = models.CharField(max_length=20, blank=True)
 
     # 3. System Status
-    is_verified = models.BooleanField(default=False, help_text="Checked by admin to allow blood requests")
+    is_verified = models.BooleanField(default=False, help_text="Checked by adminDashboard to allow blood requests")
     profilePhoto = models.ImageField(upload_to="doctor_profiles/")
 
     def __str__(self):
