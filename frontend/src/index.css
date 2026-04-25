@@ -142,6 +142,20 @@
   background-color: var(--color-primary-dark, #a30000);
 }
 
+/* GLOBAL DANGER PULSE (Light Mode default) */
+.dashboard .btn-danger-pulse {
+  background-color: var(--color-critical);
+  color: white;
+  border: 1px solid var(--color-critical);
+  animation: pulse-border 2s infinite;
+}
+
+@keyframes pulse-border {
+  0% { box-shadow: 0 0 0 0 rgba(183, 28, 28, 0.4); }
+  70% { box-shadow: 0 0 0 8px rgba(183, 28, 28, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(183, 28, 28, 0); }
+}
+
 /* DARK MODE COLORS - Using !important to combat global index.css broad rules */
 [data-theme="dark"] .dashboard .btn-outline {
   background-color: transparent !important;
