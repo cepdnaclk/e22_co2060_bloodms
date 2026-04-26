@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     "apps.blood.bloodinventor",
 "apps.medicalOfficers",
     "apps.adminDashboard",
+    "apps.donor",
     "rest_framework_simplejwt.token_blacklist",
     "phonenumber_field",
     "django_rest_passwordreset",
@@ -158,6 +159,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:5173",
     "http://localhost:5174",
     "http://127.0.0.1:5174",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
 ]
 
 CORS_ALLOW_CREDENTIALS = True  # It tells browser that sending cookies is safe.
@@ -180,6 +183,8 @@ CSRF_TRUSTED_ORIGINS = [
     "http://127.0.0.1:5173",
     "http://localhost:5174",
     "http://127.0.0.1:5174",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
 ]
 
 
@@ -215,4 +220,4 @@ EMAIL_HOST_USER = 'dulajnew01@gmail.com'
 EMAIL_HOST_PASSWORD = 'arqxzjidggqfxlyq'
 
 DEFAULT_FROM_EMAIL = 'dulajnew01@gmail.com'
-FRONTEND_URL = 'http://localhost:5173'
+FRONTEND_URL = 'http://localhost:3000'
